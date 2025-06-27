@@ -12,7 +12,7 @@ const PatientsList = ({ setIsAdminLoggedIn, setShowForm }) => {
 
   const fetchPatients = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/patients');
+      const res = await axios.get('https://hospitalpatientsreg.onrender.com/api/patients');
       setPatients(res.data);
     } catch (err) {
       console.error('Failed to fetch patients', err);
@@ -24,7 +24,7 @@ const PatientsList = ({ setIsAdminLoggedIn, setShowForm }) => {
     if (!confirmDelete) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/patients/${id}`);
+      await axios.delete(`https://hospitalpatientsreg.onrender.com/api/patients/${id}`);
       setPatients(patients.filter(p => p._id !== id));
     } catch (err) {
       console.error('Failed to delete patient', err);
