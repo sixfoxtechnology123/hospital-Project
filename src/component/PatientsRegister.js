@@ -18,7 +18,7 @@ const PatientsRegister = () => {
   // Fetch auto-generated IDs from backend
   const fetchIds = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/generate-ids');
+      const res = await axios.get('https://hospitalpatientsreg.onrender.com/api/generate-ids');
       setFormData(prev => ({
         ...prev,
         reportNo: res.data.reportNo,
@@ -58,7 +58,7 @@ const PatientsRegister = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/register', formData);
+      await axios.post('https://hospitalpatientsreg.onrender.com/api/register', formData);
       alert('Patient Registered');
       reset();
     } catch (err) {
