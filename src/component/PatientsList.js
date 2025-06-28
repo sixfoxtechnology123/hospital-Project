@@ -77,7 +77,7 @@ const PatientsList = ({ setIsAdminLoggedIn, setShowForm }) => {
                   <td className="border-2 px-2 py-1">{p.testGroup}</td>
                   <td className="border-2 px-2 py-1">{p.investigation}</td>
                   <td className="border-2 px-2 py-1">{p.signatory}</td>
-                  <td className="border-2 px-2 py-1 text-blue-700">{p.status}</td>
+                  <td className={`border-2 px-2 py-1 ${p.status.toLowerCase()==='verified'?'text-blue-700':'text-red-700'}`}>{p.status}</td>
                   <td className="border-2 px-2 py-1 flex gap-3 justify-center">
                     <FontAwesomeIcon
                       icon={faPrint}
