@@ -26,7 +26,6 @@ const PatientsRegister = () => {
         registrationNo: res.data.registrationNo
       }));
     } catch (err) {
-    //   alert("Failed to fetch IDs");
     }
   };
 
@@ -47,7 +46,7 @@ const PatientsRegister = () => {
       signatory: '',
       status: '',
     });
-    fetchIds(); // Refresh IDs
+    fetchIds(); 
   };
 
   const handleChange = (e) => {
