@@ -3,150 +3,261 @@ import axios from 'axios';
 
 const PatientsRegister = () => {
   const [formData, setFormData] = useState({
-    reportNo: '',
-    date: new Date().toISOString().split('T')[0],
-    bookingNo: '',
-    registrationNo: '',
-    prefix: '',
     name: '',
-    testGroup: '',
-    investigation: '',
-    signatory: '',
-    status: '',
+    prefix: '',
+    fatherOrSpouse: '',
+    sex: '',
+    dob: '',
+    age: '',
+    maritalStatus: '',
+    bloodGroup: '',
+    address1: '',
+    address2: '',
+    location: '',
+    city: '',
+    pinCode: '',
+    state: '',
+    country: '',
+    mobile: '',
+    email: '',
+    kinMobile: '',
+    kinRelation: '',
+    abhaId: '',
+    aadhar: '',
+    occupation: '',
+    religion: '',
+    source: '',
+    pan: ''
   });
 
-  // Fetch auto-generated IDs from backend
-  const fetchIds = async () => {
-    try {
-      const res = await axios.get('https://hospitalpatientsreg.onrender.com/api/generate-ids');
-      setFormData(prev => ({
-        ...prev,
-        reportNo: res.data.reportNo,
-        bookingNo: res.data.bookingNo,
-        registrationNo: res.data.registrationNo
-      }));
-    } catch (err) {
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [mrNumber, setMrNumber] = useState('');
+  const [manualAgeInput, setManualAgeInput] = useState(false);
+  const [manualDOBInput, setManualDOBInput] = useState(false);
+
+  // Handle field changes
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    if (name === "age") {
+      setManualAgeInput(true);
+      setManualDOBInput(false);
+    } else if (name === "dob") {
+      setManualDOBInput(true);
+      setManualAgeInput(false);
     }
+
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  // Sync DOB and Age
   useEffect(() => {
-    fetchIds();
-  }, []);
+    const today = new Date();
 
+    if (manualDOBInput && formData.dob) {
+      const birthDate = new Date(formData.dob);
+      let calculatedAge = today.getFullYear() - birthDate.getFullYear();
+      const m = today.getMonth() - birthDate.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        calculatedAge--;
+      }
+
+      if (calculatedAge !== parseInt(formData.age)) {
+        setFormData(prev => ({ ...prev, age: calculatedAge.toString() }));
+      }
+    }
+
+    if (manualAgeInput && formData.age) {
+      const ageInt = parseInt(formData.age);
+      if (!isNaN(ageInt)) {
+        const approxDOB = new Date(today.getFullYear() - ageInt, today.getMonth(), today.getDate());
+        const formattedDOB = approxDOB.toISOString().split("T")[0];
+        setFormData(prev => ({ ...prev, dob: formattedDOB }));
+      }
+    }
+  }, [formData.dob, formData.age, manualAgeInput, manualDOBInput]);
+
+  // Reset form
   const reset = () => {
     setFormData({
-      reportNo: '',
-      date: new Date().toISOString().split('T')[0],
-      bookingNo: '',
-      registrationNo: '',
-      prefix: '',
       name: '',
-      testGroup: '',
-      investigation: '',
-      signatory: '',
-      status: '',
+      prefix: '',
+      fatherOrSpouse: '',
+      sex: '',
+      dob: '',
+      age: '',
+      maritalStatus: '',
+      bloodGroup: '',
+      address1: '',
+      address2: '',
+      location: '',
+      city: '',
+      pinCode: '',
+      state: '',
+      country: '',
+      mobile: '',
+      email: '',
+      kinMobile: '',
+      kinRelation: '',
+      abhaId: '',
+      aadhar: '',
+      occupation: '',
+      religion: '',
+      source: '',
+      pan: ''
     });
-    fetchIds(); 
   };
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData({ ...formData, [name]: type === 'checkbox' ? checked : value });
-  };
+  // Validate required & optional fields
+  const validateForm = () => {
+    const { name, dob, mobile, email, aadhar } = formData;
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await axios.post('https://hospitalpatientsreg.onrender.com/api/register', formData);
-      alert('Patient Registered');
-      reset();
-    } catch (err) {
-      alert('Registration failed');
+    if (!name?.trim() || !dob?.trim() || !mobile?.trim()) {
+      alert("Name, DOB, and Mobile Number are required.");
+      return false;
     }
+
+    if (email && !/^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+      alert("Invalid Email ID");
+      return false;
+    }
+
+    if (aadhar && !/^\d{12}$/.test(aadhar)) {
+      alert("Invalid Aadhar Number");
+      return false;
+    }
+
+    return true;
   };
+
+  // Submit patient form
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (!validateForm()) return;
+
+  try {
+    const res = await axios.post('http://localhost:5000/api/register', formData);
+
+    const mr = res.data?.mrNumber || 'Unknown';
+
+    setMrNumber(mr); // This must be correct
+    setShowSuccessModal(true);
+    reset();
+  } catch (err) {
+    alert('Registration Failed');
+  }
+};
+
 
   return (
     <form onSubmit={handleSubmit} className="bg-white p-4 max-w-7xl mx-auto border border-gray-300 shadow-lg text-sm">
 
-      <div className="mt-2 text-white bg-green-600 text-xl flex justify-between p-2 font-bold">
-        <span className='ml-3'>Registration Form</span>
-      </div>
+      {/* MR Success Message */}
+      {showSuccessModal && (
+          <div className="fixed inset-0 flex items-center justify-center bg-green-100 bg-opacity-95 z-50">
+            <div className="bg-white border border-green-500 rounded-xl p-10 shadow-lg text-center max-w-md">
+              <h2 className="text-2xl font-bold text-green-700 mb-4">Patient Registered Successfully</h2>
+              <p className="text-lg text-gray-800">
+                MR Number is: <span className="font-semibold">{mrNumber}</span>
+              </p>
+              <button
+                onClick={() => setShowSuccessModal(false)}
+                className="mt-6 px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded"
+              >
+                Continue
+              </button>
+            </div>
+          </div>
+        )}
 
-      <div className="mt-3 grid grid-cols-1 md:grid-cols-4 gap-4">
-        <label className="flex flex-col">
-          <span className="text-gray-700 font-medium">Registration Date</span>
-          <input type="date" name="date" value={formData.date} onChange={handleChange} className="border p-2" />
-        </label>
 
-        <label className="flex flex-col">
-          <span className="text-gray-700 font-medium">Report No</span>
-          <input name="reportNo" value={formData.reportNo} readOnly className="border p-2 bg-gray-100" />
-        </label>
-
-        <label className="flex flex-col">
-          <span className="text-gray-700 font-medium">Booking No</span>
-          <input name="bookingNo" value={formData.bookingNo} readOnly className="border p-2 bg-gray-100" />
-        </label>
-
-        <label className="flex flex-col">
-          <span className="text-gray-700 font-medium">Registration No</span>
-          <input name="registrationNo" value={formData.registrationNo} readOnly className="border p-2 bg-gray-100" />
-        </label>
-      </div>
-
-      <h3 className="mt-6 text-white bg-teal-500 text-xl p-2 font-bold">Patient Details</h3>
+      {/* Your existing form starts here (no styling changes done) */}
+      <h3 className="mt-2 text-white bg-teal-500 text-xl p-2 font-bold">Basic Details</h3>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
         <label className="flex flex-col">
-          <span className="text-gray-700 font-medium">Name<span className="text-red-500">*</span></span>
-          <div className='flex gap-2'>
-            <select name="prefix" value={formData.prefix} onChange={handleChange} required className="border p-2 w-2/4">
+          <span className="flex items-center gap-1">Name<span className="text-red-600">*</span></span>
+          <div className="flex gap-2">
+            <select name="prefix" value={formData.prefix} onChange={handleChange} className="border p-2 w-1/3">
               <option value="">Prefix</option>
               <option value="Mr">Mr</option>
               <option value="Mrs">Mrs</option>
               <option value="Miss">Miss</option>
             </select>
-            <input name="name" placeholder='TYPE YOUR NAME' value={formData.name} onChange={handleChange} required className="border p-2 w-full" />
+            <input name="name" value={formData.name} onChange={handleChange} className="border p-2 w-2/3" />
           </div>
         </label>
 
-        <label className="flex flex-col">
-          <span className="text-gray-700 font-medium">Test Group<span className="text-red-500">*</span></span>
-          <select name="testGroup" value={formData.testGroup} onChange={handleChange} required className="border p-2">
+        <label className="flex flex-col">Father's / Spouse's Name
+          <input name="fatherOrSpouse" value={formData.fatherOrSpouse} onChange={handleChange} className="border p-2" />
+        </label>
+
+        <label className="flex flex-col">Sex
+          <select name="sex" value={formData.sex} onChange={handleChange} className="border p-2">
             <option value="">Select</option>
-            <option value="BIOCHEMISTRY">BIOCHEMISTRY</option>
-            <option value="HEAMATOLOGY">HEAMATOLOGY</option>
-            <option value="VIROLOGY">VIROLOGY</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Other</option>
           </select>
         </label>
 
         <label className="flex flex-col">
-          <span className="text-gray-700 font-medium">Investigation</span>
-          <input name="investigation" placeholder='e.g: CRP,RBS, SERUM UREA etc.' value={formData.investigation} onChange={handleChange} className="border p-2" />
+          <span className="flex items-center gap-1">Date of Birth<span className="text-red-600">*</span></span>
+          <input type="date" name="dob" value={formData.dob} onChange={handleChange} className="border p-2" />
         </label>
 
-        <label className="flex flex-col">
-          <span className="text-gray-700 font-medium">Signatory<span className="text-red-500">*</span></span>
-          <select name="signatory" value={formData.signatory} onChange={handleChange} required className="border p-2">
+        <label className="flex flex-col">Age
+          <input type="number" name="age" value={formData.age} onChange={handleChange} className="border p-2" />
+        </label>
+
+        <label className="flex flex-col">Marital Status
+          <select name="maritalStatus" value={formData.maritalStatus} onChange={handleChange} className="border p-2">
             <option value="">Select</option>
-            <option value="DR. BANIBRATA BERA">DR. BANIBRATA BERA</option>
-            <option value="DR. N.A. WASIM">DR. N.A. WASIM</option>
-            <option value="DR. B.P. BARMAN">DR. B.P. BARMAN</option>
+            <option>Married</option>
+            <option>Unmarried</option>
+            <option>Widow</option>
           </select>
         </label>
 
-        <label className="flex flex-col">
-          <span className="text-gray-700 font-medium">Status<span className="text-red-500">*</span></span>
-          <select name="status" value={formData.status} onChange={handleChange} required className="border p-2">
-            <option value="">Select</option>
-            <option value="VERIFIED">VERIFIED</option>
-            <option value="NON VERIFIED">NON VERIFIED</option>
-          </select>
+        <label className="flex flex-col">Blood Group
+          <input name="bloodGroup" value={formData.bloodGroup} onChange={handleChange} className="border p-2" />
         </label>
       </div>
 
+      {/* Contact & Address */}
+      <h3 className="mt-6 text-white bg-teal-500 text-xl p-2 font-bold">Contact & Address</h3>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
+        <label className="flex flex-col">Address Line 1<input name="address1" value={formData.address1} onChange={handleChange} className="border p-2" /></label>
+        <label className="flex flex-col">Address Line 2<input name="address2" value={formData.address2} onChange={handleChange} className="border p-2" /></label>
+        <label className="flex flex-col">Location<input name="location" value={formData.location} onChange={handleChange} className="border p-2" /></label>
+        <label className="flex flex-col">City<input name="city" value={formData.city} onChange={handleChange} className="border p-2" /></label>
+        <label className="flex flex-col">PIN Code<input name="pinCode" value={formData.pinCode} onChange={handleChange} className="border p-2" /></label>
+        <label className="flex flex-col">State<input name="state" value={formData.state} onChange={handleChange} className="border p-2" /></label>
+        <label className="flex flex-col">Country<input name="country" value={formData.country} onChange={handleChange} className="border p-2" /></label>
+        <label className="flex flex-col">
+          <span className="flex items-center gap-1">Mobile Number<span className="text-red-600">*</span></span>
+          <input name="mobile" value={formData.mobile} onChange={handleChange} className="border p-2" />
+        </label>
+        <label className="flex flex-col">Email ID<input name="email" value={formData.email} onChange={handleChange} className="border p-2" /></label>
+        <label className="flex flex-col">Next of Kin Mobile No.<input name="kinMobile" value={formData.kinMobile} onChange={handleChange} className="border p-2" /></label>
+        <label className="flex flex-col">Relation with Next to Kin<input name="kinRelation" value={formData.kinRelation} onChange={handleChange} className="border p-2" /></label>
+      </div>
+
+      {/* Identification & Other Info */}
+      <h3 className="mt-6 text-white bg-teal-500 text-xl p-2 font-bold">Identification & Other Info</h3>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
+        <label className="flex flex-col">ABHA ID<input name="abhaId" value={formData.abhaId} onChange={handleChange} className="border p-2" /></label>
+        <label className="flex flex-col">Aadhar Number<input name="aadhar" value={formData.aadhar} onChange={handleChange} className="border p-2" /></label>
+        <label className="flex flex-col">Occupation<input name="occupation" value={formData.occupation} onChange={handleChange} className="border p-2" /></label>
+        <label className="flex flex-col">Religion<input name="religion" value={formData.religion} onChange={handleChange} className="border p-2" /></label>
+        <label className="flex flex-col">Source<input name="source" value={formData.source} onChange={handleChange} className="border p-2" /></label>
+        <label className="flex flex-col">PAN No.<input name="pan" value={formData.pan} onChange={handleChange} className="border p-2" /></label>
+      </div>
+
+      {/* Buttons */}
       <div className="flex justify-end gap-4 mt-6">
-        <button type="submit" className="bg-teal-600 hover:bg-teal-700 text-white px-6 py-2 rounded">Submit</button>
-        <button type="button" onClick={reset} className="bg-zinc-800 text-white px-6 py-2 rounded">Reset</button>
+        <button type="submit" className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded">Register</button>
+        <button type="button" onClick={reset} className="bg-gray-700 hover:bg-gray-800 text-white px-6 py-2 rounded">Reset</button>
       </div>
     </form>
   );
