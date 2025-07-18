@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Patient = require('./Patient');
+const Patient = require('../models/Patient');
 
 // Helper to generate MR Number
 const generateMRNumber = async () => {
