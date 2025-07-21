@@ -14,11 +14,10 @@ const doctorSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  departmentName: {
+  departmentCode: {  
     type: String,
     required: true
   },
-
   registrationNo: {
     type: String,
     required: true

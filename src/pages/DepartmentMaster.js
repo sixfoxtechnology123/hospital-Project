@@ -4,22 +4,41 @@ import axios from 'axios';
 const DepartmentMaster = () => {
   const [deptCode, setDeptCode] = useState('');
   const [deptName, setDeptName] = useState('');
+  const [departments, setDepartments] = useState([]);
 
-  // Fetch the next department code on component mount
   useEffect(() => {
     fetchDeptCode();
+    fetchDepartments();
   }, []);
 
   const fetchDeptCode = async () => {
     try {
       const res = await axios.get('http://localhost:5000/api/departments/next-code');
-      setDeptCode(res.data.deptCode); // must match backend response field
+      setDeptCode(res.data.deptCode); 
     } catch (err) {
       console.error('Failed to fetch department code:', err);
     }
   };
 
+  const fetchDepartments = async () => {
+    try {
+      const res = await axios.get('http://localhost:5000/api/departments');
+      setDepartments(res.data);
+    } catch (err) {
+      console.error('Failed to fetch departments:', err);
+    }
+  };
+
   const handleSave = async () => {
+    const duplicate = departments.find(
+      (dept) => dept.deptName.toLowerCase().trim() === deptName.toLowerCase().trim()
+    );
+
+    if (duplicate) {
+      alert('Department name already exists!');
+      return;
+    }
+
     try {
       await axios.post('http://localhost:5000/api/departments', {
         deptCode,
@@ -27,7 +46,8 @@ const DepartmentMaster = () => {
       });
       alert('Department saved successfully');
       setDeptName('');
-      fetchDeptCode(); // Regenerate dept code after save
+      fetchDeptCode(); // Regenerate code
+      fetchDepartments(); // Refresh department list
     } catch (err) {
       console.error('Error saving department:', err); 
       alert('Failed to save department');
