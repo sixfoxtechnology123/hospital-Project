@@ -1,7 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useLocation } from 'react-router-dom';
 
-const PatientsRegister = () => {
+const OpRegister = () => {
+const location = useLocation();
+
+  const { mrNumber, patientData } = location.state || {};
+  console.log(' location:', location);
+  console.log('MR Number:', mrNumber);
+  console.log('Patient Data:', patientData);
+  console.log('Patient name:', patientData.name);
+
   const [formData, setFormData] = useState({
     registrationType: 'NEW',
     date: Date(),
@@ -94,20 +103,36 @@ const PatientsRegister = () => {
   });
 };
 
+useEffect(() => {
+if (patientData) {
+      setFormData(prev => ({
+        ...prev,
+        name: patientData.name || '',
+        email: patientData.email || '',
+        phone: patientData.phone || ''
+      }));
+    }
+  }, [patientData]);
+
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData({ ...formData, [name]: type === 'checkbox' ? checked : value });
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
   };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/register', formData);
-      alert('Patient Registered');
-      reset();
+      await axios.post('http://localhost:5000/api/register', {
+        mrNumber,
+        ...formData
+      });
+      alert('OP Registration Successful');
     } catch (err) {
-      alert('Registration failed');
+      console.error('Error submitting OP data:', err);
     }
   };
 
@@ -464,4 +489,4 @@ const PatientsRegister = () => {
   );
 };
 
-export default PatientsRegister;
+export default OpRegister;

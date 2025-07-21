@@ -147,6 +147,8 @@ const PatientsRegister = () => {
 
     setMrNumber(mr); // This must be correct
     setShowSuccessModal(true);
+
+
     reset();
   } catch (err) {
     alert('Registration Failed');
@@ -166,14 +168,22 @@ const PatientsRegister = () => {
                 MR Number is: <span className="font-semibold">{mrNumber}</span>
               </p>
               <button
-                onClick={() => {
-                  setShowSuccessModal(false);
-                  navigate('/select');
-                }}
-                className="mt-6 px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded"
-              >
-                Continue
-              </button>
+              onClick={() => {
+                setShowSuccessModal(false);
+                navigate('/select', {
+                  
+                  state: {
+                    mrNumber: mrNumber,
+                    patientData: formData,
+                    
+                  }
+                });
+              }}
+              className="mt-6 px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded"
+            >
+              Continue
+            </button>
+
 
             </div>
           </div>

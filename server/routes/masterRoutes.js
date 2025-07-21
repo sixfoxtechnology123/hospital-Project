@@ -1,49 +1,34 @@
 const express = require('express');
 const router = express.Router();
-
-const Doctor = require('../models/Doctor');
 const Department = require('../models/Department');
-const Plan = require('../models/Plan');
-const Package = require('../models/Package');
 
-// Department Master
-router.get('/departments', async (req, res) => {
+// POST: Save department
+router.post('/department', async (req, res) => {
   try {
-    const departments = await Department.find(); 
-    res.json(departments);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+    const { departmentCode, departmentName } = req.body;
+
+    // Check for duplicates
+    const existing = await Department.findOne({ departmentCode });
+    if (existing) {
+      return res.status(400).json({ message: 'Department code already exists' });
+    }
+
+    const newDepartment = new Department({ departmentCode, departmentName });
+    await newDepartment.save();
+    res.status(201).json({ message: 'Department saved successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
-// Doctor Master
-router.get('/doctors', async (req, res) => {
+// GET: Get all departments
+router.get('/department', async (req, res) => {
   try {
-    const doctors = await Doctor.find();
-    res.json(doctors);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
-
-
-// Plan Master
-router.get('/plans', async (req, res) => {
-  try {
-    const plans = await Plan.find();
-    res.json(plans);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
-
-// Package Master
-router.get('/packages', async (req, res) => {
-  try {
-    const packages = await Package.find();
-    res.json(packages);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+    const departments = await Department.find();
+    res.status(200).json(departments);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch departments' });
   }
 });
 

@@ -1,9 +1,20 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { FaUserMd, FaProcedures } from 'react-icons/fa';
 
 const IpOpSelection = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+    const { mrNumber, patientData } = location.state || {};
+
+  const goToOP = () => {
+    navigate('/op-registration', {
+      state: {
+        mrNumber,
+        patientData,
+      }
+    });
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#e0f7fa] to-[#b2ebf2] p-6">
@@ -14,8 +25,10 @@ const IpOpSelection = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* OP Button */}
-          <div
-            onClick={() => navigate('/op-registration')}
+        <div
+           onClick={goToOP}
+
+
             className="cursor-pointer group bg-white border border-gray-200 rounded-2xl p-8 flex flex-col items-center justify-center transition-all duration-300 hover:bg-blue-100 hover:scale-105 shadow-md"
           >
             <FaUserMd className="text-blue-700 text-5xl mb-4 transition-transform group-hover:rotate-6" />
