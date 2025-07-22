@@ -1,4 +1,3 @@
-// src/components/ServiceRateMaster.js
 import React, { useState } from 'react';
 import axios from 'axios';
 
@@ -55,7 +54,7 @@ const ServiceRateMaster = () => {
             <th className="border px-2 py-1">Service Code</th>
             <th className="border px-2 py-1">Effective From</th>
             <th className="border px-2 py-1">Effective To</th>
-            <th className="border px-2 py-1">Standard Rate</th>
+            <th className="border px-2 py-1">Service Rate</th>
             <th className="border px-2 py-1">Doctor Share</th>
             <th className="border px-2 py-1">Hospital Share</th>
             <th className="border px-2 py-1">Active (Y/N)</th>
@@ -91,7 +90,7 @@ const ServiceRateMaster = () => {
               </td>
               <td className="border px-2 py-1">
                 <input
-                  type="number"
+                  type="text"
                   value={row.serviceRate}
                   onChange={(e) => handleChange(idx, 'serviceRate', e.target.value)}
                   className="w-full border rounded px-1 py-0.5"
@@ -99,7 +98,7 @@ const ServiceRateMaster = () => {
               </td>
               <td className="border px-2 py-1">
                 <input
-                  type="number"
+                  type="text"
                   value={row.doctorShare}
                   onChange={(e) => handleChange(idx, 'doctorShare', e.target.value)}
                   className="w-full border rounded px-1 py-0.5"
@@ -107,7 +106,7 @@ const ServiceRateMaster = () => {
               </td>
               <td className="border px-2 py-1">
                 <input
-                  type="number"
+                  type="text"
                   value={row.hospitalShare}
                   onChange={(e) => handleChange(idx, 'hospitalShare', e.target.value)}
                   className="w-full border rounded px-1 py-0.5"
@@ -119,8 +118,8 @@ const ServiceRateMaster = () => {
                   onChange={(e) => handleChange(idx, 'active', e.target.value)}
                   className="w-full border rounded px-1 py-0.5"
                 >
-                  <option value="Y">Y</option>
-                  <option value="N">N</option>
+                  <option value="Y">Yes</option>
+                  <option value="N">No</option>
                 </select>
               </td>
             </tr>

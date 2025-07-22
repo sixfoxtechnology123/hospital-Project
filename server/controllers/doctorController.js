@@ -36,7 +36,7 @@ exports.createDoctor = async (req, res) => {
 
 exports.getDoctors = async (req, res) => {
   try {
-    const doctors = await Doctor.find();
+    const doctors = await Doctor.find().sort({ _id: 1 });
     res.status(200).json(doctors);
   } catch (error) {
     res.status(500).json({ error: error.message });

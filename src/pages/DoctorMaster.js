@@ -10,17 +10,30 @@ const DoctorMaster = () => {
   const [generatedCode, setGeneratedCode] = useState('');
   const [lastCodeNumber, setLastCodeNumber] = useState(0); // Track last code
 
-  const fetchDoctors = async () => {
+const fetchDoctors = async () => {
+  try {
     const res = await axios.get('http://localhost:5000/api/doctors');
+
+    const doctors = res.data;
+
     let next = 1;
-    if (res.data.length > 0) {
-      const last = res.data[res.data.length - 1];
-      const codeNum = last.code ? parseInt(last.code.replace('DOC', '')) : 0;
-      next = codeNum + 1;
+
+    if (doctors.length > 0) {
+      const lastDoctor = doctors[doctors.length - 1];
+      const match = lastDoctor.doctorCode?.match(/DOC(\d+)/);
+
+      if (match) {
+        next = parseInt(match[1], 10) + 1;
+      }
     }
+
     setLastCodeNumber(next);
     setGeneratedCode(`DOC${String(next).padStart(4, '0')}`);
-  };
+  } catch (error) {
+    console.error('Failed to fetch doctors:', error);
+    setGeneratedCode('DOC0001');
+  }
+};
 
   useEffect(() => {
     const fetchDepartments = async () => {

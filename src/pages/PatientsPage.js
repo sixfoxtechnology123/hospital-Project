@@ -21,19 +21,17 @@ const PatientsPage = () => {
     <div className="min-h-screen bg-zinc-300">
       {/* Top Navbar */}
       <header className="bg-teal-600 text-white p-4 shadow-md flex items-center justify-between relative">
-        <h1 className="text-2xl font-bold">Hospital</h1>
 
         <nav className="space-x-6 text-xl relative flex items-center">
           <button onClick={() => navigate('/')} className="hover:underline">Home</button>
-          <button onClick={() => navigate('')} className="hover:underline">Master</button>
-
+          
           {/* Transaction with Dropdown */}
           <div className="inline-block relative" ref={transactionRef}>
             <button
               onClick={() => setShowTransactionMenu(!showTransactionMenu)}
               className="hover:underline"
             >
-              Transaction
+              Master
             </button>
 
             {showTransactionMenu && (
@@ -49,8 +47,13 @@ const PatientsPage = () => {
             )}
           </div>
 
+          {/* Transaction  */}
+          <button onClick={() => navigate('')} className="hover:underline">Transaction</button>
+
+          {/* report section */}
           <button onClick={() => navigate('')} className="hover:underline">Report</button>
         </nav>
+        <h1 className="text-2xl font-bold">Hospital</h1>
       </header>
     </div>
   );
