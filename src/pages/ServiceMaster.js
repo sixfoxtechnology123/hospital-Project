@@ -55,7 +55,7 @@ const ServiceMaster = () => {
   return (
     <div className="min-h-screen bg-zinc-300 flex justify-center items-center p-4">
       <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-semibold text-center text-blue-700 mb-6">Service Master</h2>
+        <h2 className="text-2xl font-semibold text-center  mb-6">Service Master</h2>
 
         <div className="mb-4">
           <label className="block mb-1 font-medium">Service Code</label>
