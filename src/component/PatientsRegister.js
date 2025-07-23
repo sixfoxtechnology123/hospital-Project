@@ -157,12 +157,12 @@ const PatientsRegister = () => {
 
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-4 max-w-7xl mx-auto border border-gray-300 shadow-lg text-sm">
+    <form onSubmit={handleSubmit} className="bg-white pt-1 px-2  max-w-7xl mx-auto border-2 border-2-gray-300 shadow text-sm">
 
       {/* MR Success Message */}
       {showSuccessModal && (
           <div className="fixed inset-0 flex items-center justify-center bg-green-100 bg-opacity-95 z-50">
-            <div className="bg-white border border-green-500 rounded-xl p-10 shadow-lg text-center max-w-md">
+            <div className="bg-white border-2 border-2-green-500 rounded-xl p-10 shadow-lg text-center max-w-md">
               <h2 className="text-2xl font-bold text-green-700 mb-4">Patient Registered Successfully</h2>
               <p className="text-lg text-gray-800">
                 MR Number is: <span className="font-semibold">{mrNumber}</span>
@@ -191,89 +191,155 @@ const PatientsRegister = () => {
 
 
       {/* Your existing form starts here (no styling changes done) */}
-      <h3 className="mt-2 text-white bg-teal-500 text-xl p-2 font-bold">Basic Details</h3>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
-        <label className="flex flex-col">
-          <span className="flex items-center gap-1">Name<span className="text-red-600">*</span></span>
-          <div className="flex gap-2">
-            <select name="prefix" value={formData.prefix} onChange={handleChange} className="border p-2 w-1/3">
+      <h3 className="text-white bg-teal-700 p-1 font-semibold mt-1">Basic Details</h3>
+       <div className="grid grid-cols-5 gap-2">
+         <label className="flex flex-col">
+          <span className="text-black font-medium">Name<span className="text-red-500">*</span></span>
+          <div className="flex gap-1">
+            <select name="prefix" value={formData.prefix} onChange={handleChange} className="border-2 p-0 w-1/3">
               <option value="">Prefix</option>
               <option value="Mr">Mr</option>
               <option value="Mrs">Mrs</option>
               <option value="Miss">Miss</option>
             </select>
-            <input name="name" value={formData.name} onChange={handleChange} className="border p-2 w-2/3" />
+            <input name="name" placeholder='TYPE YOUR NAME' value={formData.name} onChange={handleChange} className="border-2 p-0 w-full" />
           </div>
         </label>
 
-        <label className="flex flex-col">Father's / Spouse's Name
-          <input name="fatherOrSpouse" value={formData.fatherOrSpouse} onChange={handleChange} className="border p-2" />
+        <label className="flex flex-col">
+          <span className="text-black  font-medium">Father's / Spouse's Name</span>
+          <input name="fatherOrSpouse" value={formData.fatherOrSpouse} onChange={handleChange} placeholder='TYPE YOUR FATHER/SPOUSE NAME' className="border-2 p-0" />
         </label>
 
-        <label className="flex flex-col">Sex
-          <select name="sex" value={formData.sex} onChange={handleChange} className="border p-2">
+        <label className="flex gap-1 w-full">
+         <div className="flex flex-col w-2/4">
+          <span className="text-black  font-medium">Age</span>
+          <input type="number" name="age" value={formData.age} onChange={handleChange} className="border-2 p-0" /> 
+          </div>
+
+           <div className="flex flex-col w-2/4">
+            <span className="text-black  font-medium">Date of Birth<span className="text-red-600">*</span></span>
+           <input type="date" name="dob" value={formData.dob} onChange={handleChange} className="border-2 p-0" />
+           </div>
+        </label>
+        
+        <label className="flex gap-2 w-full">
+           <div className="flex flex-col w-2/4">
+           <span className="text-black  font-medium">Sex</span>
+            <select name="sex" value={formData.sex} onChange={handleChange} className="border-2 p-0">
             <option value="">Select</option>
             <option>Male</option>
             <option>Female</option>
             <option>Other</option>
           </select>
-        </label>
+          </div>
 
-        <label className="flex flex-col">
-          <span className="flex items-center gap-1">Date of Birth<span className="text-red-600">*</span></span>
-          <input type="date" name="dob" value={formData.dob} onChange={handleChange} className="border p-2" />
-        </label>
-
-        <label className="flex flex-col">Age
-          <input type="number" name="age" value={formData.age} onChange={handleChange} className="border p-2" />
-        </label>
-
-        <label className="flex flex-col">Marital Status
-          <select name="maritalStatus" value={formData.maritalStatus} onChange={handleChange} className="border p-2">
+          <div className="flex flex-col w-2/4">
+          <span className="text-black  font-medium">Marital Status</span>
+           <select name="maritalStatus" value={formData.maritalStatus} onChange={handleChange} className="border-2 p-0">
             <option value="">Select</option>
             <option>Married</option>
             <option>Unmarried</option>
             <option>Widow</option>
           </select>
+          </div>
         </label>
-
-        <label className="flex flex-col">Blood Group
-          <input name="bloodGroup" value={formData.bloodGroup} onChange={handleChange} className="border p-2" />
+         <label className="flex flex-col">
+          <span className="text-black  font-medium">Blood Group</span>
+          <select name="bloodGroup" value={formData.bloodGroup} onChange={handleChange} className="border-2 p-0">
+                <option value="">Select</option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+                </select>
         </label>
+        
       </div>
 
       {/* Contact & Address */}
-      <h3 className="mt-6 text-white bg-teal-500 text-xl p-2 font-bold">Contact & Address</h3>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
-        <label className="flex flex-col">Address Line 1<input name="address1" value={formData.address1} onChange={handleChange} className="border p-2" /></label>
-        <label className="flex flex-col">Address Line 2<input name="address2" value={formData.address2} onChange={handleChange} className="border p-2" /></label>
-        <label className="flex flex-col">Location<input name="location" value={formData.location} onChange={handleChange} className="border p-2" /></label>
-        <label className="flex flex-col">City<input name="city" value={formData.city} onChange={handleChange} className="border p-2" /></label>
-        <label className="flex flex-col">PIN Code<input name="pinCode" value={formData.pinCode} onChange={handleChange} className="border p-2" /></label>
-        <label className="flex flex-col">State<input name="state" value={formData.state} onChange={handleChange} className="border p-2" /></label>
-        <label className="flex flex-col">Country<input name="country" value={formData.country} onChange={handleChange} className="border p-2" /></label>
+      <h3 className="text-white bg-teal-700 p-1 font-semibold mt-2">Contact & Address</h3>
+      <div className="grid grid-cols-4 gap-2">
         <label className="flex flex-col">
-          <span className="flex items-center gap-1">Mobile Number<span className="text-red-600">*</span></span>
-          <input name="mobile" value={formData.mobile} onChange={handleChange} className="border p-2" />
+          <span className="text-black  font-medium">Address Line 1</span>
+          <input name="address1" placeholder='FLAT/HOUSE NO, FLOOR, BUILDING' value={formData.address1} onChange={handleChange} className="border-2 p-0" /></label>
+
+        <label className="flex flex-col">
+          <span className="text-black  font-medium">Address Line 2</span>
+          <input name="address2" placeholder='COLONY/SOCIETY, STREET,LOCALITY/AREA' value={formData.address2} onChange={handleChange} className="border-2 p-0" /></label>
+
+        <label className="flex flex-col">
+          <span className="text-black  font-medium">Location</span>
+          <input name="location" placeholder='LOCALITY/AREA/TOWN' value={formData.location} onChange={handleChange} className="border-2 p-0" /></label>
+
+        <label className="flex flex-col">
+          <span className="text-black  font-medium">City</span>
+          <input name="city" value={formData.city} onChange={handleChange} className="border-2 p-0" /></label>
+
+        <label className="flex flex-col">
+          <span className="text-black  font-medium">PIN Code</span>
+          <input name="pinCode" value={formData.pinCode} onChange={handleChange} className="border-2 p-0" /></label>
+
+        <label className="flex flex-col">
+          <span className="text-black  font-medium">State</span>
+          <input name="state" value={formData.state} onChange={handleChange} className="border-2 p-0" /></label>
+
+        <label className="flex flex-col">
+          <span className="text-black  font-medium">Country</span>
+          <input name="country" value={formData.country} onChange={handleChange} className="border-2 p-0" /></label>
+
+        <label className="flex flex-col">
+          <span className="flex items-center gap-1">
+            <span className="text-black  font-medium">Mobile Number</span><span className="text-red-600">*</span></span>
+          <input name="mobile" value={formData.mobile} onChange={handleChange} className="border-2 p-0" />
         </label>
-        <label className="flex flex-col">Email ID<input name="email" value={formData.email} onChange={handleChange} className="border p-2" /></label>
-        <label className="flex flex-col">Next of Kin Mobile No.<input name="kinMobile" value={formData.kinMobile} onChange={handleChange} className="border p-2" /></label>
-        <label className="flex flex-col">Relation with Next to Kin<input name="kinRelation" value={formData.kinRelation} onChange={handleChange} className="border p-2" /></label>
+
+        <label className="flex flex-col">
+          <span className="text-black  font-medium">Email ID</span>
+          <input name="email" value={formData.email} onChange={handleChange} className="border-2 p-0" /></label>
+        <label className="flex flex-col">
+          <span className="text-black  font-medium">Next of Kin Mobile No.</span>
+          <input name="kinMobile" value={formData.kinMobile} onChange={handleChange} className="border-2 p-0" /></label>
+
+        <label className="flex flex-col">
+          <span className="text-black  font-medium">Relation with Next to Kin</span>
+          <input name="kinRelation" value={formData.kinRelation} onChange={handleChange} className="border-2 p-0" /></label>
       </div>
 
       {/* Identification & Other Info */}
-      <h3 className="mt-6 text-white bg-teal-500 text-xl p-2 font-bold">Identification & Other Info</h3>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
-        <label className="flex flex-col">ABHA ID<input name="abhaId" value={formData.abhaId} onChange={handleChange} className="border p-2" /></label>
-        <label className="flex flex-col">Aadhar Number<input name="aadhar" value={formData.aadhar} onChange={handleChange} className="border p-2" /></label>
-        <label className="flex flex-col">Occupation<input name="occupation" value={formData.occupation} onChange={handleChange} className="border p-2" /></label>
-        <label className="flex flex-col">Religion<input name="religion" value={formData.religion} onChange={handleChange} className="border p-2" /></label>
-        <label className="flex flex-col">Source<input name="source" value={formData.source} onChange={handleChange} className="border p-2" /></label>
-        <label className="flex flex-col">PAN No.<input name="pan" value={formData.pan} onChange={handleChange} className="border p-2" /></label>
+      <h3 className="text-white bg-teal-700 p-1 font-semibold mt-2">Identification & Other Info</h3>
+      <div className="grid grid-cols-4 gap-2">
+        <label className="flex flex-col">
+          <span className="text-black  font-medium">ABHA ID</span>
+          <input name="abhaId" value={formData.abhaId} onChange={handleChange} className="border-2 p-0" /></label>
+
+        <label className="flex flex-col">
+          <span className="text-black  font-medium">Aadhar Number</span>
+         <input name="aadhar" value={formData.aadhar} onChange={handleChange} className="border-2 p-0" /></label>
+
+        <label className="flex flex-col">
+          <span className="text-black  font-medium">Occupation</span>
+        <input name="occupation" value={formData.occupation} onChange={handleChange} className="border-2 p-0" /></label>
+
+        <label className="flex flex-col">
+          <span className="text-black  font-medium">Religion</span>
+        <input name="religion" value={formData.religion} onChange={handleChange} className="border-2 p-0" /></label>
+        
+        <label className="flex flex-col">
+          <span className="text-black  font-medium">Source</span>
+          <input name="source" value={formData.source} onChange={handleChange} className="border-2 p-0" /></label>
+
+        <label className="flex flex-col">
+          <span className="text-black  font-medium">PAN No.</span>
+          <input name="pan" value={formData.pan} onChange={handleChange} className="border-2 p-0" /></label>
       </div>
 
       {/* Buttons */}
-      <div className="flex justify-end gap-4 mt-6">
+      <div className="flex justify-end gap-4 mt-6 mb-3">
         <button type="submit" className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded">Register</button>
         <button type="button" onClick={reset} className="bg-gray-700 hover:bg-gray-800 text-white px-6 py-2 rounded">Reset</button>
       </div>

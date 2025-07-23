@@ -57,10 +57,10 @@ const DepartmentMaster = () => {
   return (
     <div className="min-h-screen bg-zinc-300 flex items-center justify-center">
       <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center text-teal-600">Department Master</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center text-black">Department Master</h2>
 
         <div className="mb-4">
-          <label className="block text-gray-700 mb-1">Department Code</label>
+          <label className="block text-black mb-1">Department Code</label>
           <input
             type="text"
             value={deptCode}
@@ -70,7 +70,7 @@ const DepartmentMaster = () => {
         </div>
 
         <div className="mb-6">
-          <label className="block text-gray-700 mb-1">Department Name</label>
+          <label className="block text-black mb-1">Department Name</label>
           <input
             type="text"
             value={deptName}
