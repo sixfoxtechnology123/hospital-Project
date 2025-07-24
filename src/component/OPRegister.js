@@ -6,6 +6,15 @@ import axios from 'axios';
 // install delete icon package
 // npm install @heroicons/react
 
+  // Generate OP number like OP0001
+ let opCounter = 1;
+
+const generateOpNumber = () => {
+  const opNumber = `OP${String(opCounter).padStart(4, '0')}`;
+  opCounter++;
+  return opNumber;
+};
+
 
 const OpRegister = () => {
   const location = useLocation();
@@ -19,6 +28,7 @@ const OpRegister = () => {
   const [validTill, setValidTill] = useState('');
   const [doctors, setDoctors] = useState([]);
   const [serviceList, setServicesList] = useState([]);
+
 
 
   const formatDateTime = (dateObj) => {
@@ -64,6 +74,7 @@ const addRow = () => {
   ]);
 };
 
+
 // Handle field change
 const handleServiceChange = (index, field, value) => {
   const updated = [...services];
@@ -92,15 +103,6 @@ const grossTotal = services.reduce((sum, row) => sum + row.unitPrice * row.quant
 const discountTotal = services.reduce((sum, row) => sum + row.discountValue, 0);
 const netTotal = services.reduce((sum, row) => sum + row.netAmount, 0);
 
-
-  // Generate OP number like OP0001
- let opCounter = 1;
-
-const generateOpNumber = () => {
-  const opNumber = `OP${String(opCounter).padStart(4, '0')}`;
-  opCounter++;
-  return opNumber;
-};
 
 
     useEffect(() => {
@@ -131,6 +133,7 @@ const generateOpNumber = () => {
     updated.splice(index, 1);
     setServices(updated);
   };
+  
 
   useEffect(() => {
   const fetchDoctorsAndServices = async () => {
@@ -305,7 +308,7 @@ const generateOpNumber = () => {
               >
                 <option value="">Select</option>
                 {doctors.map((d) => (
-                  <option key={d.code} value={d.code}>{d.name}</option>
+                  <option key={d.code} value={d.code}>{d.doctorName}</option>
                 ))}
               </select>
             </td>
@@ -317,7 +320,17 @@ const generateOpNumber = () => {
                 onChange={(e) => handleServiceChange(idx, 'serviceCategory', e.target.value)}
               />
             </td>
-            <td className="border p-1">{row.unitPrice}</td>
+            {/* <td className="border p-1">{row.unitPrice}</td> */}
+           <td className="border p-1">
+            <input
+              type="number"
+              value={row.unitPrice}
+              onChange={(e) => handleServiceChange(idx, 'unitPrice', e.target.value)}
+              className="w-full px-1 border rounded"
+            />
+          </td>
+
+
             <td className="border p-1">
               <input
                 type="number"
@@ -375,7 +388,7 @@ const generateOpNumber = () => {
             onClick={addRow}
             className="bg-blue-600 text-white px-4 py-2 rounded"
           >
-            Add Row
+            Add Services
           </button>
 
           <button
