@@ -20,7 +20,7 @@ const PatientsPage = () => {
   return (
     <div className="min-h-screen bg-zinc-300">
       {/* Top Navbar */}
-      <header className="bg-teal-600 text-white p-4 shadow-md flex items-center justify-between relative">
+      <header className="bg-teal-600 font-semibold text-white p-4 shadow-md flex items-center justify-between relative">
 
         <nav className="space-x-6 text-xl relative flex items-center">
           <button onClick={() => navigate('/')} className="hover:underline">Home</button>
