@@ -28,7 +28,46 @@ const OpRegister = () => {
   const [validTill, setValidTill] = useState('');
   const [doctors, setDoctors] = useState([]);
   const [serviceList, setServicesList] = useState([]);
+  
+ const [rows, setRows] = useState([
+    {
+      opNumber: "OP0001",
+      paymentType: "Cash",
+      paymentMode: "Cash",
+      amount: "",
+      cardNo: "",
+      bank: "",
+      cardValidDate: "",
+    },
+  ]);
 
+  const handleAddRow = (e) => {
+    e.preventDefault();
+    setRows([
+      ...rows,
+      {
+        opNumber: "OP0001",
+        paymentType: "Cash",
+        paymentMode: "Cash",
+        amount: "",
+        cardNo: "",
+        bank: "",
+        cardValidDate: "",
+      },
+    ]);
+  };
+
+  const handleInputChange = (index, field, value) => {
+    const updatedRows = [...rows];
+    updatedRows[index][field] = value;
+    setRows(updatedRows);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Submitted Data:", rows);
+    alert("Submitted!");
+  };
 
 
   const formatDateTime = (dateObj) => {
@@ -48,9 +87,9 @@ const OpRegister = () => {
     serviceCode: '',
     doctorCode: '',
     serviceCategory: '',
-    unitPrice: 0,
+    unitPrice: '',
     quantity: 1,
-    discountPercent: 0,
+    discountPercent: '',
     discountValue: 0,
     netAmount: 0
   }
@@ -65,9 +104,9 @@ const addRow = () => {
       serviceCode: '',
       doctorCode: '',
       serviceCategory: '',
-      unitPrice: 0,
+      unitPrice: '',
       quantity: 1,
-      discountPercent: 0,
+      discountPercent: '',
       discountValue: 0,
       netAmount: 0
     }
@@ -103,7 +142,15 @@ const grossTotal = services.reduce((sum, row) => sum + row.unitPrice * row.quant
 const discountTotal = services.reduce((sum, row) => sum + row.discountValue, 0);
 const netTotal = services.reduce((sum, row) => sum + row.netAmount, 0);
 
-
+useEffect(() => {
+    if (category === 'General') {
+      setPaymentType('Cash');
+    } else if (category === 'TPA' || category === 'Insurance') {
+      setPaymentType('Credit');
+    } else {
+      setPaymentType('');
+    }
+  }, [category]);
 
     useEffect(() => {
       const now = new Date();
@@ -119,20 +166,29 @@ const netTotal = services.reduce((sum, row) => sum + row.netAmount, 0);
           serviceCode: '',
           doctorCode: '',
           serviceCategory: '',
-          unitPrice: 0,
+          unitPrice: '',
           quantity: 1,
-          discountPercent: 0,
+          discountPercent: '',
           discountValue: 0,
           netAmount: 0,
         }
       ]);
     }, []);
 
+    //delete services
     const deleteRow = (index) => {
     const updated = [...services];
     updated.splice(index, 1);
     setServices(updated);
   };
+
+  //delete payment
+  const deletePaymentRow = (index) => {
+  const updatedRows = [...rows];
+  updatedRows.splice(index, 1);
+  setRows(updatedRows);
+};
+
   
 
   useEffect(() => {
@@ -165,7 +221,7 @@ const netTotal = services.reduce((sum, row) => sum + row.netAmount, 0);
 
 
   return (
-      <form className="bg-white pt-1 px-2 mt-1  max-w-7xl mx-auto border border-gray-300 shadow text-sm">
+      <form onSubmit={handleSubmit} className="bg-white pt-1 px-2 mt-1  max-w-7xl mx-auto border border-gray-300 shadow text-sm">
       <div className=" text-white bg-teal-700 text-base flex justify-between p-1 font-semibold">
         <span className="ml-2">OP Registration Form</span>
       </div>
@@ -199,24 +255,11 @@ const netTotal = services.reduce((sum, row) => sum + row.netAmount, 0);
           readOnly
           className="border-2 p-1"
           />
-        </label> 
+        </label>
 
-        <label className="flex flex-col">
-          <span className="text-black font-medium">Payment Type</span>
+           <label className="flex flex-col">
+        <span className="text-black font-medium">Category</span>
         <select
-          className="border-2 p-1"
-          value={paymentType}
-          onChange={(e) => setPaymentType(e.target.value)}
-        >
-          <option value="">Select</option>
-          <option value="Cash">Cash</option>
-          <option value="Credit">Creit</option>
-          <option value="Cheque">Cheque</option>
-        </select>
-
-        </label> <label className="flex flex-col">
-          <span className="text-black font-medium">Category</span>
-          <select
           className="border-2 p-1"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
@@ -226,7 +269,20 @@ const netTotal = services.reduce((sum, row) => sum + row.netAmount, 0);
           <option value="TPA">TPA</option>
           <option value="Insurance">Insurance</option>
         </select>
-        </label>
+      </label>
+
+      <label className="flex flex-col">
+        <span className="text-black font-medium">Payment Type</span>
+        <select
+          className="border-2 p-1 cursor-not-allowed" disabled 
+          value={paymentType}
+          onChange={(e) => setPaymentType(e.target.value)}
+        >
+          <option value="">Select</option>
+          <option value="Cash">CASH</option>
+          <option value="Credit">CREDIT</option>
+        </select>
+      </label>
 
         <label className="flex flex-col">
           <span className="text-black font-medium">Department</span>
@@ -266,7 +322,7 @@ const netTotal = services.reduce((sum, row) => sum + row.netAmount, 0);
       </div>
 
     <div className=" text-white bg-teal-700 text-base flex justify-between p-1 font-semibold mt-3">
-      <span className="ml-2">Service Table</span>
+      <span className="ml-2">Service</span>
       </div>
       <table className="table-auto w-full border text-center mt-2 text-sm">
       <thead className="bg-teal-400">
@@ -386,19 +442,137 @@ const netTotal = services.reduce((sum, row) => sum + row.netAmount, 0);
           <button
             type="button"
             onClick={addRow}
-            className="bg-blue-600 text-white px-4 py-2 rounded"
-          >
+            className="bg-blue-600 text-white px-4 py-2 rounded font-semibold">
             Add Services
           </button>
 
           <button
             type="submit"
-            className="px-4 py-2 bg-blue-600 text-white rounded"
-          >
-            Payment
+            className="px-4 py-2 bg-green-600 text-white rounded font-semibold">
+            Go To Payment
           </button>
         </div>
+      <div className="overflow-x-auto">
+       <div className=" text-white bg-teal-700 text-base flex justify-between p-1 font-semibold mt-3">
+      <span className="ml-2">Payment</span>
+      </div>
+        <table className="min-w-full mt-2 bg-gray-900 text-white border border-gray-700">
+          <thead>
+            <tr className="text-left">
+              <th className="p-2 border-b border-gray-700">OPNumber</th>
+              <th className="p-2 border-b border-gray-700">Payment Type</th>
+              <th className="p-2 border-b border-gray-700">Payment Mode</th>
+              <th className="p-2 border-b border-gray-700">Amount</th>
+              <th className="p-2 border-b border-gray-700">Card No</th>
+              <th className="p-2 border-b border-gray-700">Bank</th>
+              <th className="p-2 border-b border-gray-700">Card Valid Date</th>
+              <th className="p-2 border-b border-gray-700">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row, index) => {
+              const isCard = row.paymentMode === "Card";
+              return (
+                <tr key={index} className="border-b border-gray-700">
+                  <td className="p-2">{row.opNumber}</td>
+                  <td className="p-2">
+                    <select
+                      value={row.paymentType}
+                      onChange={(e) =>
+                        handleInputChange(index, "paymentType", e.target.value)
+                      }
+                      className="bg-gray-800 text-white p-1 border border-gray-600"
+                    >
+                      <option value="Cash">Cash</option>
+                      <option value="TPA">Other</option>
+                    </select>
+                  </td>
+                  <td className="p-2">
+                    <select
+                      value={row.paymentMode}
+                      onChange={(e) =>
+                        handleInputChange(index, "paymentMode", e.target.value)
+                      }
+                      className="bg-gray-800 text-white p-1 border border-gray-600"
+                    >
+                      <option value="Cash">Cash</option>
+                      <option value="Card">Card</option>
+                      <option value="UPI">UPI</option>
+                    </select>
+                  </td>
+                  <td className="p-2">
+                    <input
+                      type="text"
+                      value={row.amount}
+                      onChange={(e) =>
+                        handleInputChange(index, "amount", e.target.value)
+                      }
+                      className="bg-gray-800 text-white p-1 border border-gray-600"
+                    />
+                  </td>
+                  <td className="p-2">
+                    <input
+                      type="text"
+                      value={row.cardNo}
+                      onChange={(e) =>
+                        handleInputChange(index, "cardNo", e.target.value)
+                      }
+                      className="bg-gray-800 text-white p-1 border border-gray-600"
+                      disabled={!isCard}
+                    />
+                  </td>
+                  <td className="p-2">
+                    <input
+                      type="text"
+                      value={row.bank}
+                      onChange={(e) =>
+                        handleInputChange(index, "bank", e.target.value)
+                      }
+                      className="bg-gray-800 text-white p-1 border border-gray-600"
+                      disabled={!isCard}
+                    />
+                  </td>
+                  <td className="p-2">
+                    <input
+                      type="month"
+                      value={row.cardValidDate}
+                      onChange={(e) =>
+                        handleInputChange(index, "cardValidDate", e.target.value)
+                      }
+                      className="bg-gray-800 text-white p-1 border border-gray-600"
+                      disabled={!isCard}
+                    />
+                  </td>
+                   <td key={index} className='text-center'>
+                      <button
+                        type="button"
+                        onClick={() => deletePaymentRow(index)}
+                        className="text-red-600 hover:text-red-800"
+                      >
+                        <TrashIcon className="h-5 w-5" />
+                      </button>
+                    </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
 
+      <div className="mt-4 mb-2 flex justify-between items-center">
+        <button
+          className="bg-blue-600 hover:bg-blue-700 font-semibold text-white px-4 py-2 rounded"
+          onClick={handleAddRow}
+        >
+          Add Payment
+        </button>
+        <button
+          type="submit"
+          className="bg-green-600 font-semibold hover:bg-green-700 text-white px-4 py-2 rounded"
+        >
+          Submit
+        </button>
+      </div>
 
       </form>
     );
