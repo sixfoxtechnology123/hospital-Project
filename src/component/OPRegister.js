@@ -18,7 +18,7 @@ const generateOpNumber = () => {
 
 const OpRegister = () => {
   const location = useLocation();
-  const { mrNumber} = location.state || {};  //  Get mrNumber from route state
+  const { mrNumber, patientData } = location.state || {}; //  Get mrNumber from route state
   const [departments, setDepartments] = useState([]);
   const [opNumber, setOpNumber] = useState('');
   const [dateTime, setDateTime] = useState('');
@@ -28,7 +28,24 @@ const OpRegister = () => {
   const [validTill, setValidTill] = useState('');
   const [doctors, setDoctors] = useState([]);
   const [serviceList, setServicesList] = useState([]);
-  
+  const [name, setName] = useState('');
+  const [mobile, setMobile] = useState('');
+  const [address, setAddress] = useState('');
+  const [activeSection, setActiveSection] = useState('');
+
+const toggleSection = (section) => {
+  setActiveSection((prevSection) => (prevSection === section ? '' : section));
+};
+
+
+useEffect(() => {
+  if (patientData) {
+    setName(patientData.name || '');
+    setMobile(patientData.mobile || '');
+    setAddress(patientData.address || '');
+  }
+}, [patientData]);
+
  const [rows, setRows] = useState([
     {
       opNumber: "OP0001",
@@ -226,9 +243,10 @@ useEffect(() => {
         <span className="ml-2">OP Registration Form</span>
       </div>
 
-      <div className="md:grid grid-cols-4 gap-2 mb-2">
+      <div className="md:grid grid-cols-5 gap-2 mb-2">
       <label className="flex flex-col col-span-1">
-          <span className="text-black font-medium">MR Number</span>
+          <span className="text-black font-medium cursor-not-allowed">MR Number</span>
+          
           <input
             type="text"
             value={mrNumber}
@@ -238,7 +256,7 @@ useEffect(() => {
         </label>
 
         <label className="flex flex-col">
-          <span className="text-black font-medium">OP Number</span>
+          <span className="text-black font-medium cursor-not-allowed">OP Number</span>
          <input
           type="text"
           value={opNumber}
@@ -248,7 +266,7 @@ useEffect(() => {
         </label>
 
          <label className="flex flex-col">
-          <span className="text-black font-medium">OP Date & Time</span>
+          <span className="text-black font-medium cursor-not-allowed">OP Date & Time</span>
          <input
           type="text"
           value={dateTime}
@@ -257,7 +275,9 @@ useEffect(() => {
           />
         </label>
 
-           <label className="flex flex-col">
+     
+       <label className="flex gap-1 w-full">
+         <div className="flex flex-col w-2/4">
         <span className="text-black font-medium">Category</span>
         <select
           className="border-2 p-1"
@@ -269,9 +289,9 @@ useEffect(() => {
           <option value="TPA">TPA</option>
           <option value="Insurance">Insurance</option>
         </select>
-      </label>
+      </div>
 
-      <label className="flex flex-col">
+      <div className="flex flex-col w-2/4">
         <span className="text-black font-medium">Payment Type</span>
         <select
           className="border-2 p-1 cursor-not-allowed" disabled 
@@ -282,8 +302,8 @@ useEffect(() => {
           <option value="Cash">CASH</option>
           <option value="Credit">CREDIT</option>
         </select>
+        </div>
       </label>
-
         <label className="flex flex-col">
           <span className="text-black font-medium">Department</span>
           <select
@@ -301,7 +321,7 @@ useEffect(() => {
         </label>
 
          <label className="flex flex-col">
-          <span className="text-black font-medium">Visit Type</span>
+          <span className="text-black font-medium cursor-not-allowed">Visit Type</span>
           <input
           type="text"
           value="OP"
@@ -319,11 +339,68 @@ useEffect(() => {
           className="border-2 p-1"
         />
         </label> 
+        <label className="flex flex-col col-span-1">
+          <span className="text-black font-medium cursor-not-allowed">Name</span>
+          <input
+            type="text"
+            value={name}
+            readOnly
+            className="border-2 p-1"
+          />
+        </label>
+
+        <label className="flex flex-col col-span-1">
+          <span className="text-black font-medium cursor-not-allowed">Mobile No.</span>
+          <input
+            type="text"
+            value={mobile}
+            readOnly
+            className="border-2 p-1"
+          />
+        </label>
+
+        <label className="flex flex-col col-span-1">
+          <span className="text-black font-medium cursor-not-allowed">Address</span>
+          <input
+            type="text"
+            value={address}
+            readOnly
+            className="border-2 p-1"
+          />
+        </label>
+
+      </div>
+       <div className="flex gap-4 my-4">
+        <button
+          type="button"
+          onClick={() => toggleSection('service')}
+          className={`px-4 py-1 rounded font-medium transition-colors duration-300 ${
+            activeSection === 'service'
+              ? 'bg-teal-700 text-white'
+              : 'bg-gray-200 text-black hover:bg-teal-100'
+          }`}
+        >
+          Service
+        </button>
+
+        <button
+          type="button"
+          onClick={() => toggleSection('payment')}
+          className={`px-4 py-1 rounded font-medium transition-colors duration-300 ${
+            activeSection === 'payment'
+              ? 'bg-green-700 text-white'
+              : 'bg-gray-200 text-black hover:bg-green-100'
+          }`}
+        >
+          Payment
+        </button>
       </div>
 
-    <div className=" text-white bg-teal-700 text-base flex justify-between p-1 font-semibold mt-3">
+        {activeSection === 'service' && (
+        <>
+      {/* <div className=" text-white bg-teal-700 text-base flex justify-between p-1 font-semibold mt-3">
       <span className="ml-2">Service</span>
-      </div>
+      </div> */}
       <table className="table-auto w-full border text-center mt-2 text-sm">
       <thead className="bg-teal-400">
         <tr>
@@ -343,7 +420,7 @@ useEffect(() => {
       <tbody>
         {services.map((row, idx) => (
           <tr key={idx}>
-            <td className="border p-1">{row.opNumber}</td>
+            <td className="border p-1"></td>
             <td className="border p-1">
               <select
                 className="w-full border"
@@ -419,8 +496,7 @@ useEffect(() => {
         ))}
           </tbody>
         </table>
-
-      <div className="mt-4 flex justify-end">
+         <div className="mt-4 flex justify-end">
         <div className="flex flex-col gap-2 text-sm w-64">
           <div className="border rounded-md px-4 py-2 bg-gray-50 shadow flex justify-between">
             <span className="text-gray-600">Gross Value:</span>
@@ -448,14 +524,19 @@ useEffect(() => {
 
           <button
             type="submit"
+             onClick={() => setActiveSection('payment')}
             className="px-4 py-2 bg-green-600 text-white rounded font-semibold">
             Go To Payment
           </button>
         </div>
-      <div className="overflow-x-auto">
-       <div className=" text-white bg-teal-700 text-base flex justify-between p-1 font-semibold mt-3">
+        </>
+      )}
+      {activeSection === 'payment' && (
+        <>
+        <div className="overflow-x-auto">
+       {/* <div className=" text-white bg-teal-700 text-base flex justify-between p-1 font-semibold mt-3">
       <span className="ml-2">Payment</span>
-      </div>
+      </div> */}
         <table className="min-w-full mt-2 bg-gray-900 text-white border border-gray-700">
           <thead>
             <tr className="text-left">
@@ -558,8 +639,7 @@ useEffect(() => {
           </tbody>
         </table>
       </div>
-
-      <div className="mt-4 mb-2 flex justify-between items-center">
+          <div className="mt-4 mb-2 flex justify-between items-center">
         <button
           className="bg-blue-600 hover:bg-blue-700 font-semibold text-white px-4 py-2 rounded"
           onClick={handleAddRow}
@@ -573,7 +653,8 @@ useEffect(() => {
           Submit
         </button>
       </div>
-
+        </>
+      )}
       </form>
     );
 };

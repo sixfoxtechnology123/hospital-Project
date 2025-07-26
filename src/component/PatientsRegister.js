@@ -38,6 +38,8 @@ const PatientsRegister = () => {
   const [mrNumber, setMrNumber] = useState('');
   const [manualAgeInput, setManualAgeInput] = useState(false);
   const [manualDOBInput, setManualDOBInput] = useState(false);
+  const [navigateData, setNavigateData] = useState(null);
+
 
   // Handle field changes
   const handleChange = (e) => {
@@ -145,9 +147,10 @@ const PatientsRegister = () => {
 
     const mr = res.data?.mrNumber || 'Unknown';
 
-    setMrNumber(mr); // This must be correct
+    setMrNumber(mr);
+    const patientSnapshot = { ...formData }; 
     setShowSuccessModal(true);
-
+    setNavigateData(patientSnapshot); 
 
     reset();
   } catch (err) {
@@ -174,10 +177,11 @@ const PatientsRegister = () => {
                   
                   state: {
                     mrNumber: mrNumber,
-                    patientData: formData,
+                    patientData: navigateData,
                     
                   }
                 });
+                 //reset();
               }}
               className="mt-6 px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded"
             >

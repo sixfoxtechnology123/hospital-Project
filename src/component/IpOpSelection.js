@@ -10,8 +10,12 @@ const IpOpSelection = () => {
   const goToOP = () => {
     navigate('/op-registration', {
       state: {
-        mrNumber,
-        patientData,
+      mrNumber,
+      patientData: {
+      name: patientData.name,
+      mobile: patientData.mobile,
+      address: patientData.address1
+    }
       }
     });
   };
