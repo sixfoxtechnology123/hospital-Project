@@ -32,11 +32,12 @@ const OpRegister = () => {
   const [mobile, setMobile] = useState('');
   const [address, setAddress] = useState('');
   const [activeSection, setActiveSection] = useState('');
+  const [paymentAmount, setPaymentAmount] = useState('');
+  const [netTotals, setNetTotal] = useState(0);
 
 const toggleSection = (section) => {
   setActiveSection((prevSection) => (prevSection === section ? '' : section));
 };
-
 
 useEffect(() => {
   if (patientData) {
@@ -70,7 +71,7 @@ useEffect(() => {
         cardNo: "",
         bank: "",
         cardValidDate: "",
-      },
+      }
     ]);
   };
 
@@ -80,12 +81,53 @@ useEffect(() => {
     setRows(updatedRows);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Submitted Data:", rows);
-    alert("Submitted!");
-  };
 
+const handleSubmit = (e) => {
+  e.preventDefault();
+
+  // Parse Net Total (from services)
+  const net = Number(netTotal);
+
+  // Calculate Total Payment (from payment rows)
+  const totalPayment = rows.reduce((sum, row) => {
+    const amt = Number(row.amount);
+    return sum + (isNaN(amt) ? 0 : amt);
+  }, 0);
+
+  // Validation
+  if (net === totalPayment) {
+    alert("Submitted successfully.");
+    // Reset payment and service section
+    setServices([
+    {
+    opNumber: opNumber,
+    serviceCode: '',
+    doctorCode: '',
+    serviceCategory: '',
+    unitPrice: '',
+    quantity: 1,
+    discountPercent: '',
+    discountValue: 0,
+    netAmount: 0
+  }
+    ]);
+    setRows([
+       {
+      opNumber: "OP0001",
+      paymentType: "Cash",
+      paymentMode: "Cash",
+      amount: "",
+      cardNo: "",
+      bank: "",
+      cardValidDate: "",
+    }
+    ]);
+    setNetTotal(0);
+
+  } else {
+    alert(`Mismatch. Net Amount: ₹${net}, Payment Amount: ₹${totalPayment}`);
+  }
+};
 
   const formatDateTime = (dateObj) => {
     const options = {
@@ -205,8 +247,6 @@ useEffect(() => {
   updatedRows.splice(index, 1);
   setRows(updatedRows);
 };
-
-  
 
   useEffect(() => {
   const fetchDoctorsAndServices = async () => {
@@ -480,8 +520,8 @@ useEffect(() => {
                 onChange={(e) => handleServiceChange(idx, 'discountPercent', e.target.value)}
               />
             </td>
-            <td className="border p-1">{row.discountValue.toFixed(2)}</td>
-            <td className="border p-1">{row.netAmount.toFixed(2)}</td>
+           <td className="border p-1">{Number(row.discountValue || 0).toFixed(2)}</td>
+            <td className="border p-1">{Number(row.netAmount || 0).toFixed(2)}</td>
             <td className="border p-1 text-center">
             <button
               type="button"
@@ -531,6 +571,8 @@ useEffect(() => {
         </div>
         </>
       )}
+
+
       {activeSection === 'payment' && (
         <>
         <div className="overflow-x-auto">
@@ -555,7 +597,8 @@ useEffect(() => {
               const isCard = row.paymentMode === "Card";
               return (
                 <tr key={index} className="border-b border-gray-700">
-                  <td className="p-2">{row.opNumber}</td>
+                  <td className="p-2"></td>  
+                  {/* {row.opNumber} */}
                   <td className="p-2">
                     <select
                       value={row.paymentType}
@@ -646,6 +689,13 @@ useEffect(() => {
         >
           Add Payment
         </button>
+        <input
+          type="number"
+          value={paymentAmount}
+          onChange={(e) => setPaymentAmount(e.target.value)}
+          className="border p-1"
+        />
+
         <button
           type="submit"
           className="bg-green-600 font-semibold hover:bg-green-700 text-white px-4 py-2 rounded"
