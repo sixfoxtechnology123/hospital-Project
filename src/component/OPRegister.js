@@ -185,20 +185,33 @@ const handleServiceChange = (index, field, value) => {
 
   const qty = parseFloat(updated[index].quantity || 0);
   const price = parseFloat(updated[index].unitPrice || 0);
-  const discountPercent = parseFloat(updated[index].discountPercent || 0);
   const gross = qty * price;
-  const discountValue = (gross * discountPercent) / 100;
+
+  let discountPercent = parseFloat(updated[index].discountPercent || 0);
+  let discountValue = parseFloat(updated[index].discountValue || 0);
+
+  if (field === 'discountPercent') {
+    discountValue = (gross * discountPercent) / 100;
+    updated[index].discountValue = discountValue;
+  } else if (field === 'discountValue') {
+    discountPercent = gross ? (discountValue / gross) * 100 : 0;
+    updated[index].discountPercent = discountPercent;
+  }
+
   const net = gross - discountValue;
 
-  updated[index].discountValue = discountValue;
   updated[index].netAmount = net;
-
   setServices(updated);
 };
 
+
 // Calculate totals
 const grossTotal = services.reduce((sum, row) => sum + row.unitPrice * row.quantity, 0);
-const discountTotal = services.reduce((sum, row) => sum + row.discountValue, 0);
+const discountTotal = services.reduce(
+  (sum, row) => sum + Number(row.discountValue || 0),
+  0
+);
+
 const netTotal = services.reduce((sum, row) => sum + row.netAmount, 0);
 
 useEffect(() => {
@@ -520,7 +533,22 @@ useEffect(() => {
                 onChange={(e) => handleServiceChange(idx, 'discountPercent', e.target.value)}
               />
             </td>
-           <td className="border p-1">{Number(row.discountValue || 0).toFixed(2)}</td>
+          {services.map((row, index) => (
+              <tr key={index}>
+                {/* All your <td> cells here */}
+                <td className="border p-1">
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={row.discountValue || ''}
+                    onChange={(e) => handleServiceChange(index, 'discountValue', e.target.value)}
+                    className="w-full px-1 border border-gray-300 rounded"
+                  />
+                </td>
+              </tr>
+            ))}
+
+
             <td className="border p-1">{Number(row.netAmount || 0).toFixed(2)}</td>
             <td className="border p-1 text-center">
             <button
