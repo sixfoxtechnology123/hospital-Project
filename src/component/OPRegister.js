@@ -114,7 +114,6 @@ const handleSubmit = async (e) => {
       };
 
       await axios.post('http://localhost:5000/api/op/register', formData);
-
       alert('Submitted successfully to backend!');
 
       // Reset
@@ -490,8 +489,8 @@ useEffect(() => {
           <th className="border p-1">Unit Price</th>
           <th className="border p-1 w-20">Quantity</th>
           <th className="border p-1 w-24">Discount %</th>
-          <th className="border p-1">Disc Value</th>
-          <th className="border p-1">Net value</th>
+          <th className="border p-1 w-28">Disc Value</th>
+          <th className="border p-1 w-40">Net value</th>
           <th className="border p-1">Action</th>
 
         </tr>
@@ -559,22 +558,15 @@ useEffect(() => {
                 onChange={(e) => handleServiceChange(idx, 'discountPercent', e.target.value)}
               />
             </td>
-          {services.map((row, index) => (
-              <tr key={index}>
-                {/* All your <td> cells here */}
                 <td className="border p-1">
                   <input
                     type="number"
                     step="0.01"
                     value={row.discountValue || ''}
-                    onChange={(e) => handleServiceChange(index, 'discountValue', e.target.value)}
+                    onChange={(e) => handleServiceChange(idx, 'discountValue', e.target.value)}
                     className="w-full px-1 border border-gray-300 rounded"
                   />
                 </td>
-              </tr>
-            ))}
-
-
             <td className="border p-1">{Number(row.netAmount || 0).toFixed(2)}</td>
             <td className="border p-1 text-center">
             <button

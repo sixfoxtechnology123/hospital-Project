@@ -22,11 +22,16 @@ const paymentSchema = new mongoose.Schema({
 const opSchema = new mongoose.Schema({
   mrNumber: String,
   opNumber: String,
+  dateTime: {
+            type: String,
+            default: () => new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })},
   category: String,
   paymentType: String,
   department: String,
-  dateTime: { type: Date },
-  validTill: { type: Date },
+  visittype:String,
+  validTill: {
+            type: String,
+            default: () => new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })},
   name: String,
   mobile: String,
   address: String,
@@ -35,6 +40,6 @@ const opSchema = new mongoose.Schema({
   grossTotal: Number,
   discountTotal: Number,
   netTotal: Number
-}, { timestamps: true });
+}, { timestamps: false });
 
 module.exports = mongoose.model('OpVisit', opSchema);
