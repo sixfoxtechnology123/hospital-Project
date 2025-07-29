@@ -34,6 +34,7 @@ const OpRegister = () => {
   const [activeSection, setActiveSection] = useState('');
   const [paymentAmount, setPaymentAmount] = useState('');
   const [netTotals, setNetTotal] = useState(0);
+  
 
 const toggleSection = (section) => {
   setActiveSection((prevSection) => (prevSection === section ? '' : section));
@@ -82,52 +83,77 @@ useEffect(() => {
   };
 
 
-const handleSubmit = (e) => {
+const handleSubmit = async (e) => {
   e.preventDefault();
 
-  // Parse Net Total (from services)
   const net = Number(netTotal);
 
-  // Calculate Total Payment (from payment rows)
   const totalPayment = rows.reduce((sum, row) => {
     const amt = Number(row.amount);
     return sum + (isNaN(amt) ? 0 : amt);
   }, 0);
 
-  // Validation
   if (net === totalPayment) {
-    alert("Submitted successfully.");
-    // Reset payment and service section
-    setServices([
-    {
-    opNumber: opNumber,
-    serviceCode: '',
-    doctorCode: '',
-    serviceCategory: '',
-    unitPrice: '',
-    quantity: 1,
-    discountPercent: '',
-    discountValue: 0,
-    netAmount: 0
-  }
-    ]);
-    setRows([
-       {
-      opNumber: "OP0001",
-      paymentType: "Cash",
-      paymentMode: "Cash",
-      amount: "",
-      cardNo: "",
-      bank: "",
-      cardValidDate: "",
+    try {
+      const formData = {
+        mrNumber,
+        opNumber,
+        dateTime,
+        category,
+        paymentType,
+        department,
+        validTill,
+        name,
+        mobile,
+        address,
+        services,
+        payments: rows,
+        grossTotal,
+        discountTotal,
+        netTotal
+      };
+
+      await axios.post('http://localhost:5000/api/op/register', formData);
+
+      alert('Submitted successfully to backend!');
+
+      // Reset
+      setServices([
+        {
+          opNumber: opNumber,
+          serviceCode: '',
+          doctorCode: '',
+          serviceCategory: '',
+          unitPrice: '',
+          quantity: 1,
+          discountPercent: '',
+          discountValue: 0,
+          netAmount: 0
+        }
+      ]);
+      setRows([
+        {
+          opNumber: opNumber,
+          paymentType: 'Cash',
+          paymentMode: 'Cash',
+          amount: '',
+          cardNo: '',
+          bank: '',
+          cardValidDate: ''
+        }
+      ]);
+      setNetTotal(0);
+
+    } catch (err) {
+      console.error("Error saving OP data:", err);
+      alert("Failed to submit. Check console for details.");
     }
-    ]);
-    setNetTotal(0);
 
   } else {
     alert(`Mismatch. Net Amount: ₹${net}, Payment Amount: ₹${totalPayment}`);
   }
 };
+
 
   const formatDateTime = (dateObj) => {
     const options = {

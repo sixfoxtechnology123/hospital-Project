@@ -8,6 +8,7 @@ const doctorRoutes = require('./routes/doctorRoutes');
 const departmentRoutes = require('./routes/departmentRoutes');
 const serviceRoutes = require('./routes/serviceRoutes');
 const serviceRateRoutes = require('./routes/serviceRateRoutes');
+const opRoutes = require('./routes/opRegistrationRoutes');
 
 
 
@@ -27,6 +28,7 @@ app.use('/api/doctors', doctorRoutes);
 app.use('/api/departments', departmentRoutes);
 app.use('/api/services', serviceRoutes);
 app.use('/api/service-rates', serviceRateRoutes);
+app.use('/api/op', opRoutes);
 
 
 const PORT = process.env.PORT || 5000;
