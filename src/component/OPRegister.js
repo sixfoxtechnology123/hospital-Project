@@ -39,6 +39,7 @@ const OpRegister = () => {
 const toggleSection = (section) => {
   setActiveSection((prevSection) => (prevSection === section ? '' : section));
 };
+console.log(netTotals)
 
 useEffect(() => {
   if (patientData) {
@@ -114,7 +115,7 @@ const handleSubmit = async (e) => {
       };
 
       await axios.post('http://localhost:5000/api/op/register', formData);
-      alert('Submitted successfully to backend!');
+      alert('Submitted successfully!');
 
       // Reset
       setServices([

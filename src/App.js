@@ -8,6 +8,7 @@ import DepartmentMaster from './pages/DepartmentMaster';
 import DoctorMaster from './pages/DoctorMaster';
 import ServiceMaster from './pages/ServiceMaster';
 import ServiceRateMaster from './pages/ServiceRateMaster';
+import IPRegistration from './component/IPRegistration';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/PatientsRegister" element={<PatientsRegister />} />
         <Route path="/select" element={<OpIpSelection />} />
         <Route path="/op-registration" element={<OpForm />} />
+        <Route path="/ip-registration" element={<IPRegistration/>} />
         <Route path="/departmentMaster" element={<DepartmentMaster/>} />
         <Route path="/doctorMaster" element={<DoctorMaster/>} />
         <Route path="/serviceMaster" element={<ServiceMaster/>} />
