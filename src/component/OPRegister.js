@@ -316,7 +316,7 @@ useEffect(() => {
 
 
   return (
-      <form onSubmit={handleSubmit} className="bg-white pt-1 px-2 mt-1  max-w-7xl mx-auto border border-gray-300 shadow text-sm">
+      <form onSubmit={handleSubmit} className="bg-white pt-1 px-2 mt-1 w-screen mx-auto border border-gray-300 shadow text-sm">
       <div className=" text-white bg-teal-700 text-base flex justify-between p-1 font-semibold">
         <span className="ml-2">OP Registration Form</span>
       </div>

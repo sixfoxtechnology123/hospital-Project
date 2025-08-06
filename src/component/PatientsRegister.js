@@ -160,7 +160,7 @@ const PatientsRegister = () => {
 
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white pt-1 px-2  max-w-7xl mx-auto border-2 border-2-gray-300 shadow text-sm">
+    <form onSubmit={handleSubmit} className="bg-white pt-1 px-2  w-screen mx-auto border-2 border-2-gray-300 shadow text-sm">
 
       {/* MR Success Message */}
       {showSuccessModal && (
