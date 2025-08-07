@@ -195,7 +195,7 @@ const PatientsRegister = () => {
 
 
       {/* Your existing form starts here */}
-      <h3 className="text-white bg-teal-700 p-1 font-semibold mt-1">Basic Detailsssss</h3>
+      <h3 className="text-white bg-teal-700 p-1 font-semibold mt-1">Basic Details</h3>
        <div className="grid grid-cols-5 gap-2">
          <label className="flex flex-col">
           <span className="text-black font-medium">Name<span className="text-red-500">*</span></span>
