@@ -6,6 +6,6 @@ const wardSchema = new mongoose.Schema({
   departmentId: { type: String, required: true },
   type: { type: String, required: true },
   status: { type: String, default: 'Active' }
-}, { timestamps: true });
+}, { timestamps: false });
 
 module.exports = mongoose.model('Wardmaster', wardSchema);
