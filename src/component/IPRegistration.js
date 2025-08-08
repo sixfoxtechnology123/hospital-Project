@@ -110,8 +110,19 @@ const [patientData, setPatientData] = useState(passedPatientData || null);
   }, [patientData]);
 console.log('MR Number:', mrNumber); 
   // Dropdown options
-  useEffect(() => {
-    setDepartments(['GENERAL MEDICINE', 'EYE SURGERY']);
+    useEffect(() => {
+  const fetchDepartments = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/departments');
+      const data = await response.json();
+      setDepartments(data.map((dept) => dept.deptName)); // only deptName
+    } catch (err) {
+      console.error('Failed to fetch departments:', err);
+    }
+  };
+
+  fetchDepartments();
+
     setDoctors(['Dr. A Kumar', 'Dr. B Mehta', 'Dr. C Singh']);
     setPlans(['GENERAL', 'CORPORATE', 'SCHEME']);
     setPackages(['CATARACT PACKAGE', 'EYE SURGERY PACKAGE']);
@@ -316,8 +327,10 @@ console.log('MR Number:', mrNumber);
         <label className="flex flex-col">
         <span className="font-medium">Department</span>
         <select name="department" className="border-2 p-0" onChange={handleChange}>
-            <option value="">Select</option>
-            {departments.map((d, i) => <option key={i} value={d}>{d}</option>)}
+          <option value="">Select</option>
+          {departments.map((d, i) => (
+            <option key={i} value={d}>{d}</option>
+          ))}
         </select>
         </label>
 
