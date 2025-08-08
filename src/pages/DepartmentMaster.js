@@ -56,7 +56,7 @@ const DepartmentMaster = () => {
 
   return (
     <div className="min-h-screen bg-zinc-300 flex items-center justify-center">
-      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
+      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-sm">
         <h2 className="text-2xl font-bold mb-6 text-center text-black">Department Master</h2>
 
         <div className="mb-4">

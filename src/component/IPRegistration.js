@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import axios from 'axios';
+
 
 const IPRegistration = () => {
  const location = useLocation();
 const {mrNumber,patientData: passedPatientData } = location.state || {};
 const [patientData, setPatientData] = useState(passedPatientData || null);
-
-
   const [formData, setFormData] = useState({
     mrno: '',
     ipNumber: '',
@@ -45,14 +45,15 @@ const [patientData, setPatientData] = useState(passedPatientData || null);
     name: ''
   });
 
+  const [doctorName, setDoctorName] = useState([]);
   const [departments, setDepartments] = useState([]);
-  const [doctors, setDoctors] = useState([]);
+  //const [doctors, setDoctors] = useState([]);
   const [plans, setPlans] = useState([]);
   const [packages, setPackages] = useState([]);
   const [wards, setWards] = useState([]);
   const [beds, setBeds] = useState([]);
 
-  // 🔁 Optionally fetch full data from backend if not passed from router
+  // Optionally fetch full data from backend if not passed from router
   useEffect(() => {
     const fetchPatientDetails = async () => {
       try {
@@ -72,7 +73,6 @@ const [patientData, setPatientData] = useState(passedPatientData || null);
   // 🧠 Auto-fill form when patientData is ready
   useEffect(() => {
     if (!patientData) return;
-
     const now = new Date();
     const date = now.toLocaleDateString('en-GB'); // e.g., 07/08/2025
     const time = now.toLocaleTimeString('en-US', {
@@ -108,7 +108,7 @@ const [patientData, setPatientData] = useState(passedPatientData || null);
       abhaId: patientData?.abhaId || ''
     }));
   }, [patientData]);
-console.log('MR Number:', mrNumber); 
+  console.log('MR Number:', mrNumber); 
   // Dropdown options
     useEffect(() => {
   const fetchDepartments = async () => {
@@ -120,13 +120,21 @@ console.log('MR Number:', mrNumber);
       console.error('Failed to fetch departments:', err);
     }
   };
-
   fetchDepartments();
 
-    setDoctors(['Dr. A Kumar', 'Dr. B Mehta', 'Dr. C Singh']);
-    setPlans(['GENERAL', 'CORPORATE', 'SCHEME']);
-    setPackages(['CATARACT PACKAGE', 'EYE SURGERY PACKAGE']);
-    setWards(['MALE WARD 1', 'FEMALE WARD 2']);
+    const getDoctorName = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/doctors');
+      console.log("Doctor : ", response.data); 
+      setDoctorName(response.data.map(doc => doc.doctorName));
+    } catch (error) {
+      console.error('Error fetching doctor names:', error);
+    }
+  };
+  getDoctorName();
+    // setPlans(['GENERAL', 'CORPORATE', 'SCHEME']);
+    // setPackages(['CATARACT PACKAGE', 'EYE SURGERY PACKAGE']);
+    // setWards(['MALE WARD 1', 'FEMALE WARD 2']);
   }, []);
 
   // Auto-update beds when ward changes
@@ -337,18 +345,38 @@ console.log('MR Number:', mrNumber);
         {/* Consultant */}
         <label className="flex flex-col">
         <span className="font-medium">Consultant (Primary Doctor)</span>
-        <select name="consultant" className="border-2 p-0" onChange={handleChange}>
+        <select
+            name="consultant"
+            className="border-2 p-0"
+            onChange={handleChange}
+            value={formData.consultant}
+          >
             <option value="">Select</option>
-            {doctors.map((d, i) => <option key={i} value={d}>{d}</option>)}
+            {doctorName.map((name, index) => (
+              <option key={index} value={name}>
+                {name}
+              </option>
+            ))}
           </select>
+
+
        </label>
         {/* Secondary Consultant */}
        <label className="flex flex-col">
         <span className="font-medium">S. Consultant (Optional)</span>
-        <select name="secondaryConsultant" className="border-2 p-0" onChange={handleChange}>
-            <option value="">Select</option>
-            {doctors.map((d, i) => <option key={i} value={d}>{d}</option>)}
-          </select>
+        <select
+          name="consultant"
+          className="border-2 p-0"
+          onChange={handleChange}
+          value={formData.consultant}
+        >
+          <option value="">Select</option>
+          {doctorName.map((name, index) => (
+            <option key={index} value={name}>
+              {name}
+            </option>
+          ))}
+        </select>
         </label>
 
           {/* Plan */}

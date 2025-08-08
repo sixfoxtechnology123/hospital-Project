@@ -9,6 +9,8 @@ import DoctorMaster from './pages/DoctorMaster';
 import ServiceMaster from './pages/ServiceMaster';
 import ServiceRateMaster from './pages/ServiceRateMaster';
 import IPRegistration from './component/IPRegistration';
+import WardMaster from './pages/WardMaster';
+import WardList from './pages/WardList';
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
         <Route path="/doctorMaster" element={<DoctorMaster/>} />
         <Route path="/serviceMaster" element={<ServiceMaster/>} />
         <Route path="/serviceRateMaster" element={<ServiceRateMaster/>} />
+        <Route path="/wards" element={<WardMaster/>} />
+        <Route path="/wardList" element={<WardList/>} />
         
       </Routes>
     </div>

@@ -79,7 +79,7 @@ const fetchDoctors = async () => {
 
   return (
     <div className="min-h-screen bg-zinc-300 py-10">
-      <div className="max-w-4xl mx-auto bg-white shadow-md p-6 rounded">
+      <div className="max-w-2xl mx-auto bg-white shadow-md p-6 rounded">
         <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Doctor Master</h2>
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
