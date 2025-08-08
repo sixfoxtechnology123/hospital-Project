@@ -13,34 +13,32 @@ const WardMaster = () => {
   const [departments, setDepartments] = useState([]);
 
   // Fetch departments and latest ward ID on mount
-    useEffect(() => {
-      const fetchDepartments = async () => {
-        try {
-          const response = await fetch('http://localhost:5000/api/departments');
-          const data = await response.json();
-          setDepartments(data.map((dept) => dept.deptName)); // only deptName
-        } catch (err) {
-          console.error('Failed to fetch departments:', err);
-        }
-      };
-      fetchDepartments();
-
-
-    // Fetch latest ward to generate next wardId
-    axios.get('http://localhost:5000/api/wards/latest') // <-- Make sure this route exists in backend
-      .then(res => {
-        const lastId = res.data?.wardId || 'WARD0000';
-        const newId = generateNextWardId(lastId);
-        setWards(prev => ({ ...prev, wardId: newId }));
-      })
-      .catch(err => console.error('Failed to fetch latest ward:', err));
-  }, []);
-
-  // Function to generate next ward ID
-  const generateNextWardId = (lastId) => {
-    const number = parseInt(lastId.replace('WARD', '')) + 1;
-    return `WARD${number.toString().padStart(4, '0')}`;
+  useEffect(() => {
+  // Fetch departments
+  const fetchDepartments = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/departments');
+      const data = await response.json();
+      setDepartments(data);
+    } catch (err) {
+      console.error('Failed to fetch departments:', err);
+    }
   };
+  fetchDepartments();
+
+  // Fetch next ward ID
+  const fetchNextWardId = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/wards/latest');
+      const nextWardId = response.data?.wardId || 'WARD0001';
+      setWards((prev) => ({ ...prev, wardId: nextWardId }));
+    } catch (err) {
+      console.error('Error getting ward ID:', err);
+    }
+  };
+  fetchNextWardId();
+}, []);
+
 
   //  Handle form changes
   const handleChange = (e) => {
@@ -102,12 +100,22 @@ const WardMaster = () => {
         {/* Department */}
         <div className="col-span-1">
           <label className="block font-medium">Department</label>
-         <select name="department" className="w-full border border-gray-300 p-1 rounded" onChange={handleChange}>
-          <option value="">Select</option>
-          {departments.map((d, i) => (
-            <option key={i} value={d}>{d}</option>
-          ))}
-        </select>
+        <select
+        name="departmentId"
+        value={wards.departmentId}
+        onChange={handleChange}
+        className="w-full border border-gray-300 p-1 rounded"
+        required
+      >
+        <option value="">Select</option>
+        {departments.map((dept) => (
+          <option key={dept._id} value={dept._id}>
+            {dept.deptName}
+          </option>
+        ))}
+      </select>
+
+
         </div>
 
     {/* Type */}
