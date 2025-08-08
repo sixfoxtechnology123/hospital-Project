@@ -3,8 +3,7 @@ import { useLocation } from 'react-router-dom';
 
 const IPRegistration = () => {
  const location = useLocation();
-const { patientData: passedPatientData } = location.state || {};
-const mrNumber = passedPatientData?.mrno || ''; 
+const {mrNumber,patientData: passedPatientData } = location.state || {};
 const [patientData, setPatientData] = useState(passedPatientData || null);
 
 
@@ -90,7 +89,6 @@ const [patientData, setPatientData] = useState(passedPatientData || null);
       admissionDate: date,
       admissionTime: time,
       ipNumber,
-      mrno: patientData?.mrno || '',
       name: patientData?.name || '',
       ageSex: patientData?.ageSex || '',
       fatherOrSpouse: patientData?.fatherOrSpouse || '',
@@ -183,7 +181,7 @@ console.log('MR Number:', mrNumber);
           <label className="block font-semibold">MR Number</label>
           <input
             type="text"
-            value={formData.mrno}
+            value={mrNumber}
             readOnly
             className="w-full border-2 p-0 rounded"
           />

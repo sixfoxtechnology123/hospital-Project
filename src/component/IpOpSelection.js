@@ -6,7 +6,6 @@ const IpOpSelection = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // ✅ SAFELY extract state data
   const locationState = location.state || {};
   const patientData = locationState.patientData || {};
   const mrNumber = locationState.mrNumber || patientData.mrno || '';
@@ -14,8 +13,8 @@ const IpOpSelection = () => {
   const goToIP = () => {
     navigate('/ip-registration', {
       state: {
+        mrNumber,
         patientData: {
-          mrno: patientData?.mrno || '', 
           name: patientData?.name || '',
           age: patientData?.age || '',
           sex: patientData?.sex || '',
