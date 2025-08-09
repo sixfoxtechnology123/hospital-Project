@@ -46,25 +46,40 @@ const WardMaster = () => {
     setWards({ ...wards, [name]: value });
   };
 
-  // Handle form submit
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      // Check if wardId already exists
-      const exists = await axios.get(`http://localhost:5000/api/wards/check/${wards.wardId}`);
-      if (exists.data?.exists) {
-        alert(`Ward ID ${wards.wardId} already exists. Please refresh the page.`);
-        return;
-      }
-
-      // Submit ward
-      await axios.post('http://localhost:5000/api/wards', wards);
-      alert('Ward saved successfully!');
-    } catch (err) {
-      console.error('Save failed:', err);
-      alert('Error saving ward');
+// Handle form submit
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    // Check if wardId already exists
+    const exists = await axios.get(`http://localhost:5000/api/wards/check/${wards.wardId}`);
+    if (exists.data?.exists) {
+      alert(`Ward ID ${wards.wardId} already exists. Please refresh the page.`);
+      return;
     }
-  };
+
+    // Submit ward
+    await axios.post('http://localhost:5000/api/wards', wards);
+    alert('Ward saved successfully!');
+
+    // Fetch next ward ID after saving
+    const response = await axios.get('http://localhost:5000/api/wards/latest');
+    const nextWardId = response.data?.wardId || 'WARD0001';
+
+    // Reset form with new wardId
+    setWards({
+      wardId: nextWardId,
+      name: '',
+      departmentId: '',
+      type: '',
+      status: 'Active',
+    });
+
+  } catch (err) {
+    console.error('Save failed:', err);
+    alert('Error saving ward');
+  }
+};
+
 
   return (
     <div className="min-h-screen bg-zinc-300 flex items-center justify-center">
