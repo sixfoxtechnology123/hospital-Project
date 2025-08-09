@@ -46,26 +46,26 @@ const WardList = () => {
       </div>
 
       {/* Table */}
-      <table className="w-full table-auto border border-gray-300">
+      <table className="w-full table-auto border border-green-500">
         <thead className="bg-gray-200 text-sm">
           <tr>
-            <th className="border px-2 py-1">Ward ID</th>
-            <th className="border px-2 py-1">Name</th>
-            <th className="border px-2 py-1">Department</th>
-            <th className="border px-2 py-1">Type</th>
-            <th className="border px-2 py-1">Status</th>
-            <th className="border px-2 py-1">Action</th>
+            <th className="border border-green-500 px-2 py-1">Ward ID</th>
+            <th className="border border-green-500 px-2 py-1">Name</th>
+            <th className="border border-green-500 px-2 py-1">Department</th>
+            <th className="border border-green-500 px-2 py-1">Type</th>
+            <th className="border border-green-500 px-2 py-1">Status</th>
+            <th className="border border-green-500 px-2 py-1">Action</th>
           </tr>
         </thead>
         <tbody className="text-sm text-center">
           {wardData.map((ward, index) => (
             <tr key={index} className="hover:bg-gray-100 transition">
-              <td className="border px-2 py-1">{ward.wardId}</td>
-              <td className="border px-2 py-1">{ward.name}</td>
-              <td className="border px-2 py-1">{ward.departmentName}</td>
-              <td className="border px-2 py-1">{ward.type}</td>
-              <td className="border px-2 py-1">{ward.status}</td>
-              <td className="border px-2 py-1 flex justify-center gap-3">
+              <td className="border border-green-500 px-2 py-1">{ward.wardId}</td>
+              <td className="border border-green-500 px-2 py-1">{ward.name}</td>
+              <td className="border border-green-500 px-2 py-1">{ward.departmentName}</td>
+              <td className="border border-green-500 px-2 py-1">{ward.type}</td>
+              <td className="border border-green-500 px-2 py-1">{ward.status}</td>
+              <td className="border border-green-500 px-2 py-1 text-center gap-3">
               {/* Delete Button */}
                 <button
                   onClick={() => deleteWard(ward.wardId)}
