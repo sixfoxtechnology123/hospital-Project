@@ -62,7 +62,7 @@ const WardList = () => {
             <tr key={index} className="hover:bg-gray-100 transition">
               <td className="border px-2 py-1">{ward.wardId}</td>
               <td className="border px-2 py-1">{ward.name}</td>
-              <td className="border px-2 py-1">{ward.departmentId?.deptName || 'N/A'}</td>
+              <td className="border px-2 py-1">{ward.departmentName}</td>
               <td className="border px-2 py-1">{ward.type}</td>
               <td className="border px-2 py-1">{ward.status}</td>
               <td className="border px-2 py-1 flex justify-center gap-3">

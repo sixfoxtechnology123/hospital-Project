@@ -2,16 +2,25 @@
 const express = require('express');
 const router = express.Router();
 const Ward = require('../models/Ward');
-const DepartmentMaster = require('../models/Department'); // fixed path
+const DepartmentMaster = require('../models/Department');
 
-// ✅ GET all wards (with department name from DepartmentMaster)
+// ✅ GET all wards with department names
 router.get('/', async (req, res) => {
   try {
-    const wards = await Ward.find().sort({ wardId: 1 });
-    res.json(wards);
+    const wards = await Ward.find();
+    const departments = await DepartmentMaster.find({}, 'deptCode deptName');
+
+    const wardList = wards.map(ward => {
+      const dept = departments.find(d => d.deptCode === ward.departmentCode);
+      return {
+        ...ward._doc,
+        departmentName: dept ? dept.deptName : 'N/A'
+      };
+    });
+
+    res.json(wardList);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Error fetching wards' });
+    res.status(500).json({ message: err.message });
   }
 });
 
@@ -31,7 +40,6 @@ router.get('/latest', async (req, res) => {
     const nextWardId = `WARD${(maxWardNumber + 1).toString().padStart(4, '0')}`;
     res.json({ wardId: nextWardId });
   } catch (err) {
-    console.error(err);
     res.status(500).json({ message: 'Error generating next ward ID' });
   }
 });
@@ -73,7 +81,7 @@ router.post('/', async (req, res) => {
     const newWard = new Ward({
       wardId,
       name,
-      departmentCode: department.deptCode, // store deptCode here
+      departmentCode: department.deptCode, // store deptCode
       type,
       status
     });
@@ -81,7 +89,6 @@ router.post('/', async (req, res) => {
     await newWard.save();
     res.status(201).json(newWard);
   } catch (err) {
-    console.error(err);
     res.status(500).json({ message: 'Error saving ward' });
   }
 });
