@@ -16,6 +16,19 @@ const WardList = () => {
     }
   };
 
+  useEffect(() => {
+    fetchWards();
+  }, []);
+
+  const handleSelectWard = (ward) => {
+    // navigate to the IP/OP selection screen and forward the ward
+    navigate('/ip-op-selection', {
+      state: {
+        wardName: ward.name,
+        wardId: ward.wardId,
+      },
+    });
+  };
   const deleteWard = async (wardId) => {
     if (!window.confirm(`Are you sure you want to delete ${wardId}?`)) return;
     try {
@@ -26,9 +39,6 @@ const WardList = () => {
     }
   };
 
-  useEffect(() => {
-    fetchWards();
-  }, []);
 
   return (
     <div className="p-6 bg-white shadow-md rounded-md">

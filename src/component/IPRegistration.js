@@ -2,11 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 
-
 const IPRegistration = () => {
- const location = useLocation();
-const {mrNumber,patientData: passedPatientData } = location.state || {};
-const [patientData, setPatientData] = useState(passedPatientData || null);
+  const location = useLocation();
+  const {
+    mrNumber,
+    patientData: passedPatientData,
+    wardName: selectedWardName, // forwarded from IpOpSelection/WardList
+  } = location.state || {};
+
+  const [patientData, setPatientData] = useState(passedPatientData || null);
+
   const [formData, setFormData] = useState({
     mrno: '',
     ipNumber: '',
@@ -42,20 +47,20 @@ const [patientData, setPatientData] = useState(passedPatientData || null);
     email: '',
     religion: '',
     occupation: '',
-    name: ''
+    name: '',
   });
 
   const [doctorName, setDoctorName] = useState([]);
   const [departments, setDepartments] = useState([]);
-  //const [doctors, setDoctors] = useState([]);
   const [plans, setPlans] = useState([]);
   const [packages, setPackages] = useState([]);
-  const [wards, setWards] = useState([]);
+  const [wards, setWards] = useState([]); // list of ward names for dropdown
   const [beds, setBeds] = useState([]);
 
-  // Optionally fetch full data from backend if not passed from router
+  // If patientData not passed, fetch it (your existing code)
   useEffect(() => {
     const fetchPatientDetails = async () => {
+      if (!mrNumber) return;
       try {
         const response = await fetch(`/api/patients/${mrNumber}`);
         const data = await response.json();
@@ -65,23 +70,17 @@ const [patientData, setPatientData] = useState(passedPatientData || null);
       }
     };
 
-    if (!patientData && mrNumber) {
-      fetchPatientDetails();
-    }
+    if (!patientData && mrNumber) fetchPatientDetails();
   }, [mrNumber, patientData]);
 
-  // 🧠 Auto-fill form when patientData is ready
+  // Auto-fill patient fields when patientData ready (your existing)
   useEffect(() => {
     if (!patientData) return;
     const now = new Date();
-    const date = now.toLocaleDateString('en-GB'); // e.g., 07/08/2025
-    const time = now.toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-
+    const date = now.toLocaleDateString('en-GB');
+    const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
     const formattedDate = now.toISOString().slice(0, 10).replace(/-/g, '');
-    const counter = '0001'; // Replace with dynamic value later
+    const counter = '0001';
     const ipNumber = `IP${formattedDate}${counter}`;
 
     setFormData(prev => ({
@@ -108,36 +107,36 @@ const [patientData, setPatientData] = useState(passedPatientData || null);
       abhaId: patientData?.abhaId || ''
     }));
   }, [patientData]);
-  console.log('MR Number:', mrNumber); 
-  // Dropdown options
-    useEffect(() => {
-  const fetchDepartments = async () => {
-    try {
-      const response = await fetch('http://localhost:5000/api/departments');
-      const data = await response.json();
-      setDepartments(data.map((dept) => dept.deptName)); // only deptName
-    } catch (err) {
-      console.error('Failed to fetch departments:', err);
-    }
-  };
-  fetchDepartments();
 
-    const getDoctorName = async () => {
-    try {
-      const response = await axios.get('http://localhost:5000/api/doctors');
-      console.log("Doctor : ", response.data); 
-      setDoctorName(response.data.map(doc => doc.doctorName));
-    } catch (error) {
-      console.error('Error fetching doctor names:', error);
-    }
-  };
-  getDoctorName();
-    // setPlans(['GENERAL', 'CORPORATE', 'SCHEME']);
-    // setPackages(['CATARACT PACKAGE', 'EYE SURGERY PACKAGE']);
-    // setWards(['MALE WARD 1', 'FEMALE WARD 2']);
+  // Fetch dropdown options including wards (so the select shows all wards)
+  useEffect(() => {
+    const fetchDropdowns = async () => {
+      try {
+        const [deptRes, docRes, wardsRes] = await Promise.all([
+          axios.get('http://localhost:5000/api/departments'),
+          axios.get('http://localhost:5000/api/doctors'),
+          axios.get('http://localhost:5000/api/wards'),
+        ]);
+
+        setDepartments(deptRes.data.map(d => d.deptName || d.deptCode));
+        setDoctorName(docRes.data.map(d => d.doctorName));
+        setWards(wardsRes.data.map(w => w.name)); // we store just ward names for dropdown
+      } catch (err) {
+        console.error('Error fetching dropdowns:', err);
+      }
+    };
+
+    fetchDropdowns();
   }, []);
 
-  // Auto-update beds when ward changes
+  // If we received selectedWardName from previous pages, prefill the formData.ward
+  useEffect(() => {
+    if (selectedWardName) {
+      setFormData(prev => ({ ...prev, ward: selectedWardName }));
+    }
+  }, [selectedWardName]);
+
+  // update beds when ward changes (you already had this)
   useEffect(() => {
     const wardBeds = {
       'MALE WARD 1': ['101A', '101B'],
@@ -146,7 +145,7 @@ const [patientData, setPatientData] = useState(passedPatientData || null);
     setBeds(wardBeds[formData.ward] || []);
   }, [formData.ward]);
 
-  // Auto-update bed rate
+  // bed rate logic (your existing)
   useEffect(() => {
     const rates = {
       '101A': 1200,
@@ -162,15 +161,17 @@ const [patientData, setPatientData] = useState(passedPatientData || null);
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     const payload = {
       mrNumber,
-      ...formData
+      ...formData,
     };
     console.log('Submitted IP Registration Data:', payload);
     alert('IP Registration Submitted Successfully!');
-    // TODO: Send payload to backend here
+    // TODO: send payload to backend
   };
+
 
   return (
      <form onSubmit={handleSubmit} className="bg-white pt-1 px-2 mt-1 text-black  w-screen mx-auto border border-gray-300 shadow text-sm">
@@ -400,9 +401,16 @@ const [patientData, setPatientData] = useState(passedPatientData || null);
         {/* Ward */}
         <label className="flex flex-col">
         <span className="font-medium">Ward</span>
-        <select name="ward" className="border-2 p-0" onChange={handleChange}>
+        <select
+            name="ward"
+            value={formData.ward}
+            onChange={handleChange}
+            className="border-2 p-0"
+          >
             <option value="">Select</option>
-            {wards.map((w, i) => <option key={i} value={w}>{w}</option>)}
+            {wards.map((w, i) => (
+              <option key={i} value={w}>{w}</option>
+            ))}
           </select>
         </label>
 

@@ -9,6 +9,8 @@ const IpOpSelection = () => {
   const locationState = location.state || {};
   const patientData = locationState.patientData || {};
   const mrNumber = locationState.mrNumber || patientData.mrno || '';
+  const wardName = locationState.wardName || '';
+
 
   const goToIP = () => {
     navigate('/ip-registration', {
@@ -34,7 +36,8 @@ const IpOpSelection = () => {
           occupation: patientData?.occupation || '',
           aadhar: patientData?.aadhar || '',
           abhaId: patientData?.abhaId || ''
-        }
+        },
+       wardName
       }
     });
   };
