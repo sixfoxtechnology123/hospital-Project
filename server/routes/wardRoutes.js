@@ -2,14 +2,12 @@
 const express = require('express');
 const router = express.Router();
 const Ward = require('../models/Ward');
+const DepartmentMaster = require('../models/Department'); // fixed path
 
-// ✅ GET all wards (with department name)
+// ✅ GET all wards (with department name from DepartmentMaster)
 router.get('/', async (req, res) => {
   try {
-    const wards = await Ward.find()
-      .populate('departmentId', 'deptName') // fetch only deptName
-      .sort({ wardId: 1 });
-
+    const wards = await Ward.find().sort({ wardId: 1 });
     res.json(wards);
   } catch (err) {
     console.error(err);
@@ -47,7 +45,8 @@ router.get('/check/:wardId', async (req, res) => {
     res.status(500).json({ message: 'Error checking ward ID' });
   }
 });
-// DELETE Ward
+
+// ✅ DELETE Ward
 router.delete('/:wardId', async (req, res) => {
   try {
     const ward = await Ward.findOneAndDelete({ wardId: req.params.wardId });
@@ -60,10 +59,25 @@ router.delete('/:wardId', async (req, res) => {
   }
 });
 
-// ✅ POST new ward
+// ✅ POST new ward (store deptCode instead of _id)
 router.post('/', async (req, res) => {
   try {
-    const newWard = new Ward(req.body);
+    const { wardId, name, departmentId, type, status } = req.body;
+
+    // Find department by _id to get deptCode
+    const department = await DepartmentMaster.findById(departmentId);
+    if (!department) {
+      return res.status(404).json({ message: 'Department not found' });
+    }
+
+    const newWard = new Ward({
+      wardId,
+      name,
+      departmentCode: department.deptCode, // store deptCode here
+      type,
+      status
+    });
+
     await newWard.save();
     res.status(201).json(newWard);
   } catch (err) {

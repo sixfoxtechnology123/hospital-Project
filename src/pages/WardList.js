@@ -69,7 +69,8 @@ const WardList = () => {
               {/* Delete Button */}
                 <button
                   onClick={() => deleteWard(ward.wardId)}
-                  className="text-red-600 hover:text-red-800">
+                  className="text-red-600 hover:text-red-800"
+>
                   <FaTrash />
                 </button>
               </td>
