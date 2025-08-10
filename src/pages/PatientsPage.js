@@ -55,7 +55,7 @@ const PatientsPage = () => {
           {/* report section */}
           <button onClick={() => navigate('')} className="hover:underline">Report</button>
         </nav>
-        <h1 className="text-2xl font-bold">Hospital</h1>
+        <h1 className="text-2xl font-bold">Hospisys</h1>
       </header>
     </div>
   );
