@@ -38,6 +38,8 @@ const PatientsPage = () => {
               <div className="absolute left-full transform -translate-x-1/2 mt-2 bg-white text-black shadow-lg rounded-md z-50 w-44">
                 <ul className="flex flex-col text-base">
                   <li className="hover:bg-teal-100 px-4 py-2 rounded cursor-pointer" onClick={() => navigate('/PatientsRegister')}>Register</li>
+                  <li className="hover:bg-teal-100 px-4 py-2 rounded cursor-pointer" onClick={() => navigate('/op-registration')}>Out Patient</li>
+                  <li className="hover:bg-teal-100 px-4 py-2 rounded cursor-pointer" onClick={() => navigate('/ip-registration')}>In Patient</li>
                   <li className="hover:bg-teal-100 px-4 py-2 rounded cursor-pointer" onClick={() => navigate('/departmentMaster')}>Department Master</li>
                   <li className="hover:bg-teal-100 px-4 py-2 rounded cursor-pointer" onClick={() => navigate('/doctorMaster')}>Doctor Master</li>
                   <li className="hover:bg-teal-100 px-4 py-2 rounded cursor-pointer" onClick={() => navigate('/serviceMaster')}>Service Master</li>
