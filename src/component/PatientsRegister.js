@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import BackButton from './BackButton';
 
 
 const PatientsRegister = () => {
@@ -344,8 +345,9 @@ const PatientsRegister = () => {
 
       {/* Buttons */}
       <div className="flex justify-end gap-4 mt-6 mb-3">
-        <button type="submit" className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded">Register</button>
-        <button type="button" onClick={reset} className="bg-gray-700 hover:bg-gray-800 text-white px-6 py-2 rounded">Reset</button>
+        <BackButton/>
+        <button type="submit" className="bg-green-600 font-semibold hover:bg-green-700 text-white px-6 py-2 rounded">Register</button>
+        <button type="button" onClick={reset} className="bg-gray-700 font-semibold hover:bg-gray-800 text-white px-6 py-2 rounded">Reset</button>
       </div>
     </form>
   );

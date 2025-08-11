@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
+import BackButton from './BackButton';
 
 const IPRegistration = () => {
   const location = useLocation();
@@ -473,15 +474,17 @@ const IPRegistration = () => {
           />
         </label>
       </div>
-      <div className="text-right">
+      <div className="flex justify-end gap-2 mb-2">
+        <BackButton />
         <button
           type="submit"
-          className="bg-green-600 font-semibold hover:bg-green-700 text-white px-4 py-2 mb-2 rounded"
+          className="bg-green-600 font-semibold hover:bg-green-700 text-white px-4 py-2 rounded"
         >
           Submit
         </button>
       </div>
     </form>
+    
   );
 };
 

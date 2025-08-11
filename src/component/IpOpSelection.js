@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FaUserMd, FaProcedures } from 'react-icons/fa';
+import BackButton from './BackButton';
 
 const IpOpSelection = () => {
   const navigate = useNavigate();
@@ -80,6 +81,9 @@ const IpOpSelection = () => {
           >
             <FaProcedures className="text-purple-700 text-5xl mb-4 transition-transform group-hover:-rotate-6" />
             <h2 className="text-xl font-semibold text-gray-800 mb-1">In-Patient(IN)</h2>
+          </div>
+          <div>
+            <BackButton/>
           </div>
         </div>
       </div>

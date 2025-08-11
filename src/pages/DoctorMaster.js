@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import BackButton from '../component/BackButton';
 
 const DoctorMaster = () => {
   const [doctorName, setDoctorName] = useState('');
@@ -78,38 +79,38 @@ const fetchDoctors = async () => {
 
 
   return (
-    <div className="min-h-screen bg-zinc-300 py-10">
-      <div className="max-w-2xl mx-auto bg-white shadow-md p-6 rounded">
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Doctor Master</h2>
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
+     <div className="min-h-screen bg-zinc-300 flex items-center justify-center">
+      <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-sm">
+        <h2 className="text-2xl font-bold mb-4 text-center text-black">Doctor Master</h2>
+         <form onSubmit={handleSubmit}>
+          <div className='mb-2'>
             <label className="block mb-1 font-medium">Doctor Code</label>
             <input
               type="text"
               value={generatedCode}
               readOnly
-              className="w-full p-2 bg-gray-100 border rounded"
+              className="w-full p-1 bg-gray-100 border rounded"
             />
           </div>
 
-          <div>
+          <div className='mb-2'>
             <label className="block mb-1 font-medium">Doctor Name</label>
             <input
               type="text"
               value={doctorName}
               onChange={(e) => setDoctorName(e.target.value)}
               required
-              className="w-full p-2 border rounded"
+              className="w-full p-1 border rounded"
             />
           </div>
 
-          <div>
+          <div className='mb-2'>
             <label className="block mb-1 font-medium">Select Department</label>
             <select
               value={selectedDeptCode}
               onChange={(e) => setSelectedDeptCode(e.target.value)}
               required
-              className="w-full p-2 border rounded"
+              className="w-full p-1 border rounded"
             >
               <option value="">-- Select Department --</option>
               {departments.map((dept) => (
@@ -120,36 +121,37 @@ const fetchDoctors = async () => {
             </select>
           </div>
 
-          <div>
+          <div className='mb-2'>
             <label className="block mb-1 font-medium">Qualification</label>
             <input
               type="text"
               value={qualification}
               onChange={(e) => setQualification(e.target.value)}
-              className="w-full p-2 border rounded"
+              className="w-full p-1 border rounded"
             />
           </div>
 
-          <div className="md:col-span-1">
+          <div className="mb-2">
             <label className="block mb-1 font-medium">Registration No</label>
             <input
               type="text"
               value={registrationNo}
               onChange={(e) => setRegistrationNo(e.target.value)}
               required
-              className="w-full p-2 border rounded"
+              className="w-full p-1 border rounded"
             />
           </div>
 
-          <div className="md:col-span-2 text-center">
+          <div className="flex justify-between">
+            <BackButton/>
             <button
-              type="submit"
-              className="bg-teal-600 text-white px-6 py-2 rounded hover:bg-teal-700"
+              type="handleSubmit"
+              className="bg-teal-600 text-white px-4 py-1 rounded hover:bg-teal-700"
             >
               Save
             </button>
           </div>
-        </form>
+          </form>
       </div>
     </div>
   );

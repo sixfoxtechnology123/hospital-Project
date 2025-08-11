@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import BackButton from '../component/BackButton';
 
 const WardMaster = () => {
   const [wards, setWards] = useState({
@@ -174,14 +175,15 @@ const handleSubmit = async (e) => {
         </div>
 
         {/* Submit */}
-        <div className="col-span-1 text-center mt-4">
-          <button
-            type="submit"
-            className="bg-teal-600 text-white py-2 px-6 rounded hover:bg-teal-700"
-          >
-            Save Ward
-          </button>
-        </div>
+        <div className="flex justify-between">
+            <BackButton/>
+            <button
+              type="submit"
+              className="bg-teal-600 text-white px-4 py-1 rounded hover:bg-teal-700"
+            >
+              Save
+            </button>
+          </div>
       </form>
     </div>
   </div>

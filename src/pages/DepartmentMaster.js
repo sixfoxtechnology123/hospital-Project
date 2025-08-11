@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import BackButton from '../component/BackButton';
 
 const DepartmentMaster = () => {
   const [deptCode, setDeptCode] = useState('');
@@ -56,8 +57,8 @@ const DepartmentMaster = () => {
 
   return (
     <div className="min-h-screen bg-zinc-300 flex items-center justify-center">
-      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-sm">
-        <h2 className="text-2xl font-bold mb-6 text-center text-black">Department Master</h2>
+      <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-sm">
+        <h2 className="text-2xl font-bold mb-4 text-center text-black">Department Master</h2>
 
         <div className="mb-4">
           <label className="block text-black mb-1">Department Code</label>
@@ -65,27 +66,29 @@ const DepartmentMaster = () => {
             type="text"
             value={deptCode}
             readOnly
-            className="w-full px-4 py-2 border rounded-md bg-gray-100 cursor-not-allowed"
+            className="w-full p-1 border rounded cursor-not-allowed"
           />
         </div>
 
-        <div className="mb-6">
+        <div className="mb-4">
           <label className="block text-black mb-1">Department Name</label>
           <input
             type="text"
             value={deptName}
             onChange={(e) => setDeptName(e.target.value)}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+            className="w-full p-1 border rounded"
             placeholder="Enter Department Name"
           />
         </div>
 
-        <button
-          onClick={handleSave}
-          className="w-full bg-teal-600 text-white py-2 rounded-md hover:bg-teal-700 transition"
-        >
-          Save
-        </button>
+        <div className="flex justify-between">
+          <BackButton />
+          <button
+            onClick={handleSave}
+           className="bg-teal-600 text-white px-4 py-1 rounded hover:bg-teal-700">
+            Save
+          </button>
+        </div>
       </div>
     </div>
   );

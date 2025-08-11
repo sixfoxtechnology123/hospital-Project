@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { TrashIcon } from '@heroicons/react/24/solid';
 import axios from 'axios';
+import BackButton from './BackButton';
 
 // install delete icon package
 // npm install @heroicons/react
@@ -473,6 +474,7 @@ useEffect(() => {
         >
           Payment
         </button>
+        <BackButton/>
       </div>
 
         {activeSection === 'service' && (

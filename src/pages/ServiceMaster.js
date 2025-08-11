@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import BackButton from '../component/BackButton';
 
 const ServiceMaster = () => {
   const [serviceCode, setServiceCode] = useState('');
@@ -53,9 +54,9 @@ const ServiceMaster = () => {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-300 flex justify-center items-center p-4">
-      <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-semibold text-center  mb-6">Service Master</h2>
+    <div className="min-h-screen bg-zinc-300 flex items-center justify-center">
+      <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-sm">
+        <h2 className="text-2xl font-bold mb-4 text-center text-black">Service Master</h2>
 
         <div className="mb-4">
           <label className="block mb-1 font-medium">Service Code</label>
@@ -63,7 +64,7 @@ const ServiceMaster = () => {
             type="text"
             value={serviceCode}
             readOnly
-            className="w-full border px-3 py-2 rounded-md bg-gray-100 cursor-not-allowed"
+            className="w-full p-1 border rounded bg-gray-100 cursor-not-allowed"
           />
         </div>
 
@@ -73,7 +74,7 @@ const ServiceMaster = () => {
             type="text"
             value={serviceName}
             onChange={(e) => setServiceName(e.target.value)}
-            className="w-full border px-3 py-2 rounded-md"
+            className="w-full p-1 border rounded"
           />
         </div>
 
@@ -83,16 +84,19 @@ const ServiceMaster = () => {
             type="text"
             value={departmentName}
             onChange={(e) => setDepartmentName(e.target.value)}
-            className="w-full border px-3 py-2 rounded-md"
+            className="w-full p-1 border rounded"
           />
         </div>
 
-        <button
-          onClick={handleSave}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md"
-        >
-          Save
-        </button>
+        <div className="flex justify-between">
+            <BackButton/>
+            <button
+              onClick={handleSave}
+              className="bg-teal-600 text-white px-4 py-1 rounded hover:bg-teal-700"
+            >
+              Save
+            </button>
+          </div>
       </div>
     </div>
   );

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FaTrash, FaEdit, FaEye } from 'react-icons/fa';
+import BackButton from '../component/BackButton';
 
 const WardList = () => {
   const [wardData, setWardData] = useState([]);
@@ -46,12 +47,15 @@ const WardList = () => {
       <div className="bg-green-50 border border-green-300 rounded-lg shadow-md p-2 mb-4">
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-bold text-green-800">Ward Master</h2>
+         <div className='flex gap-4'>
+           <BackButton/>
           <button
             onClick={() => navigate('/wards')}
             className="bg-green-600 text-white px-4 py-1 rounded-lg font-semibold shadow"
           >
             Add Ward
           </button>
+         </div>
         </div>
       </div>
 
