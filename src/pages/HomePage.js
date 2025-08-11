@@ -24,7 +24,7 @@ const HomePage = () => {
         {/* Ward Box */}
         <div
           className="group p-8 bg-white shadow-lg rounded-xl text-center cursor-pointer hover:bg-green-100 transition"
-          onClick={() => navigate('/wardList')}
+          onClick={() => navigate('/wardpage')}
         >
           <FaProcedures size={50} className="mx-auto text-green-500" />
           <h2 className="mt-4 text-xl font-semibold transform transition-transform duration-300 group-hover:-translate-y-1">

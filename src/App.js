@@ -11,6 +11,10 @@ import ServiceRateMaster from './pages/ServiceRateMaster';
 import IPRegistration from './component/IPRegistration';
 import WardMaster from './pages/WardMaster';
 import WardList from './pages/WardList';
+import WardPage from './pages/WardPage';
+import BedMaster from './pages/BedMaster';
+import BedList from './pages/BedList';
+import UpdateWard from './pages/UpdateWard';
 
 function App() {
   return (
@@ -28,6 +32,10 @@ function App() {
         <Route path="/serviceRateMaster" element={<ServiceRateMaster/>} />
         <Route path="/wards" element={<WardMaster/>} />
         <Route path="/wardList" element={<WardList/>} />
+        <Route path="/wardpage" element={<WardPage/>} />
+        <Route path="/updateward/:wardId" element={<UpdateWard/>} />
+        <Route path="/Bedmaster" element={<BedMaster/>} />
+        <Route path="/Bedlist" element={<BedList/>} />
         
       </Routes>
     </div>

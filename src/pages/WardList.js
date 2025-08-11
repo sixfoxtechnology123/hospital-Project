@@ -79,14 +79,23 @@ const WardList = () => {
               <td className="border border-green-500 px-2 py-1">{ward.departmentName}</td>
               <td className="border border-green-500 px-2 py-1">{ward.type}</td>
               <td className="border border-green-500 px-2 py-1">{ward.status}</td>
-              <td className="border border-green-500 px-2 py-1 text-center gap-3">
-              {/* Delete Button */}
-                <button
-                  onClick={() => deleteWard(ward.wardId)}
-                  className="text-red-600 hover:text-red-800"
->
-                  <FaTrash />
-                </button>
+             <td className="border border-green-500 px-2 py-1 text-center">
+                <div className="flex justify-center items-center gap-4">
+                  {/* Edit Button */}
+                  <button
+                    onClick={() => navigate(`/updateward/${ward.wardId}`)}
+                    className="text-blue-600 hover:text-blue-800"
+                  >
+                    <FaEdit />
+                  </button>
+                  {/* Delete Button */}
+                  <button
+                    onClick={() => deleteWard(ward.wardId)}
+                    className="text-red-600 hover:text-red-800"
+                  >
+                    <FaTrash />
+                  </button>
+                </div>
               </td>
             </tr>
           ))}
