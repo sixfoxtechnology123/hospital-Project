@@ -21,6 +21,15 @@ const BedList = () => {
     fetchBeds();
   }, []);
 
+  //   const handleSelectWard = (ward) => {
+  //   // navigate to the IP/OP selection screen and forward the ward
+  //   navigate('/ip-op-selection', {
+  //     state: {
+  //       bedName: bed.name,
+  //       bedId: bed.bedId,
+  //     },
+  //   });
+  // };
   const deleteBed = async (bedId) => {
     if (!window.confirm(`Are you sure you want to delete bed ${bedId}?`)) return;
     try {
@@ -63,7 +72,6 @@ const BedList = () => {
         <tbody className="text-sm text-center">
           {bedData.map((bed, index) => (
             <tr key={index} className="hover:bg-gray-100 transition">
-              <td className="border border-green-500 px-2 py-1">{bed.bed_id}</td>
               <td className="border border-green-500 px-2 py-1">{bed.ward_name}</td>
               <td className="border border-green-500 px-2 py-1">{bed.bed_number}</td>
               <td className="border border-green-500 px-2 py-1">{bed.bed_type}</td>
