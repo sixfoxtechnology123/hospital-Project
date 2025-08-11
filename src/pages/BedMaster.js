@@ -25,7 +25,28 @@ const BedMaster = () => {
     fetchWards();
   }, []);
 
-  // Handle form changes
+  // When ward changes → fetch next bed number
+  const handleWardChange = async (e) => {
+    const wardName = e.target.value;
+    setBed((prev) => ({ ...prev, ward_name: wardName }));
+
+    if (!wardName) {
+      setBed((prev) => ({ ...prev, bed_number: '' }));
+      return;
+    }
+
+    try {
+      const res = await axios.get(
+        `http://localhost:5000/api/beds/next/${encodeURIComponent(wardName)}`
+      );
+      setBed((prev) => ({ ...prev, bed_number: res.data.nextBedNumber }));
+    } catch (err) {
+      console.error('Failed to fetch next bed number:', err);
+      setBed((prev) => ({ ...prev, bed_number: '' }));
+    }
+  };
+
+  // Handle other input changes (bed_type, status)
   const handleChange = (e) => {
     const { name, value } = e.target;
     setBed({ ...bed, [name]: value });
@@ -61,7 +82,7 @@ const BedMaster = () => {
             <select
               name="ward_name"
               value={bed.ward_name}
-              onChange={handleChange}
+              onChange={handleWardChange}
               className="w-full border border-gray-300 p-1 rounded"
               required
             >
@@ -74,15 +95,15 @@ const BedMaster = () => {
             </select>
           </div>
 
-          {/* Bed Number */}
+          {/* Bed Number — readonly */}
           <div>
             <label className="block font-medium">Bed Number</label>
             <input
               type="text"
               name="bed_number"
               value={bed.bed_number}
-              onChange={handleChange}
-              className="w-full border border-gray-300 p-1 rounded"
+              readOnly
+              className="w-full border border-gray-300 p-1 rounded bg-gray-100"
               required
             />
           </div>
