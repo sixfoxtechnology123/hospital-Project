@@ -72,7 +72,7 @@ const createBed = async (req, res) => {
 // GET /api/beds
 const getBeds = async (req, res) => {
   try {
-    const beds = await Bed.find().sort({ createdAt: 1 });
+    const beds = await Bed.find().sort({ createdAt: -1 });
     res.json(beds);
   } catch (err) {
     res.status(500).json({ message: 'Error fetching beds', error: err.message });

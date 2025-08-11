@@ -5,6 +5,6 @@ const bedSchema = new mongoose.Schema({
   bed_number: { type: String, required: true, unique: true },
   bed_type: { type: String, required: true },
   status: { type: String, default: 'Available' }
-}, { timestamps: true });
+}, { timestamps: false });
 
 module.exports = mongoose.model('Bedmaster', bedSchema);
