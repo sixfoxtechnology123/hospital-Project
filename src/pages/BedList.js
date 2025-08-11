@@ -31,14 +31,15 @@ const BedList = () => {
   //   });
   // };
   const deleteBed = async (bedId) => {
-    if (!window.confirm(`Are you sure you want to delete bed ${bedId}?`)) return;
-    try {
-      await axios.delete(`http://localhost:5000/api/beds/${bedId}`);
-      setBedData(bedData.filter((bed) => bed.bed_id !== bedId));
-    } catch (err) {
-      console.error('Error deleting bed:', err);
-    }
-  };
+  if (!window.confirm(`Are you sure you want to delete this bed?`)) return;
+  try {
+    await axios.delete(`http://localhost:5000/api/beds/${bedId}`);
+    setBedData(bedData.filter((bed) => bed._id !== bedId));
+  } catch (err) {
+    console.error('Error deleting bed:', err);
+  }
+};
+
 
   return (
     <div className="p-6 bg-white shadow-md rounded-md">
@@ -78,7 +79,7 @@ const BedList = () => {
               <td className="border border-green-500 px-2 py-1">{bed.status}</td>
               <td className="border border-green-500 px-2 py-1 text-center">
                 <button
-                  onClick={() => deleteBed(bed.bed_id)}
+                  onClick={() => deleteBed(bed._id)}
                   className="text-red-600 hover:text-red-800"
                 >
                   <FaTrash />
