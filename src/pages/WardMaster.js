@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import BackButton from '../component/BackButton';
+import { useLocation } from "react-router-dom";
 
 const WardMaster = () => {
   const [wards, setWards] = useState({
@@ -10,78 +11,59 @@ const WardMaster = () => {
     type: '',
     status: 'Active',
   });
-
   const [departments, setDepartments] = useState([]);
+  
 
-  // Fetch departments and latest ward ID on mount
+  const location = useLocation();
+
   useEffect(() => {
-  // Fetch departments
-  const fetchDepartments = async () => {
-    try {
-      const response = await fetch('http://localhost:5000/api/departments');
-      const data = await response.json();
-      setDepartments(data);
-    } catch (err) {
-      console.error('Failed to fetch departments:', err);
-    }
-  };
-  fetchDepartments();
+    const fetchDepartments = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/departments');
+        const data = await response.json();
+        setDepartments(data);
+      } catch (err) {
+        console.error('Failed to fetch departments:', err);
+      }
+    };
+    fetchDepartments();
+    const fetchNextWardId = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/wards/latest');
+        const nextWardId = response.data?.wardId || 'WARD0001';
+        setWards((prev) => ({ ...prev, wardId: nextWardId }));
+      } catch (err) {
+        console.error('Error getting ward ID:', err);
+      }
+    };
 
-  // Fetch next ward ID
-  const fetchNextWardId = async () => {
-    try {
-      const response = await axios.get('http://localhost:5000/api/wards/latest');
-      const nextWardId = response.data?.wardId || 'WARD0001';
-      setWards((prev) => ({ ...prev, wardId: nextWardId }));
-    } catch (err) {
-      console.error('Error getting ward ID:', err);
-    }
-  };
-  fetchNextWardId();
-}, []);
+    // Step 1: Always fetch departments first
+    fetchDepartments().then(() => {
+      if (location.state?.ward) {
+        // Edit mode - set ward data after departments are loaded
+        setWards(location.state.ward);
+      } else {
+        // Add mode
+        fetchNextWardId();
+      }
+    });
+  }, [location.state]);
 
-
-  //  Handle form changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setWards({ ...wards, [name]: value });
   };
 
-// Handle form submit
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    // Check if wardId already exists
-    const exists = await axios.get(`http://localhost:5000/api/wards/check/${wards.wardId}`);
-    if (exists.data?.exists) {
-      alert(`Ward ID ${wards.wardId} already exists. Please refresh the page.`);
-      return;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post('http://localhost:5000/api/wards', wards);
+      alert('Ward saved successfully!');
+    } catch (err) {
+      console.error('Save failed:', err);
+      alert('Error saving ward');
     }
-
-    // Submit ward
-    await axios.post('http://localhost:5000/api/wards', wards);
-    alert('Ward saved successfully!');
-
-    // Fetch next ward ID after saving
-    const response = await axios.get('http://localhost:5000/api/wards/latest');
-    const nextWardId = response.data?.wardId || 'WARD0001';
-
-    // Reset form with new wardId
-    setWards({
-      wardId: nextWardId,
-      name: '',
-      departmentId: '',
-      type: '',
-      status: 'Active',
-    });
-
-  } catch (err) {
-    console.error('Save failed:', err);
-    alert('Error saving ward');
-  }
-};
-
-
+  };
   return (
     <div className="min-h-screen bg-zinc-300 flex items-center justify-center">
       <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-sm">
@@ -123,7 +105,7 @@ const handleSubmit = async (e) => {
         className="w-full border border-gray-300 p-1 rounded"
         required
       >
-        <option value="">Select</option>
+        <option value="">--Select--</option>
         {departments.map((dept) => (
           <option key={dept._id} value={dept._id}>
             {dept.deptName}

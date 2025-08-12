@@ -83,7 +83,7 @@ const WardList = () => {
                 <div className="flex justify-center items-center gap-4">
                   {/* Edit Button */}
                   <button
-                    onClick={() => navigate(`/updateward/${ward.wardId}`)}
+                    onClick={() => navigate("/wards", { state: { ward } })}
                     className="text-blue-600 hover:text-blue-800"
                   >
                     <FaEdit />

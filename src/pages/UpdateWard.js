@@ -1,163 +1,161 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import BackButton from "../component/BackButton";
 
 const UpdateWard = () => {
-  const { wardId } = useParams();
+  const { wardId } = useParams(); // This comes from the URL
   const navigate = useNavigate();
 
+  const [departments, setDepartments] = useState([]);
   const [ward, setWard] = useState({
     wardId: "",
     name: "",
     departmentId: "",
     type: "",
-    status: "Active",
+    status: ""
   });
 
-  const [departments, setDepartments] = useState([]);
-
-    useEffect(() => {
-    console.log("wardId from URL:", wardId);
-    const fetchData = async () => {
-        try {
-        const deptRes = await axios.get("http://localhost:5000/api/departments");
-        setDepartments(deptRes.data);
-
-        const wardRes = await axios.get(`http://localhost:5000/api/wards/${wardId}`);
-        console.log("Fetched ward data:", wardRes.data);
-        setWard(wardRes.data);
-        } catch (err) {
-        console.error("Error fetching ward details:", err);
-        }
-    };
-
-    fetchData();
-    }, [wardId]);
-
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setWard((prev) => ({ ...prev, [name]: value }));
+  // Fetch all departments for dropdown
+  const fetchDepartments = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/departments");
+      setDepartments(res.data);
+    } catch (err) {
+      console.error("Error fetching departments:", err);
+    }
   };
 
+  // Fetch ward details to edit
+  const fetchWardDetails = async () => {
+    try {
+      const res = await axios.get(`http://localhost:5000/api/wards/${wardId}`);
+
+      // If backend sends { ward: {...} }
+      const w = res.data.ward || res.data;
+
+      setWard({
+        wardId: w.wardId,
+        name: w.name,
+        departmentId: w.departmentId?._id || w.departmentId || "",
+        type: w.type,
+        status: w.status
+      });
+    } catch (err) {
+      console.error("Error fetching ward details:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchDepartments();
+    fetchWardDetails();
+  }, [wardId]);
+
+  // Handle input changes
+  const handleChange = (e) => {
+    setWard({
+      ...ward,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  // Update ward in backend
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await axios.put(`http://localhost:5000/api/wards/${wardId}`, ward);
-      alert("Ward updated successfully!");
-      navigate("/wards");
+      navigate("/wardlist");
     } catch (err) {
       console.error("Error updating ward:", err);
     }
   };
 
   return (
-    <div className="min-h-screen bg-zinc-300 flex items-center justify-center">
-      <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-sm">
-        <h2 className="text-2xl font-bold mb-6 text-center text-black">
+    <div className="min-h-screen bg-zinc-300 py-10">
+      <div className="max-w-2xl mx-auto bg-white shadow-md p-6 rounded">
+        <BackButton />
+        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
           Update Ward
         </h2>
 
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-2">
-          {/* Ward ID */}
-          <div className="col-span-1">
-            <label className="block font-medium">Ward ID</label>
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Ward ID (Read Only) */}
+          <div>
+            <label className="block mb-1 font-medium">Ward ID</label>
             <input
               type="text"
               name="wardId"
               value={ward.wardId}
               readOnly
-              className="w-full border border-gray-300 p-1 rounded bg-gray-100"
+              className="w-full border border-gray-300 rounded px-3 py-2 bg-gray-100"
             />
           </div>
 
-          {/* Name */}
-          <div className="col-span-1">
-            <label className="block font-medium">Ward Name</label>
+          {/* Ward Name */}
+          <div>
+            <label className="block mb-1 font-medium">Ward Name</label>
             <input
               type="text"
               name="name"
               value={ward.name}
               onChange={handleChange}
-              className="w-full border border-gray-300 p-1 rounded"
+              className="w-full border border-gray-300 rounded px-3 py-2"
               required
             />
           </div>
 
-          {/* Department */}
-          <div className="col-span-1">
-            <label className="block font-medium">Department</label>
+          {/* Department Dropdown */}
+          <div>
+            <label className="block mb-1 font-medium">Department</label>
             <select
               name="departmentId"
               value={ward.departmentId}
               onChange={handleChange}
-              className="w-full border border-gray-300 p-1 rounded"
+              className="w-full border border-gray-300 rounded px-3 py-2"
               required
             >
-              <option value="">Select</option>
+              <option value="">Select Department</option>
               {departments.map((dept) => (
-                <option
-                  key={dept._id || dept.departmentId}
-                  value={dept._id || dept.departmentId}
-                >
-                  {dept.deptName || dept.name}
+                <option key={dept._id} value={dept._id}>
+                  {dept.name}
                 </option>
               ))}
             </select>
           </div>
 
-          {/* Type */}
-          <div className="col-span-1">
-            <label className="block font-medium">Type</label>
-            <select
+          {/* Ward Type */}
+          <div>
+            <label className="block mb-1 font-medium">Ward Type</label>
+            <input
+              type="text"
               name="type"
               value={ward.type}
               onChange={handleChange}
-              className="w-full border border-gray-300 p-1 rounded"
-              required
-            >
-              <option value="">----Select----</option>
-              <option value="General">General</option>
-              <option value="Semi-Private">Semi-Private</option>
-              <option value="Private">Private</option>
-              <option value="Deluxe / VIP">Deluxe / VIP</option>
-              <option value="ICU">ICU</option>
-              <option value="NICU">NICU</option>
-              <option value="PICU">PICU</option>
-              <option value="SICU">SICU</option>
-              <option value="CCU">CCU</option>
-              <option value="Burn Unit">Burn Unit</option>
-              <option value="Isolation Ward">Isolation Ward</option>
-              <option value="Day Care">Day Care</option>
-              <option value="Maternity Ward">Maternity Ward</option>
-              <option value="Emergency / Casualty">Emergency / Casualty</option>
-            </select>
+              className="w-full border border-gray-300 rounded px-3 py-2"
+            />
           </div>
 
           {/* Status */}
-          <div className="col-span-1">
-            <label className="block font-medium">Status</label>
+          <div>
+            <label className="block mb-1 font-medium">Status</label>
             <select
               name="status"
               value={ward.status}
               onChange={handleChange}
-              className="w-full border border-gray-300 p-1 rounded"
-              required
+              className="w-full border border-gray-300 rounded px-3 py-2"
             >
               <option value="Active">Active</option>
               <option value="Inactive">Inactive</option>
             </select>
           </div>
 
-          {/* Buttons */}
-          <div className="flex justify-between">
-            <BackButton />
+          {/* Submit Button */}
+          <div className="md:col-span-2 text-center">
             <button
               type="submit"
-              className="bg-teal-600 text-white px-4 py-1 rounded hover:bg-teal-700"
+              className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded"
             >
-              Update
+              Update Ward
             </button>
           </div>
         </form>
