@@ -66,6 +66,19 @@ router.delete('/:wardId', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+// PUT /api/wards/:id
+router.put('/:id', async (req, res) => {
+  try {
+    const updatedWard = await Ward.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!updatedWard) {
+      return res.status(404).json({ message: 'Ward not found' });
+    }
+    res.json(updatedWard);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 
 // ✅ POST new ward (store deptCode instead of _id)
 router.post('/', async (req, res) => {

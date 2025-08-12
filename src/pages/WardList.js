@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate ,useLocation} from 'react-router-dom';
 import { FaTrash, FaEdit, FaEye } from 'react-icons/fa';
 import BackButton from '../component/BackButton';
 
 const WardList = () => {
   const [wardData, setWardData] = useState([]);
   const navigate = useNavigate();
-
+  const location = useLocation();
   const fetchWards = async () => {
     try {
       const res = await axios.get('http://localhost:5000/api/wards');
@@ -19,7 +19,8 @@ const WardList = () => {
 
   useEffect(() => {
     fetchWards();
-  }, []);
+  }, [location.key]);
+
 
   const handleSelectWard = (ward) => {
     // navigate to the IP/OP selection screen and forward the ward
