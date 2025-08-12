@@ -77,7 +77,7 @@ const handleWardChange = async (e) => {
         alert('Bed saved successfully!');
       }
       resetForm();
-      navigate('/bedlist'); // ✅ go back to list page so it refreshes
+      // navigate('/bedlist'); // ✅ go back to list page so it refreshes
     } catch (err) {
       console.error('Save failed:', err);
       alert('Error saving bed');
