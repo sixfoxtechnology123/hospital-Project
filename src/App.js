@@ -16,6 +16,7 @@ import BedMaster from './pages/BedMaster';
 import BedList from './pages/BedList';
 import UpdateWard from './pages/UpdateWard';
 import DepartmentList from './pages/DepartmentList';
+import DoctorList from './pages/DoctorList';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
         <Route path="/departmentMaster" element={<DepartmentMaster/>} />
         <Route path="/departmentlist" element={<DepartmentList/>} />
         <Route path="/doctorMaster" element={<DoctorMaster/>} />
+        <Route path="/doctorlist" element={<DoctorList/>} />
         <Route path="/serviceMaster" element={<ServiceMaster/>} />
         <Route path="/serviceRateMaster" element={<ServiceRateMaster/>} />
         <Route path="/wards" element={<WardMaster/>} />

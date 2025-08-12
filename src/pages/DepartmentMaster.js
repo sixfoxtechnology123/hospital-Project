@@ -98,7 +98,8 @@ const DepartmentMaster = () => {
         fetchDepartments();
 
         // Navigate with flag so useEffect skips code generation
-        navigate('/departmentMaster', { replace: true, state: { fromUpdate: true } });
+       
+        navigate('/departmentList', { replace: true }); 
       } else {
         // Add new department
         await axios.post('http://localhost:5000/api/departments', {
@@ -110,7 +111,7 @@ const DepartmentMaster = () => {
         fetchDepartments();
 
         // Navigate without flag to generate new code
-        navigate('/departmentMaster', { replace: true, state: {} });
+      navigate('/departmentList', { replace: true }); 
       }
     } catch (err) {
       console.error('Error saving/updating department:', err);

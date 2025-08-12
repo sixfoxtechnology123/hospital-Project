@@ -73,12 +73,14 @@ const BedMaster = () => {
       if (isEditMode) {
         await axios.put(`http://localhost:5000/api/beds/${bed._id}`, bed);
         alert('Bed updated successfully!');
+        navigate('/bedlist', { replace: true }); 
       } else {
         await axios.post('http://localhost:5000/api/beds', bed);
         alert('Bed saved successfully!');
+        
       }
       resetForm();
-      // navigate('/bedlist'); // ✅ go back to list page so it refreshes
+     navigate('/bedlist'); // ✅ go back to list page so it refreshes
     } catch (err) {
       console.error('Save failed:', err);
       alert('Error saving bed');

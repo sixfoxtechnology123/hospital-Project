@@ -82,6 +82,8 @@ const handleSubmit = async (e) => {
       });
 
       setIsEditMode(false); // Exit edit mode
+      navigate('/wardlist', { replace: true }); 
+
 
     } else {
       // ADD
