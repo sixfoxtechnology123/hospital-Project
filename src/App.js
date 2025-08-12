@@ -15,6 +15,7 @@ import WardPage from './pages/WardPage';
 import BedMaster from './pages/BedMaster';
 import BedList from './pages/BedList';
 import UpdateWard from './pages/UpdateWard';
+import DepartmentList from './pages/DepartmentList';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route path="/op-registration" element={<OpForm />} />
         <Route path="/ip-registration" element={<IPRegistration/>} />
         <Route path="/departmentMaster" element={<DepartmentMaster/>} />
+        <Route path="/departmentlist" element={<DepartmentList/>} />
         <Route path="/doctorMaster" element={<DoctorMaster/>} />
         <Route path="/serviceMaster" element={<ServiceMaster/>} />
         <Route path="/serviceRateMaster" element={<ServiceRateMaster/>} />
@@ -36,7 +38,6 @@ function App() {
         <Route path="/updateward/:wardId" element={<UpdateWard/>} />
         <Route path="/Bedmaster" element={<BedMaster/>} />
         <Route path="/Bedlist" element={<BedList/>} />
-        
       </Routes>
     </div>
   );

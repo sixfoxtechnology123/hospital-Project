@@ -111,10 +111,9 @@ const BedMaster = () => {
               name="ward_name"
               value={bed.ward_name}
               onChange={handleWardChange}
-              disabled={isEditMode} // ✅ Make it uneditable when updating
+              disabled={isEditMode} //  Make it uneditable when updating
               className="w-full border border-gray-300 p-1 rounded disabled:bg-gray-100"
-              required
-            >
+              required>
               <option value="">Select Ward</option>
               {wards.map((w) => (
                 <option key={w._id} value={w.name}>
