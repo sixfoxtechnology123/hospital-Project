@@ -207,11 +207,15 @@ const handleSubmit = async (e) => {
           <div className="flex justify-between">
             <BackButton />
             <button
-              type="submit"
-              className="bg-teal-600 text-white px-4 py-1 rounded hover:bg-teal-700"
-            >
-              {isEditMode ? "Update" : "Save"}
-            </button>
+                type="submit"
+                className={`px-4 py-1 rounded text-white ${
+                  isEditMode
+                    ? "bg-yellow-500 hover:bg-yellow-600"
+                    : "bg-teal-600 hover:bg-teal-700"
+                }`}
+              >
+                {isEditMode ? "Update" : "Save"}
+              </button>
           </div>
         </form>
       </div>
