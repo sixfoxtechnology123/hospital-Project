@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { FaTrash } from 'react-icons/fa';
+import { FaTrash, FaEdit } from 'react-icons/fa';
 import BackButton from '../component/BackButton';
 
 const BedList = () => {
@@ -21,25 +21,15 @@ const BedList = () => {
     fetchBeds();
   }, []);
 
-  //   const handleSelectWard = (ward) => {
-  //   // navigate to the IP/OP selection screen and forward the ward
-  //   navigate('/ip-op-selection', {
-  //     state: {
-  //       bedName: bed.name,
-  //       bedId: bed.bedId,
-  //     },
-  //   });
-  // };
   const deleteBed = async (bedId) => {
-  if (!window.confirm(`Are you sure you want to delete this bed?`)) return;
-  try {
-    await axios.delete(`http://localhost:5000/api/beds/${bedId}`);
-    setBedData(bedData.filter((bed) => bed._id !== bedId));
-  } catch (err) {
-    console.error('Error deleting bed:', err);
-  }
-};
-
+    if (!window.confirm(`Are you sure you want to delete this bed?`)) return;
+    try {
+      await axios.delete(`http://localhost:5000/api/beds/${bedId}`);
+      setBedData(bedData.filter((bed) => bed._id !== bedId));
+    } catch (err) {
+      console.error('Error deleting bed:', err);
+    }
+  };
 
   return (
     <div className="p-6 bg-white shadow-md rounded-md">
@@ -78,12 +68,22 @@ const BedList = () => {
               <td className="border border-green-500 px-2 py-1">{bed.bed_type}</td>
               <td className="border border-green-500 px-2 py-1">{bed.status}</td>
               <td className="border border-green-500 px-2 py-1 text-center">
-                <button
-                  onClick={() => deleteBed(bed._id)}
-                  className="text-red-600 hover:text-red-800"
-                >
-                  <FaTrash />
-                </button>
+                <div className="flex justify-center items-center gap-4">
+                  {/* Edit Button */}
+                  <button
+                    onClick={() => navigate('/Bedmaster', { state: { bed } })}
+                    className="text-blue-600 hover:text-blue-800"
+                  >
+                    <FaEdit />
+                  </button>
+                  {/* Delete Button */}
+                  <button
+                    onClick={() => deleteBed(bed._id)}
+                    className="text-red-600 hover:text-red-800"
+                  >
+                    <FaTrash />
+                  </button>
+                </div>
               </td>
             </tr>
           ))}

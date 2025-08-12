@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import BackButton from '../component/BackButton';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const BedMaster = () => {
   const [bed, setBed] = useState({
@@ -11,8 +12,12 @@ const BedMaster = () => {
   });
 
   const [wards, setWards] = useState([]);
+  const [isEditMode, setIsEditMode] = useState(false);
 
-  // Fetch ward list on mount
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Fetch wards and check edit mode
   useEffect(() => {
     const fetchWards = async () => {
       try {
@@ -23,57 +28,79 @@ const BedMaster = () => {
       }
     };
     fetchWards();
-  }, []);
 
-  // When ward changes → fetch next bed number
-  const handleWardChange = async (e) => {
-    const wardName = e.target.value;
-    setBed((prev) => ({ ...prev, ward_name: wardName }));
-
-    if (!wardName) {
-      setBed((prev) => ({ ...prev, bed_number: '' }));
-      return;
+    if (location.state?.bed) {
+      setBed(location.state.bed);
+      setIsEditMode(true);
+    } else {
+      setIsEditMode(false);
     }
+  }, [location.state]);
 
-    try {
-      const res = await axios.get(
-        `http://localhost:5000/api/beds/next/${encodeURIComponent(wardName)}`
-      );
-      setBed((prev) => ({ ...prev, bed_number: res.data.nextBedNumber }));
-    } catch (err) {
-      console.error('Failed to fetch next bed number:', err);
-      setBed((prev) => ({ ...prev, bed_number: '' }));
-    }
-  };
+  // When ward changes, get next bed number only in add mode
+const handleWardChange = async (e) => {
+  const wardName = e.target.value;
+  setBed((prev) => ({ ...prev, ward_name: wardName }));
 
-  // Handle other input changes (bed_type, status)
+  if (!wardName) return;
+
+  try {
+    const res = await axios.get(
+      `http://localhost:5000/api/beds/next/${encodeURIComponent(wardName)}`
+    );
+    setBed((prev) => ({
+      ...prev,
+      bed_number: res.data.nextBedNumber
+    }));
+  } catch (err) {
+    console.error('Failed to fetch next bed number:', err);
+    setBed((prev) => ({ ...prev, bed_number: '' }));
+  }
+};
+
+
+  // Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setBed({ ...bed, [name]: value });
+    setBed((prev) => ({ ...prev, [name]: value }));
   };
 
   // Handle submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/beds', bed);
-      alert('Bed saved successfully!');
-      setBed({
-        ward_name: '',
-        bed_number: '',
-        bed_type: '',
-        status: 'Available',
-      });
+      if (isEditMode) {
+        await axios.put(`http://localhost:5000/api/beds/${bed._id}`, bed);
+        alert('Bed updated successfully!');
+      } else {
+        await axios.post('http://localhost:5000/api/beds', bed);
+        alert('Bed saved successfully!');
+      }
+      resetForm();
+      navigate('/bedlist'); // ✅ go back to list page so it refreshes
     } catch (err) {
       console.error('Save failed:', err);
       alert('Error saving bed');
     }
   };
 
+  // Reset form
+  const resetForm = () => {
+    setBed({
+      ward_name: '',
+      bed_number: '',
+      bed_type: '',
+      status: 'Available',
+    });
+    setIsEditMode(false);
+  };
+
   return (
     <div className="min-h-screen bg-zinc-300 flex items-center justify-center">
       <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-sm">
-        <h2 className="text-2xl font-bold mb-6 text-center text-black">Bed Master</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center text-black">
+          {isEditMode ? "Update Bed" : "Bed Master"}
+        </h2>
 
         <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-2">
           {/* Ward Name */}
@@ -88,14 +115,14 @@ const BedMaster = () => {
             >
               <option value="">Select Ward</option>
               {wards.map((w) => (
-                <option key={w.wardId} value={w.name}>
+                <option key={w._id} value={w.name}>
                   {w.name}
                 </option>
               ))}
             </select>
           </div>
 
-          {/* Bed Number — readonly */}
+          {/* Bed Number */}
           <div>
             <label className="block font-medium">Bed Number</label>
             <input
@@ -147,9 +174,13 @@ const BedMaster = () => {
             <BackButton />
             <button
               type="submit"
-              className="bg-teal-600 text-white px-4 py-1 rounded hover:bg-teal-700"
+              className={`px-4 py-1 rounded text-white ${
+                isEditMode
+                  ? "bg-yellow-500 hover:bg-yellow-600"
+                  : "bg-teal-600 hover:bg-teal-700"
+              }`}
             >
-              Save
+              {isEditMode ? "Update" : "Save"}
             </button>
           </div>
         </form>
