@@ -17,6 +17,19 @@ router.get('/next/:wardName', getNextBedNumber);
 // Create new bed
 router.post('/', createBed);
 
+router.put('/:id', async (req, res) => {
+  try {
+    const updatedBed = await Bed.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!updatedBed) {
+      return res.status(404).json({ message: 'Bed not found' });
+    }
+    res.json(updatedBed);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 router.delete('/:id', async (req, res) => {
   try {
     await Bed.findByIdAndDelete(req.params.id);

@@ -37,26 +37,27 @@ const BedMaster = () => {
     }
   }, [location.state]);
 
-  // When ward changes, get next bed number only in add mode
-const handleWardChange = async (e) => {
-  const wardName = e.target.value;
-  setBed((prev) => ({ ...prev, ward_name: wardName }));
+    const handleWardChange = async (e) => {
+      const wardName = e.target.value;
+      setBed((prev) => ({ ...prev, ward_name: wardName }));
 
-  if (!wardName) return;
+      // ✅ Do NOT fetch new bed number in edit mode
+      if (!wardName || isEditMode) return;
 
-  try {
-    const res = await axios.get(
-      `http://localhost:5000/api/beds/next/${encodeURIComponent(wardName)}`
-    );
-    setBed((prev) => ({
-      ...prev,
-      bed_number: res.data.nextBedNumber
-    }));
-  } catch (err) {
-    console.error('Failed to fetch next bed number:', err);
-    setBed((prev) => ({ ...prev, bed_number: '' }));
-  }
-};
+      try {
+        const res = await axios.get(
+          `http://localhost:5000/api/beds/next/${encodeURIComponent(wardName)}`
+        );
+        setBed((prev) => ({
+          ...prev,
+          bed_number: res.data.nextBedNumber
+        }));
+      } catch (err) {
+        console.error('Failed to fetch next bed number:', err);
+        setBed((prev) => ({ ...prev, bed_number: '' }));
+      }
+    };
+
 
 
   // Handle input change
@@ -110,7 +111,8 @@ const handleWardChange = async (e) => {
               name="ward_name"
               value={bed.ward_name}
               onChange={handleWardChange}
-              className="w-full border border-gray-300 p-1 rounded"
+              disabled={isEditMode} // ✅ Make it uneditable when updating
+              className="w-full border border-gray-300 p-1 rounded disabled:bg-gray-100"
               required
             >
               <option value="">Select Ward</option>
@@ -134,6 +136,7 @@ const handleWardChange = async (e) => {
               required
             />
           </div>
+
 
           {/* Bed Type */}
           <div>
