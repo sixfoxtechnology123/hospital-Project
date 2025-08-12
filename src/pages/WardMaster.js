@@ -42,10 +42,17 @@ const WardMaster = () => {
     fetchDepartments();
 
     if (location.state?.ward) {
-      // EDIT MODE
-      setWards(location.state.ward);
-      setIsEditMode(true);
-    } else {
+    const wardData = location.state.ward;
+
+    // Ensure departmentId is the actual _id, not the name
+    setWards({
+      ...wardData,
+      departmentId: wardData.departmentId?._id || wardData.departmentId || "",
+    });
+
+    setIsEditMode(true);
+  }
+else {
       // ADD MODE
       fetchNextWardId();
       setIsEditMode(false);
@@ -64,13 +71,8 @@ const handleSubmit = async (e) => {
       // UPDATE
       await axios.put(`http://localhost:5000/api/wards/${wards._id}`, wards);
       alert('Ward updated successfully!');
-      navigate("/wards");
-    } else {
-      // ADD
-      await axios.post('http://localhost:5000/api/wards', wards);
-      alert('Ward saved successfully!');
 
-      // Reset form fields
+      // Just reset fields to blank
       setWards({
         wardId: '',
         name: '',
@@ -79,10 +81,25 @@ const handleSubmit = async (e) => {
         status: 'Active',
       });
 
-      // Fetch and set next ward ID
+      setIsEditMode(false); // Exit edit mode
+
+    } else {
+      // ADD
+      await axios.post('http://localhost:5000/api/wards', wards);
+      alert('Ward saved successfully!');
+
+      // Fetch next ward ID
       const response = await axios.get('http://localhost:5000/api/wards/latest');
       const nextWardId = response.data?.wardId || 'WARD0001';
-      setWards((prev) => ({ ...prev, wardId: nextWardId }));
+
+      // Reset form with next ID
+      setWards({
+        wardId: nextWardId,
+        name: '',
+        departmentId: '',
+        type: '',
+        status: 'Active',
+      });
     }
   } catch (err) {
     console.error('Save failed:', err);
