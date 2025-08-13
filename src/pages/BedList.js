@@ -59,30 +59,38 @@ const BedList = () => {
           </tr>
         </thead>
         <tbody className="text-sm text-center">
-          {bedData.map((bed, index) => (
-            <tr key={index} className="hover:bg-gray-100 transition">
-              <td className="border border-green-500 px-2 py-1">{bed.ward_name}</td>
-              <td className="border border-green-500 px-2 py-1">{bed.bed_number}</td>
-              <td className="border border-green-500 px-2 py-1">{bed.bed_type}</td>
-              <td className="border border-green-500 px-2 py-1">{bed.status}</td>
-              <td className="border border-green-500 px-2 py-1 text-center">
-                <div className="flex justify-center items-center gap-4">
-                  <button
-                    onClick={() => navigate('/Bedmaster', { state: { bed } })}
-                    className="text-blue-600 hover:text-blue-800"
-                  >
-                    <FaEdit />
-                  </button>
-                  <button
-                    onClick={() => deleteBed(bed._id)}
-                    className="text-red-600 hover:text-red-800"
-                  >
-                    <FaTrash />
-                  </button>
-                </div>
+          {bedData.length > 0 ? (
+            bedData.map((bed, index) => (
+              <tr key={index} className="hover:bg-gray-100 transition">
+                <td className="border border-green-500 px-2 py-1">{bed.ward_name}</td>
+                <td className="border border-green-500 px-2 py-1">{bed.bed_number}</td>
+                <td className="border border-green-500 px-2 py-1">{bed.bed_type}</td>
+                <td className="border border-green-500 px-2 py-1">{bed.status}</td>
+                <td className="border border-green-500 px-2 py-1 text-center">
+                  <div className="flex justify-center items-center gap-4">
+                    <button
+                      onClick={() => navigate('/Bedmaster', { state: { bed } })}
+                      className="text-blue-600 hover:text-blue-800"
+                    >
+                      <FaEdit />
+                    </button>
+                    <button
+                      onClick={() => deleteBed(bed._id)}
+                      className="text-red-600 hover:text-red-800"
+                    >
+                      <FaTrash />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="5" className="text-center py-4 text-gray-500">
+                No beds found.
               </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
     </div>

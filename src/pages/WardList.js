@@ -34,7 +34,7 @@ const WardList = () => {
   };
 
   return (
-    <div className="p-6 bg-white shadow-md rounded-md">
+        <div className="p-6 bg-white shadow-md rounded-md">
       <div className="bg-green-50 border border-green-300 rounded-lg shadow-md p-2 mb-4">
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-bold text-green-800">Ward Master</h2>
@@ -62,31 +62,39 @@ const WardList = () => {
           </tr>
         </thead>
         <tbody className="text-sm text-center">
-          {wardData.map((ward, index) => (
-            <tr key={index} className="hover:bg-gray-100 transition">
-              <td className="border border-green-500 px-2 py-1">{ward.wardId}</td>
-              <td className="border border-green-500 px-2 py-1">{ward.name}</td>
-              <td className="border border-green-500 px-2 py-1">{ward.departmentName}</td>
-              <td className="border border-green-500 px-2 py-1">{ward.type}</td>
-              <td className="border border-green-500 px-2 py-1">{ward.status}</td>
-              <td className="border border-green-500 px-2 py-1 text-center">
-                <div className="flex justify-center items-center gap-4">
-                  <button
-                    onClick={() => navigate("/wards", { state: { ward } })}
-                    className="text-blue-600 hover:text-blue-800"
-                  >
-                    <FaEdit />
-                  </button>
-                  <button
-                    onClick={() => deleteWard(ward.wardId)}
-                    className="text-red-600 hover:text-red-800"
-                  >
-                    <FaTrash />
-                  </button>
-                </div>
+          {wardData.length > 0 ? (
+            wardData.map((ward, index) => (
+              <tr key={index} className="hover:bg-gray-100 transition">
+                <td className="border border-green-500 px-2 py-1">{ward.wardId}</td>
+                <td className="border border-green-500 px-2 py-1">{ward.name}</td>
+                <td className="border border-green-500 px-2 py-1">{ward.departmentName}</td>
+                <td className="border border-green-500 px-2 py-1">{ward.type}</td>
+                <td className="border border-green-500 px-2 py-1">{ward.status}</td>
+                <td className="border border-green-500 px-2 py-1 text-center">
+                  <div className="flex justify-center items-center gap-4">
+                    <button
+                      onClick={() => navigate("/wards", { state: { ward } })}
+                      className="text-blue-600 hover:text-blue-800"
+                    >
+                      <FaEdit />
+                    </button>
+                    <button
+                      onClick={() => deleteWard(ward.wardId)}
+                      className="text-red-600 hover:text-red-800"
+                    >
+                      <FaTrash />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="6" className="text-center py-4 text-gray-500">
+                No wards found.
               </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
     </div>

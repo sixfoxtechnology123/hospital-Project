@@ -9,6 +9,26 @@ const WardPage = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-teal-200">
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-8"> 
+           {/* Department Master */}
+        <div
+          onClick={() => navigate('/departmentList')}
+          className="group p-8 bg-white shadow-lg rounded-xl text-center cursor-pointer hover:bg-green-100 transition"
+        >
+          <FaBuilding size={60} className="text-blue-600 mb-4" />
+          <h2 className="mt-4 text-xl font-semibold transform transition-transform duration-300 group-hover:-translate-y-1">
+            Department Master
+          </h2>
+        </div>
+         {/* Doctor Master */}
+        <div
+          onClick={() => navigate('/doctorlist')}
+          className="group p-8 bg-white shadow-lg rounded-xl text-center cursor-pointer hover:bg-green-100 transition"
+        >
+          <FaBuilding size={60} className="text-blue-600 mb-4" />
+          <h2 className="mt-4 text-xl font-semibold transform transition-transform duration-300 group-hover:-translate-y-1">
+            Doctore Master
+          </h2>
+        </div>
         {/* Ward Master */}
         <div
           onClick={() => navigate('/wardList')}
@@ -31,26 +51,7 @@ const WardPage = () => {
           </h2>
         </div>
 
-        {/* Department Master */}
-        <div
-          onClick={() => navigate('/departmentList')}
-          className="group p-8 bg-white shadow-lg rounded-xl text-center cursor-pointer hover:bg-green-100 transition"
-        >
-          <FaBuilding size={60} className="text-blue-600 mb-4" />
-          <h2 className="mt-4 text-xl font-semibold transform transition-transform duration-300 group-hover:-translate-y-1">
-            Department Master
-          </h2>
-        </div>
-         {/* Doctor Master */}
-        <div
-          onClick={() => navigate('/doctorlist')}
-          className="group p-8 bg-white shadow-lg rounded-xl text-center cursor-pointer hover:bg-green-100 transition"
-        >
-          <FaBuilding size={60} className="text-blue-600 mb-4" />
-          <h2 className="mt-4 text-xl font-semibold transform transition-transform duration-300 group-hover:-translate-y-1">
-            Doctore Master
-          </h2>
-        </div>
+     
       </div>
       <div className="mt-8 w-full flex justify-center">
         <BackButton />
