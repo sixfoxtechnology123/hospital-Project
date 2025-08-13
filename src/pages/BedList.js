@@ -33,7 +33,6 @@ const BedList = () => {
 
   return (
     <div className="p-6 bg-white shadow-md rounded-md">
-      {/* Header */}
       <div className="bg-green-50 border border-green-300 rounded-lg shadow-md p-2 mb-4">
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-bold text-green-800">Bed Master</h2>
@@ -49,7 +48,6 @@ const BedList = () => {
         </div>
       </div>
 
-      {/* Table */}
       <table className="w-full table-auto border border-green-500">
         <thead className="bg-gray-200 text-sm">
           <tr>
@@ -69,14 +67,12 @@ const BedList = () => {
               <td className="border border-green-500 px-2 py-1">{bed.status}</td>
               <td className="border border-green-500 px-2 py-1 text-center">
                 <div className="flex justify-center items-center gap-4">
-                  {/* Edit Button */}
                   <button
                     onClick={() => navigate('/Bedmaster', { state: { bed } })}
                     className="text-blue-600 hover:text-blue-800"
                   >
                     <FaEdit />
                   </button>
-                  {/* Delete Button */}
                   <button
                     onClick={() => deleteBed(bed._id)}
                     className="text-red-600 hover:text-red-800"

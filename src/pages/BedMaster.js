@@ -37,28 +37,25 @@ const BedMaster = () => {
     }
   }, [location.state]);
 
-    const handleWardChange = async (e) => {
-      const wardName = e.target.value;
-      setBed((prev) => ({ ...prev, ward_name: wardName }));
+  const handleWardChange = async (e) => {
+    const wardName = e.target.value;
+    setBed((prev) => ({ ...prev, ward_name: wardName }));
 
-      // ✅ Do NOT fetch new bed number in edit mode
-      if (!wardName || isEditMode) return;
+    if (!wardName) return;
 
-      try {
-        const res = await axios.get(
-          `http://localhost:5000/api/beds/next/${encodeURIComponent(wardName)}`
-        );
-        setBed((prev) => ({
-          ...prev,
-          bed_number: res.data.nextBedNumber
-        }));
-      } catch (err) {
-        console.error('Failed to fetch next bed number:', err);
-        setBed((prev) => ({ ...prev, bed_number: '' }));
-      }
-    };
-
-
+    try {
+      const res = await axios.get(
+        `http://localhost:5000/api/beds/next/${encodeURIComponent(wardName)}`
+      );
+      setBed((prev) => ({
+        ...prev,
+        bed_number: res.data.nextBedNumber
+      }));
+    } catch (err) {
+      console.error('Failed to fetch next bed number:', err);
+      setBed((prev) => ({ ...prev, bed_number: '' }));
+    }
+  };
 
   // Handle input change
   const handleChange = (e) => {
@@ -73,14 +70,12 @@ const BedMaster = () => {
       if (isEditMode) {
         await axios.put(`http://localhost:5000/api/beds/${bed._id}`, bed);
         alert('Bed updated successfully!');
-        navigate('/bedlist', { replace: true }); 
       } else {
         await axios.post('http://localhost:5000/api/beds', bed);
         alert('Bed saved successfully!');
-        
       }
       resetForm();
-     navigate('/bedlist'); // ✅ go back to list page so it refreshes
+      navigate('/bedlist'); // go back to list page
     } catch (err) {
       console.error('Save failed:', err);
       alert('Error saving bed');
@@ -113,8 +108,7 @@ const BedMaster = () => {
               name="ward_name"
               value={bed.ward_name}
               onChange={handleWardChange}
-              disabled={isEditMode} //  Make it uneditable when updating
-              className="w-full border border-gray-300 p-1 rounded disabled:bg-gray-100"
+              className="w-full border border-gray-300 p-1 rounded"
               required>
               <option value="">Select Ward</option>
               {wards.map((w) => (
@@ -132,12 +126,11 @@ const BedMaster = () => {
               type="text"
               name="bed_number"
               value={bed.bed_number}
-              readOnly
-              className="w-full border border-gray-300 p-1 rounded bg-gray-100"
+              onChange={handleChange}
+              className="w-full border border-gray-300 p-1 rounded"
               required
             />
           </div>
-
 
           {/* Bed Type */}
           <div>
