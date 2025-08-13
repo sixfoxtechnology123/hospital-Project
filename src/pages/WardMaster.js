@@ -14,10 +14,12 @@ const WardMaster = () => {
 
   const [departments, setDepartments] = useState([]);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [incomingWard, setIncomingWard] = useState(null); // ward from list (has departmentCode)
 
   const location = useLocation();
   const navigate = useNavigate();
 
+  // Load departments + decide create vs edit
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
@@ -42,73 +44,74 @@ const WardMaster = () => {
     fetchDepartments();
 
     if (location.state?.ward) {
-    const wardData = location.state.ward;
-
-    // Ensure departmentId is the actual _id, not the name
-    setWards({
-      ...wardData,
-      departmentId: wardData.departmentId?._id || wardData.departmentId || "",
-    });
-
-    setIsEditMode(true);
-  }
-else {
-      // ADD MODE
+      setIncomingWard(location.state.ward);
+      setIsEditMode(true);
+      // Set the non-department fields immediately
+      const w = location.state.ward;
+      setWards(prev => ({
+        ...prev,
+        _id: w._id,
+        wardId: w.wardId || '',
+        name: w.name || '',
+        type: w.type || '',
+        status: w.status || 'Active',
+      }));
+    } else {
       fetchNextWardId();
       setIsEditMode(false);
     }
   }, [location.state]);
+
+  // After departments are loaded, map departmentCode -> departmentId (for dropdown)
+  useEffect(() => {
+    if (!isEditMode || !incomingWard || departments.length === 0) return;
+
+    // Support both old shape (departmentId) and new shape (departmentCode)
+    let deptId = '';
+    if (incomingWard.departmentId) {
+      deptId =
+        typeof incomingWard.departmentId === 'object'
+          ? incomingWard.departmentId._id
+          : incomingWard.departmentId;
+    } else if (incomingWard.departmentCode) {
+      const match = departments.find(d => d.deptCode === incomingWard.departmentCode);
+      if (match) deptId = match._id;
+    }
+
+    setWards(prev => ({ ...prev, departmentId: deptId }));
+  }, [isEditMode, incomingWard, departments]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setWards({ ...wards, [name]: value });
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    if (isEditMode) {
-      // UPDATE
-      await axios.put(`http://localhost:5000/api/wards/${wards._id}`, wards);
-      alert('Ward updated successfully!');
-
-      // Just reset fields to blank
-      setWards({
-        wardId: '',
-        name: '',
-        departmentId: '',
-        type: '',
-        status: 'Active',
-      });
-
-      setIsEditMode(false); // Exit edit mode
-      navigate('/wardlist', { replace: true }); 
-
-
-    } else {
-      // ADD
-      await axios.post('http://localhost:5000/api/wards', wards);
-      alert('Ward saved successfully!');
-
-      // Fetch next ward ID
-      const response = await axios.get('http://localhost:5000/api/wards/latest');
-      const nextWardId = response.data?.wardId || 'WARD0001';
-
-      // Reset form with next ID
-      setWards({
-        wardId: nextWardId,
-        name: '',
-        departmentId: '',
-        type: '',
-        status: 'Active',
-      });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (isEditMode) {
+        // PUT accepts departmentId; backend maps to departmentCode
+        await axios.put(`http://localhost:5000/api/wards/${wards._id}`, wards);
+        alert('Ward updated successfully!');
+        navigate('/wardlist', { replace: true });
+      } else {
+        await axios.post('http://localhost:5000/api/wards', wards);
+        alert('Ward saved successfully!');
+        const response = await axios.get('http://localhost:5000/api/wards/latest');
+        const nextWardId = response.data?.wardId || 'WARD0001';
+        setWards({
+          wardId: nextWardId,
+          name: '',
+          departmentId: '',
+          type: '',
+          status: 'Active',
+        });
+      }
+    } catch (err) {
+      console.error('Save failed:', err);
+      alert('Error saving ward');
     }
-  } catch (err) {
-    console.error('Save failed:', err);
-    alert('Error saving ward');
-  }
-};
-
+  };
 
   return (
     <div className="min-h-screen bg-zinc-300 flex items-center justify-center">
@@ -118,7 +121,6 @@ const handleSubmit = async (e) => {
         </h2>
 
         <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-2">
-          {/* Ward ID */}
           <div>
             <label className="block font-medium">Ward ID</label>
             <input
@@ -130,7 +132,6 @@ const handleSubmit = async (e) => {
             />
           </div>
 
-          {/* Ward Name */}
           <div>
             <label className="block font-medium">Ward Name</label>
             <input
@@ -143,7 +144,6 @@ const handleSubmit = async (e) => {
             />
           </div>
 
-          {/* Department */}
           <div>
             <label className="block font-medium">Department</label>
             <select
@@ -162,7 +162,6 @@ const handleSubmit = async (e) => {
             </select>
           </div>
 
-          {/* Type */}
           <div>
             <label className="block font-medium">Type</label>
             <select
@@ -190,7 +189,6 @@ const handleSubmit = async (e) => {
             </select>
           </div>
 
-          {/* Status */}
           <div>
             <label className="block font-medium">Status</label>
             <select
@@ -205,19 +203,18 @@ const handleSubmit = async (e) => {
             </select>
           </div>
 
-          {/* Submit */}
           <div className="flex justify-between">
             <BackButton />
             <button
-                type="submit"
-                className={`px-4 py-1 rounded text-white ${
-                  isEditMode
-                    ? "bg-yellow-500 hover:bg-yellow-600"
-                    : "bg-teal-600 hover:bg-teal-700"
-                }`}
-              >
-                {isEditMode ? "Update" : "Save"}
-              </button>
+              type="submit"
+              className={`px-4 py-1 rounded text-white ${
+                isEditMode
+                  ? "bg-yellow-500 hover:bg-yellow-600"
+                  : "bg-teal-600 hover:bg-teal-700"
+              }`}
+            >
+              {isEditMode ? "Update" : "Save"}
+            </button>
           </div>
         </form>
       </div>

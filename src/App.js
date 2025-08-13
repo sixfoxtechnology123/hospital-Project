@@ -14,7 +14,6 @@ import WardList from './pages/WardList';
 import WardPage from './pages/WardPage';
 import BedMaster from './pages/BedMaster';
 import BedList from './pages/BedList';
-import UpdateWard from './pages/UpdateWard';
 import DepartmentList from './pages/DepartmentList';
 import DoctorList from './pages/DoctorList';
 
@@ -37,7 +36,6 @@ function App() {
         <Route path="/wards" element={<WardMaster/>} />
         <Route path="/wardList" element={<WardList/>} />
         <Route path="/wardpage" element={<WardPage/>} />
-        <Route path="/updateward/:wardId" element={<UpdateWard/>} />
         <Route path="/Bedmaster" element={<BedMaster/>} />
         <Route path="/Bedlist" element={<BedList/>} />
       </Routes>
