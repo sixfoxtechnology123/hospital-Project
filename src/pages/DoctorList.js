@@ -1,3 +1,4 @@
+// DoctorList.jsx
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -8,11 +9,10 @@ const DoctorList = () => {
   const [doctors, setDoctors] = useState([]);
   const navigate = useNavigate();
 
-  // Fetch all doctors
   const fetchDoctors = async () => {
     try {
       const res = await axios.get('http://localhost:5000/api/doctors');
-      setDoctors(res.data);
+      setDoctors(res.data || []);
     } catch (err) {
       console.error('Failed to fetch doctors:', err);
     }
@@ -22,12 +22,11 @@ const DoctorList = () => {
     fetchDoctors();
   }, []);
 
-  // Delete a doctor
   const deleteDoctor = async (id) => {
     if (!window.confirm('Are you sure you want to delete this doctor?')) return;
     try {
       await axios.delete(`http://localhost:5000/api/doctors/${id}`);
-      setDoctors(doctors.filter((doc) => doc._id !== id));
+      setDoctors((prev) => prev.filter((d) => d._id !== id));
     } catch (err) {
       console.error('Failed to delete doctor:', err);
     }
@@ -64,14 +63,16 @@ const DoctorList = () => {
           </tr>
         </thead>
         <tbody className="text-sm text-center">
-          {doctors.length > 0 ? (
-            doctors.map((doc, index) => (
-              <tr key={index} className="hover:bg-gray-100 transition">
-                <td className="border border-green-500 px-2 py-1">{doc.code || doc.doctorCode}</td>
-                <td className="border border-green-500 px-2 py-1">{doc.name || doc.doctorName}</td>
-                <td className="border border-green-500 px-2 py-1">{doc.deptCode || doc.department}</td>
+          {doctors.length ? (
+            doctors.map((doc) => (
+              <tr key={doc._id} className="hover:bg-gray-100 transition">
+                <td className="border border-green-500 px-2 py-1">{doc.doctorCode}</td>
+                <td className="border border-green-500 px-2 py-1">{doc.doctorName}</td>
+                <td className="border border-green-500 px-2 py-1">
+                  {doc.departmentName || doc.departmentCode /* fallback */}
+                </td>
                 <td className="border border-green-500 px-2 py-1">{doc.qualification}</td>
-                <td className="border border-green-500 px-2 py-1">{doc.registrationNo || doc.regNo}</td>
+                <td className="border border-green-500 px-2 py-1">{doc.registrationNo}</td>
                 <td className="border border-green-500 px-2 py-1 text-center">
                   <div className="flex justify-center items-center gap-4">
                     <button

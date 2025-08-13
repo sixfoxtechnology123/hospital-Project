@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+// DoctorMaster.jsx
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import BackButton from '../component/BackButton';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -8,8 +9,9 @@ const DoctorMaster = () => {
   const [doctorName, setDoctorName] = useState('');
   const [qualification, setQualification] = useState('');
   const [registrationNo, setRegistrationNo] = useState('');
-  const [departments, setDepartments] = useState([]);
-  const [selectedDeptCode, setSelectedDeptCode] = useState('');
+
+  const [departments, setDepartments] = useState([]);     // [{deptCode, deptName}]
+  const [selectedDeptCode, setSelectedDeptCode] = useState(''); // "CARD"
 
   const [doctors, setDoctors] = useState([]);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -18,140 +20,100 @@ const DoctorMaster = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Fetch doctors and departments on mount or location.state change
+  // fetch deps + docs; then decide add/edit
   useEffect(() => {
-    fetchDepartments();
-    fetchDoctors();
+    const fetchDeps = async () => {
+      try {
+        const res = await axios.get('http://localhost:5000/api/departments');
+        setDepartments(res.data || []);
+      } catch (e) {
+        console.error('Failed to fetch departments', e);
+      }
+    };
 
+    const fetchDocs = async () => {
+      try {
+        const res = await axios.get('http://localhost:5000/api/doctors');
+        setDoctors(res.data || []);
+        // generate next code only for Add mode
+        if (!location.state?.doctor) {
+          let nextNum = 1;
+          if (res.data?.length) {
+            const last = res.data[res.data.length - 1];
+            const m = (last.doctorCode || '').match(/DOC(\d+)/);
+            if (m) nextNum = parseInt(m[1], 10) + 1;
+          }
+          setDoctorCode(`DOC${String(nextNum).padStart(4, '0')}`);
+        }
+      } catch (e) {
+        console.error('Failed to fetch doctors', e);
+        if (!location.state?.doctor) setDoctorCode('DOC0001');
+      }
+    };
+
+    fetchDeps();
+    fetchDocs();
+
+    // handle edit prefill
     if (location.state?.doctor) {
-      // Edit mode: fill form with doctor data
       const doc = location.state.doctor;
-      setDoctorCode(doc.doctorCode || doc.code);
-      setDoctorName(doc.doctorName || doc.name);
+      setIsEditMode(true);
+      setEditId(doc._id);
+      setDoctorCode(doc.doctorCode || doc.code || '');
+      setDoctorName(doc.doctorName || doc.name || '');
       setQualification(doc.qualification || '');
       setRegistrationNo(doc.registrationNo || doc.regNo || '');
-      setSelectedDeptCode(doc.deptCode || '');
-      setEditId(doc._id);
-      setIsEditMode(true);
-    } else if (location.state?.fromUpdate) {
-      resetUpdateForm();
+      // ✅ prefer departmentCode; fallback to deptCode if your old data has that key
+      setSelectedDeptCode(doc.departmentCode || doc.deptCode || '');
     } else {
-      resetAddForm();
+      // add mode
+      setIsEditMode(false);
+      setEditId(null);
+      setDoctorName('');
+      setQualification('');
+      setRegistrationNo('');
+      setSelectedDeptCode('');
     }
   }, [location.state]);
 
-  const fetchDepartments = async () => {
-    try {
-      const res = await axios.get('http://localhost:5000/api/departments');
-      setDepartments(res.data);
-    } catch (err) {
-      console.error('Failed to fetch departments:', err);
-    }
-  };
-
-  const fetchDoctors = async () => {
-    try {
-      const res = await axios.get('http://localhost:5000/api/doctors');
-      setDoctors(res.data);
-
-      if (!isEditMode) {
-        // Generate next doctor code
-        let next = 1;
-        if (res.data.length > 0) {
-          const lastDoctor = res.data[res.data.length - 1];
-          const match = (lastDoctor.doctorCode || lastDoctor.code)?.match(/DOC(\d+)/);
-          if (match) {
-            next = parseInt(match[1], 10) + 1;
-          }
-        }
-        setDoctorCode(`DOC${String(next).padStart(4, '0')}`);
-      }
-    } catch (err) {
-      console.error('Failed to fetch doctors:', err);
-      if (!isEditMode) setDoctorCode('DOC0001');
-    }
-  };
-
-  const resetUpdateForm = () => {
-    setDoctorCode('');
-    setDoctorName('');
-    setQualification('');
-    setRegistrationNo('');
-    setSelectedDeptCode('');
-    setIsEditMode(false);
-    setEditId(null);
-  };
-
-  const resetAddForm = () => {
-    setDoctorName('');
-    setQualification('');
-    setRegistrationNo('');
-    setSelectedDeptCode('');
-    setIsEditMode(false);
-    setEditId(null);
-    fetchDoctors(); // regenerates code
-  };
-
   const handleSaveOrUpdate = async () => {
-    if (!doctorName.trim()) {
-      alert('Doctor name is required');
-      return;
-    }
-    if (!selectedDeptCode) {
-      alert('Please select a department');
-      return;
-    }
-    if (!registrationNo.trim()) {
-      alert('Registration number is required');
-      return;
-    }
+    if (!doctorName.trim()) return alert('Doctor name is required');
+    if (!selectedDeptCode) return alert('Please select a department');
+    if (!registrationNo.trim()) return alert('Registration number is required');
 
-    // Duplicate name check ignoring current edited doctor
-    const duplicate = doctors.find(
-      (doc) =>
-        doc.doctorName.toLowerCase().trim() === doctorName.toLowerCase().trim() &&
-        doc._id !== editId
+    // prevent duplicate names (ignore self on edit)
+    const dup = doctors.find(
+      (d) =>
+        (d.doctorName || '').toLowerCase().trim() === doctorName.toLowerCase().trim() &&
+        d._id !== editId
     );
-    if (duplicate) {
-      alert('Doctor name already exists!');
-      return;
+    if (dup) return alert('Doctor name already exists');
+
+    try {
+      if (isEditMode) {
+        await axios.put(`http://localhost:5000/api/doctors/${editId}`, {
+          doctorCode,
+          doctorName,
+          qualification,
+          registrationNo,
+          departmentCode: selectedDeptCode,
+        });
+        alert('Doctor updated successfully');
+      } else {
+        await axios.post('http://localhost:5000/api/doctors', {
+          doctorCode,
+          doctorName,
+          qualification,
+          registrationNo,
+          departmentCode: selectedDeptCode,
+        });
+        alert('Doctor saved successfully');
+      }
+      navigate('/doctorList', { replace: true });
+    } catch (err) {
+      console.error('Save/Update doctor failed:', err);
+      alert('Failed to save/update doctor');
     }
-
- try {
-  if (isEditMode) {
-    await axios.put(`http://localhost:5000/api/doctors/${editId}`, {
-      doctorCode,
-      doctorName,
-      qualification,
-      registrationNo,
-      departmentCode: selectedDeptCode,  // <--- change here
-    });
-    alert('Doctor updated successfully');
-    resetUpdateForm();
-    fetchDoctors();
-    navigate('/doctorList', { replace: true });
-  } else {
-    await axios.post('http://localhost:5000/api/doctors', {
-      doctorCode,
-      doctorName,
-      qualification,
-      registrationNo,
-      departmentCode: selectedDeptCode,  // <--- change here
-    });
-    alert('Doctor saved successfully');
-    resetAddForm();
-    fetchDoctors();
-    navigate('/doctorList', { replace: true });
-  }
-} catch (err) {
-  console.error('Error saving/updating doctor:', err);
-  alert('Failed to save/update doctor');
-}
-
-  };
-
-  const handleBack = () => {
-    navigate(-1);
   };
 
   return (
@@ -161,16 +123,18 @@ const DoctorMaster = () => {
           {isEditMode ? 'Update Doctor' : 'Doctor Master'}
         </h2>
 
+        {/* Doctor Code */}
         <div className="mb-4">
           <label className="block text-black mb-1">Doctor Code</label>
           <input
             type="text"
             value={doctorCode}
             readOnly
-            className="w-full p-1 border rounded cursor-not-allowed bg-gray-100"
+            className="w-full p-1 border rounded bg-gray-100 cursor-not-allowed"
           />
         </div>
 
+        {/* Doctor Name */}
         <div className="mb-4">
           <label className="block text-black mb-1">Doctor Name</label>
           <input
@@ -182,6 +146,7 @@ const DoctorMaster = () => {
           />
         </div>
 
+        {/* Department */}
         <div className="mb-4">
           <label className="block text-black mb-1">Select Department</label>
           <select
@@ -198,6 +163,7 @@ const DoctorMaster = () => {
           </select>
         </div>
 
+        {/* Qualification */}
         <div className="mb-4">
           <label className="block text-black mb-1">Qualification</label>
           <input
@@ -209,6 +175,7 @@ const DoctorMaster = () => {
           />
         </div>
 
+        {/* Registration No */}
         <div className="mb-4">
           <label className="block text-black mb-1">Registration No</label>
           <input
@@ -221,7 +188,7 @@ const DoctorMaster = () => {
         </div>
 
         <div className="flex justify-between">
-          <button onClick={handleBack}>
+          <button onClick={() => navigate(-1)}>
             <BackButton />
           </button>
 
