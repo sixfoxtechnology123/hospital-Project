@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { FaTrash, FaEdit } from 'react-icons/fa';
 import BackButton from '../component/BackButton';
 
 const ServiceList = () => {
   const [services, setServices] = useState([]);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const fetchServices = async () => {
     try {
       const res = await axios.get('http://localhost:5000/api/services');
+      console.log('Fetched services:', res.data); // Debugging log
       setServices(res.data || []);
     } catch (e) {
       console.error('Failed to fetch services:', e);
@@ -19,13 +21,13 @@ const ServiceList = () => {
 
   useEffect(() => {
     fetchServices();
-  }, []);
+  }, [location.key]); // Refresh when coming back from ServiceMaster
 
   const deleteService = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this service?')) return;
+    if (!window.confirm(`Are you sure you want to delete this service?`)) return;
     try {
       await axios.delete(`http://localhost:5000/api/services/${id}`);
-      setServices((prev) => prev.filter((s) => s._id !== id));
+      setServices(prev => prev.filter(s => s._id !== id)); // Match on _id, not serviceId
     } catch (e) {
       console.error('Delete failed:', e);
     }
@@ -60,7 +62,7 @@ const ServiceList = () => {
           </tr>
         </thead>
         <tbody className="text-sm text-center">
-          {services.length ? (
+          {services.length > 0 ? (
             services.map((svc) => (
               <tr key={svc._id} className="hover:bg-gray-100 transition">
                 <td className="border border-green-500 px-2 py-1">{svc.serviceId}</td>
@@ -73,14 +75,12 @@ const ServiceList = () => {
                     <button
                       onClick={() => navigate('/serviceMaster', { state: { service: svc } })}
                       className="text-blue-600 hover:text-blue-800"
-                      aria-label="Edit Service"
                     >
                       <FaEdit />
                     </button>
                     <button
-                      onClick={() => deleteService(svc._id)}
+                      onClick={() => deleteService(svc._id)} // ✅ Now using _id
                       className="text-red-600 hover:text-red-800"
-                      aria-label="Delete Service"
                     >
                       <FaTrash />
                     </button>

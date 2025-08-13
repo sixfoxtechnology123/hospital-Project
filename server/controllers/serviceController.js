@@ -1,6 +1,7 @@
 // controllers/serviceController.js
 const mongoose = require('mongoose');
 const Service = require('../models/service');
+const Department = require('../models/Department'); 
 
 // prefix used everywhere (matches your frontend fallback "SRV0001")
 const PREFIX = 'SERV';
@@ -28,16 +29,30 @@ exports.getLatestServiceId = async (_req, res) => {
   }
 };
 
-// GET /api/services  -> list with populated department name
 exports.getAllServices = async (_req, res) => {
   try {
-    const services = await Service.find().populate('departmentId', 'deptName');
-    res.json(services);
+    const services = await Service.find()
+      .populate('departmentId', 'deptName') // match schema
+      .lean();
+
+    const formatted = services.map(svc => ({
+      _id: svc._id,
+      serviceId: svc.serviceId,
+      serviceName: svc.serviceName,
+      serviceCategory: svc.serviceCategory,
+      departmentName: svc.departmentId?.deptName || '',
+      status: svc.status,
+      description: svc.description || ''
+    }));
+
+    res.json(formatted);
   } catch (err) {
     console.error('getAllServices error:', err);
     res.status(500).json({ error: err.message || 'Failed to fetch services' });
   }
 };
+
+
 
 // POST /api/services  -> create (auto-generates serviceId)
 exports.createService = async (req, res) => {
