@@ -1,19 +1,19 @@
+// models/Service.js
 const mongoose = require('mongoose');
 
-const serviceSchema = new mongoose.Schema({
-  code: {
-    type: String,
-    required: true,
-    unique: true,
+const serviceSchema = new mongoose.Schema(
+  {
+    serviceId: { type: String, required: true, unique: true },  // SRV0001
+    serviceName: { type: String, required: true },
+    serviceCategory: { type: String, required: true },
+    departmentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Department', required: true },
+    description: { type: String, default: '' },
+    status: { type: String, enum: ['Active', 'Inactive'], default: 'Active' },
   },
-  name: {
-    type: String,
-    required: true,
-  },
-  department: {
-    type: String,
-    required: true,
+  { 
+    timestamps: false,
+    collection: 'servicemaster' 
   }
-}, { timestamps: false });
+);
 
 module.exports = mongoose.model('ServiceMaster', serviceSchema);

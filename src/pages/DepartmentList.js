@@ -38,7 +38,7 @@ const DepartmentList = () => {
       {/* Header */}
       <div className="bg-green-50 border border-green-300 rounded-lg shadow-md p-2 mb-4">
         <div className="flex justify-between items-center">
-          <h2 className="text-xl font-bold text-green-800">Department Master</h2>
+          <h2 className="text-xl font-bold text-green-800">Department</h2>
           <div className="flex gap-4">
             <BackButton />
             <button

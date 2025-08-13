@@ -35,7 +35,7 @@ const BedList = () => {
     <div className="p-6 bg-white shadow-md rounded-md">
       <div className="bg-green-50 border border-green-300 rounded-lg shadow-md p-2 mb-4">
         <div className="flex justify-between items-center">
-          <h2 className="text-xl font-bold text-green-800">Bed Master</h2>
+          <h2 className="text-xl font-bold text-green-800">Bed</h2>
           <div className="flex gap-4">
             <BackButton />
             <button
