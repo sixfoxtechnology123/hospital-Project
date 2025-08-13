@@ -23,15 +23,15 @@ const ServiceList = () => {
     fetchServices();
   }, [location.key]); // Refresh when coming back from ServiceMaster
 
-  const deleteService = async (id) => {
-    if (!window.confirm(`Are you sure you want to delete this service?`)) return;
-    try {
-      await axios.delete(`http://localhost:5000/api/services/${id}`);
-      setServices(prev => prev.filter(s => s._id !== id)); // Match on _id, not serviceId
-    } catch (e) {
-      console.error('Delete failed:', e);
-    }
-  };
+const deleteService = async (id) => {
+  if (!window.confirm('Are you sure you want to delete this service?')) return;
+  try {
+    await axios.delete(`http://localhost:5000/api/services/${id}`);
+    setServices(prev => prev.filter(s => s._id !== id));
+  } catch (err) {
+    console.error('Failed to delete service:', err);
+  }
+};
 
   return (
     <div className="p-6 bg-white shadow-md rounded-md">
@@ -57,6 +57,7 @@ const ServiceList = () => {
             <th className="border border-green-500 px-2 py-1">Service Name</th>
             <th className="border border-green-500 px-2 py-1">Category</th>
             <th className="border border-green-500 px-2 py-1">Department</th>
+            <th className="border border-green-500 px-2 py-1">Description</th>
             <th className="border border-green-500 px-2 py-1">Status</th>
             <th className="border border-green-500 px-2 py-1">Action</th>
           </tr>
@@ -69,6 +70,7 @@ const ServiceList = () => {
                 <td className="border border-green-500 px-2 py-1">{svc.serviceName}</td>
                 <td className="border border-green-500 px-2 py-1">{svc.serviceCategory}</td>
                 <td className="border border-green-500 px-2 py-1">{svc.departmentName}</td>
+                <td className="border border-green-500 px-2 py-1">{svc.description}</td>
                 <td className="border border-green-500 px-2 py-1">{svc.status}</td>
                 <td className="border border-green-500 px-2 py-1 text-center">
                   <div className="flex justify-center items-center gap-4">
