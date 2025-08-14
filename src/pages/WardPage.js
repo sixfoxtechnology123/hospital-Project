@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaHospitalAlt, FaBed, FaBuilding, FaUserMd, FaCogs } from 'react-icons/fa';
+import { FaHospitalAlt, FaBed, FaBuilding, FaUserMd,FaRupeeSign, FaCogs } from 'react-icons/fa';
 import BackButton from '../component/BackButton';
 
 const WardPage = () => {
@@ -38,6 +38,16 @@ const WardPage = () => {
           <FaCogs size={60} className="text-green-600 mb-4" />
           <h2 className="mt-4 text-xl font-semibold transform transition-transform duration-300 group-hover:-translate-y-1">
             Service
+          </h2>
+        </div>
+         {/* Service Rate Master */}
+        <div
+          onClick={() => navigate('/serviceratelist')}
+          className="group p-8 bg-white shadow-lg rounded-xl text-center cursor-pointer hover:bg-green-100 transition"
+        >
+          <FaRupeeSign size={60} className="text-yellow-600 mb-4" />
+          <h2 className="mt-4 text-xl font-semibold transform transition-transform duration-300 group-hover:-translate-y-1">
+            Service Rate
           </h2>
         </div>
         {/* Ward Master */}

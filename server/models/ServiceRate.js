@@ -1,13 +1,22 @@
+// models/ServiceRate.js
 const mongoose = require('mongoose');
 
-const ServiceRateSchema = new mongoose.Schema({
-  serviceCode: { type: String, required: true },
-  effectiveFrom: { type: Date, required: true },
-  effectiveTo: { type: Date, required: true },
-  serviceRate: { type: Number, required: true },         
-  doctorShare: { type: Number, required: true },         
-  hospitalShare: { type: Number, required: true },       
-  active: { type: String, enum: ['Yes', 'No'], default: 'Yes' },
-});
+const serviceRateSchema = new mongoose.Schema(
+  {
+    rateId: { type: String, required: true, unique: true }, // SERVRATE0001
+    serviceId: { type: String, required: true },            // links to ServiceMaster.serviceId (string)
+    rateType: { type: String, enum: ['General', 'Insurance', 'Corporate', 'Package'], required: true },
+    rateAmount: { type: Number, required: true },
+    effectiveFrom: { type: Date, required: true },
+    effectiveTo: { type: Date }, // optional
+    status: { type: String, enum: ['Active', 'Inactive'], default: 'Active' },
+    doctorShare: { type: Number, default: null },
+    hospitalShare: { type: Number, default: null },
+  },
+  {
+    timestamps: false,
+    collection: 'service_rate_master',
+  }
+);
 
-module.exports = mongoose.model('ServiceRateMaster', ServiceRateSchema);
+module.exports = mongoose.model('ServiceRate', serviceRateSchema);

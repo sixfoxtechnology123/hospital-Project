@@ -17,6 +17,7 @@ import BedList from './pages/BedList';
 import DepartmentList from './pages/DepartmentList';
 import DoctorList from './pages/DoctorList';
 import ServiceList from './pages/ServiceList';
+import ServiceRateList from './pages/ServiceRateList';
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
         <Route path="/servicemaster" element={<ServiceMaster/>} />
         <Route path="/servicelist" element={<ServiceList/>} />
         <Route path="/serviceRateMaster" element={<ServiceRateMaster/>} />
+        <Route path="/serviceratelist" element={<ServiceRateList/>} />
         <Route path="/wards" element={<WardMaster/>} />
         <Route path="/wardList" element={<WardList/>} />
         <Route path="/wardpage" element={<WardPage/>} />
