@@ -12,6 +12,7 @@ const opRoutes = require('./routes/opRegistrationRoutes');
 const wardRoutes = require('./routes/wardRoutes');
 const bedRoutes = require('./routes/bedRoutes');
 const vendorRoutes = require('./routes/vendorRoutes');
+const inventoryItemRoutes = require('./routes/inventoryItemRoutes');
 
 
 
@@ -36,6 +37,8 @@ app.use('/api/op', opRoutes);
 app.use('/api/wards', wardRoutes);
 app.use('/api/beds', bedRoutes);
 app.use('/api/vendors', vendorRoutes);
+app.use('/api/inventory-items', inventoryItemRoutes);
+
 
 
 

@@ -20,6 +20,8 @@ import ServiceList from './pages/ServiceList';
 import ServiceRateList from './pages/ServiceRateList';
 import VendorMaster from './pages/VendorMaster';
 import VendorList from './pages/VendorList';
+import InventoryItemMaster from './pages/InventoryItemMaster';
+import InventoryItemList from './pages/InventoryItemList';
 
 function App() {
   return (
@@ -46,6 +48,8 @@ function App() {
         <Route path="/Bedlist" element={<BedList/>} />
         <Route path="/vendormaster" element={<VendorMaster/>} />
         <Route path="/vendorlist" element={<VendorList/>} />
+        <Route path="/InventoryItemMaster" element={<InventoryItemMaster/>} />
+        <Route path="/InventoryItemList" element={<InventoryItemList/>} />
       </Routes>
     </div>
   );
