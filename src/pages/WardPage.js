@@ -8,7 +8,7 @@ const WardPage = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-teal-200">
-      <div className="grid grid-cols-1 sm:grid-cols-6 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-4 gap-8">
         {/* Department Master */}
         <div
           onClick={() => navigate('/departmentList')}

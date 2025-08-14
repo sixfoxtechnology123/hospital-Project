@@ -7,7 +7,7 @@ const HomePage = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-teal-200">
-      <h1 className="text-4xl font-bold text-gray-800 mb-10">Welcome to Hospisys</h1>
+      <h1 className="text-4xl font-bold text-gray-800 mb-10">Welcome to CLINIX</h1>
 
       <div className="flex gap-10">
         {/* Patients Box */}
