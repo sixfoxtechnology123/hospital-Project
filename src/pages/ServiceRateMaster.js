@@ -114,147 +114,147 @@ const ServiceRateMaster = () => {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-300 flex items-center justify-center">
-      <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-sm">
-        <h2 className="text-2xl font-bold mb-6 text-center text-black">
-          {isEditMode ? 'Update Service Rate' : 'Service Rate Master'}
-        </h2>
+        <div className="min-h-screen bg-zinc-300 flex items-center justify-center">
+        <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-6xl">
+          <h2 className="text-2xl font-bold mb-6 text-center text-black">
+            {isEditMode ? 'Update Service Rate' : 'Service Rate'}
+          </h2>
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div>
+              <label className="block font-medium">Rate ID</label>
+              <input
+                type="text"
+                name="rateId"
+                value={rate.rateId}
+                readOnly
+                className="w-full border border-gray-300 p-1 rounded bg-gray-100"
+              />
+            </div>
 
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-2">
-          <div>
-            <label className="block font-medium">Rate ID</label>
-            <input
-              type="text"
-              name="rateId"
-              value={rate.rateId}
-              readOnly
-              className="w-full border border-gray-300 p-1 rounded bg-gray-100"
-            />
-          </div>
+            <div>
+              <label className="block font-medium">Service</label>
+              <select
+                name="serviceId"
+                value={rate.serviceId}
+                onChange={handleChange}
+                className="w-full border border-gray-300 p-1 rounded"
+                required
+              >
+                <option value="">--Select--</option>
+                {services.map(svc => (
+                  <option key={svc._id} value={svc.serviceId}>
+                    {svc.serviceName}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-          <div>
-            <label className="block font-medium">Service</label>
-            <select
-              name="serviceId"
-              value={rate.serviceId}
-              onChange={handleChange}
-              className="w-full border border-gray-300 p-1 rounded"
-              required
-            >
-              <option value="">--Select--</option>
-              {services.map(svc => (
-                <option key={svc._id} value={svc.serviceId}>
-                  {svc.serviceName}
-                </option>
-              ))}
-            </select>
-          </div>
+            <div>
+              <label className="block font-medium">Rate Type</label>
+              <select
+                name="rateType"
+                value={rate.rateType}
+                onChange={handleChange}
+                className="w-full border border-gray-300 p-1 rounded"
+                required
+              >
+                <option value="">--Select--</option>
+                <option value="General">General</option>
+                <option value="Insurance">Insurance</option>
+                <option value="Corporate">Corporate</option>
+                <option value="Package">Package</option>
+              </select>
+            </div>
 
-          <div>
-            <label className="block font-medium">Rate Type</label>
-            <select
-              name="rateType"
-              value={rate.rateType}
-              onChange={handleChange}
-              className="w-full border border-gray-300 p-1 rounded"
-              required
-            >
-              <option value="">--Select--</option>
-              <option value="General">General</option>
-              <option value="Insurance">Insurance</option>
-              <option value="Corporate">Corporate</option>
-              <option value="Package">Package</option>
-            </select>
-          </div>
+            <div>
+              <label className="block font-medium">Rate Amount (₹)</label>
+              <input
+                type="number"
+                step="0.01"
+                name="rateAmount"
+                value={rate.rateAmount}
+                onChange={handleChange}
+                className="w-full border border-gray-300 p-1 rounded"
+                required
+              />
+            </div>
 
-          <div>
-            <label className="block font-medium">Rate Amount (₹)</label>
-            <input
-              type="number"
-              step="0.01"
-              name="rateAmount"
-              value={rate.rateAmount}
-              onChange={handleChange}
-              className="w-full border border-gray-300 p-1 rounded"
-              required
-            />
-          </div>
+            <div>
+              <label className="block font-medium">Effective From</label>
+              <input
+                type="date"
+                name="effectiveFrom"
+                value={rate.effectiveFrom}
+                onChange={handleChange}
+                className="w-full border border-gray-300 p-1 rounded"
+                required
+              />
+            </div>
 
-          <div>
-            <label className="block font-medium">Effective From</label>
-            <input
-              type="date"
-              name="effectiveFrom"
-              value={rate.effectiveFrom}
-              onChange={handleChange}
-              className="w-full border border-gray-300 p-1 rounded"
-              required
-            />
-          </div>
+            <div>
+              <label className="block font-medium">Effective To</label>
+              <input
+                type="date"
+                name="effectiveTo"
+                value={rate.effectiveTo}
+                onChange={handleChange}
+                className="w-full border border-gray-300 p-1 rounded"
+              />
+            </div>
 
-          <div>
-            <label className="block font-medium">Effective To</label>
-            <input
-              type="date"
-              name="effectiveTo"
-              value={rate.effectiveTo}
-              onChange={handleChange}
-              className="w-full border border-gray-300 p-1 rounded"
-            />
-          </div>
+            <div>
+              <label className="block font-medium">Doctor Share (₹)</label>
+              <input
+                type="number"
+                step="0.01"
+                name="doctorShare"
+                value={rate.doctorShare}
+                onChange={handleChange}
+                className="w-full border border-gray-300 p-1 rounded"
+              />
+            </div>
 
-          <div>
-            <label className="block font-medium">Doctor Share (₹)</label>
-            <input
-              type="number"
-              step="0.01"
-              name="doctorShare"
-              value={rate.doctorShare}
-              onChange={handleChange}
-              className="w-full border border-gray-300 p-1 rounded"
-            />
-          </div>
+            <div>
+              <label className="block font-medium">Hospital Share (₹)</label>
+              <input
+                type="number"
+                step="0.01"
+                name="hospitalShare"
+                value={rate.hospitalShare}
+                onChange={handleChange}
+                className="w-full border border-gray-300 p-1 rounded"
+              />
+            </div>
 
-          <div>
-            <label className="block font-medium">Hospital Share (₹)</label>
-            <input
-              type="number"
-              step="0.01"
-              name="hospitalShare"
-              value={rate.hospitalShare}
-              onChange={handleChange}
-              className="w-full border border-gray-300 p-1 rounded"
-            />
-          </div>
+            <div>
+              <label className="block font-medium">Status</label>
+              <select
+                name="status"
+                value={rate.status}
+                onChange={handleChange}
+                className="w-full border border-gray-300 p-1 rounded"
+                required
+              >
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+            </div>
 
-          <div>
-            <label className="block font-medium">Status</label>
-            <select
-              name="status"
-              value={rate.status}
-              onChange={handleChange}
-              className="w-full border border-gray-300 p-1 rounded"
-              required
-            >
-              <option value="Active">Active</option>
-              <option value="Inactive">Inactive</option>
-            </select>
-          </div>
-
-          <div className="flex justify-between">
-            <BackButton />
-            <button
-              type="submit"
-              className={`px-4 py-1 rounded text-white ${
-                isEditMode ? 'bg-yellow-500 hover:bg-yellow-600' : 'bg-teal-600 hover:bg-teal-700'
-              }`}
-            >
-              {isEditMode ? 'Update' : 'Save'}
-            </button>
-          </div>
-        </form>
+            {/* ✅ Buttons row: full width under the grid */}
+            <div className="col-span-1 md:col-span-2 lg:col-span-3 flex justify-between mt-2">
+              <BackButton />
+              <button
+                type="submit"
+                className={`px-4 py-1 rounded text-white ${
+                  isEditMode ? 'bg-yellow-500 hover:bg-yellow-600' : 'bg-teal-600 hover:bg-teal-700'
+                }`}
+              >
+                {isEditMode ? 'Update' : 'Save'}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
   );
 };
 

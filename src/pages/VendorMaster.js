@@ -63,6 +63,7 @@ const VendorMaster = () => {
           email: '',
           address: '',
         });
+        navigate('/vendorlist', { replace: true });
       }
     } catch (err) {
       console.error('Save failed:', err);
@@ -71,57 +72,117 @@ const VendorMaster = () => {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-300 flex items-center justify-center">
-      <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-sm">
+      <div className="min-h-screen bg-zinc-300 flex items-center justify-center">
+      <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-6xl">
         <h2 className="text-2xl font-bold mb-6 text-center text-black">
-          {isEditMode ? "Update Vendor" : "Vendor Master"}
+          {isEditMode ? "Update Vendor" : "Vendor"}
         </h2>
-
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-2">
+        <form
+          onSubmit={handleSubmit}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+        >
           <div>
             <label className="block font-medium">Vendor ID</label>
-            <input type="text" name="vendorId" value={vendor.vendorId} readOnly className="w-full border border-gray-300 p-1 rounded bg-gray-100" />
+            <input
+              type="text"
+              name="vendorId"
+              value={vendor.vendorId}
+              readOnly
+              className="w-full border border-gray-300 p-1 rounded bg-gray-100"
+            />
           </div>
 
           <div>
             <label className="block font-medium">Supplier Name</label>
-            <input type="text" name="vendorName" value={vendor.vendorName} onChange={handleChange} required className="w-full border border-gray-300 p-1 rounded" />
+            <input
+              type="text"
+              name="vendorName"
+              value={vendor.vendorName}
+              onChange={handleChange}
+              required
+              className="w-full border border-gray-300 p-1 rounded"
+            />
           </div>
 
           <div>
             <label className="block font-medium">Contact Person</label>
-            <input type="text" name="contactPerson" value={vendor.contactPerson} onChange={handleChange} required className="w-full border border-gray-300 p-1 rounded" />
+            <input
+              type="text"
+              name="contactPerson"
+              value={vendor.contactPerson}
+              onChange={handleChange}
+              required
+              className="w-full border border-gray-300 p-1 rounded"
+            />
           </div>
 
           <div>
             <label className="block font-medium">Mobile Number</label>
-            <input type="text" name="mobileNumber" value={vendor.mobileNumber} onChange={handleChange} required className="w-full border border-gray-300 p-1 rounded" />
+            <input
+              type="text"
+              name="mobileNumber"
+              value={vendor.mobileNumber}
+              onChange={handleChange}
+              required
+              className="w-full border border-gray-300 p-1 rounded"
+            />
           </div>
 
           <div>
             <label className="block font-medium">GST No</label>
-            <input type="text" name="gstNo" value={vendor.gstNo} onChange={handleChange} required className="w-full border border-gray-300 p-1 rounded" />
+            <input
+              type="text"
+              name="gstNo"
+              value={vendor.gstNo}
+              onChange={handleChange}
+              required
+              className="w-full border border-gray-300 p-1 rounded"
+            />
           </div>
 
           <div>
             <label className="block font-medium">Email</label>
-            <input type="email" name="email" value={vendor.email} onChange={handleChange} required className="w-full border border-gray-300 p-1 rounded" />
+            <input
+              type="email"
+              name="email"
+              value={vendor.email}
+              onChange={handleChange}
+              required
+              className="w-full border border-gray-300 p-1 rounded"
+            />
           </div>
 
-          <div>
+          {/* Address spans full width on lg */}
+          <div className="lg:col-span-3 md:col-span-2 col-span-1">
             <label className="block font-medium">Address</label>
-            <textarea name="address" value={vendor.address} onChange={handleChange} required className="w-full border border-gray-300 p-1 rounded" rows="2"></textarea>
+            <textarea
+              name="address"
+              value={vendor.address}
+              onChange={handleChange}
+              required
+              className="w-full border border-gray-300 p-1 rounded"
+              rows="2"
+            ></textarea>
           </div>
 
-          <div className="flex justify-between">
+          {/* Buttons row spans full width */}
+          <div className="col-span-1 md:col-span-2 lg:col-span-3 flex justify-between mt-2">
             <BackButton />
-            <button type="submit" className={`px-4 py-1 rounded text-white ${isEditMode ? "bg-yellow-500 hover:bg-yellow-600" : "bg-teal-600 hover:bg-teal-700"}`}>
+            <button
+              type="submit"
+              className={`px-4 py-1 rounded text-white ${
+                isEditMode
+                  ? "bg-yellow-500 hover:bg-yellow-600"
+                  : "bg-teal-600 hover:bg-teal-700"
+              }`}
+            >
               {isEditMode ? "Update" : "Save"}
             </button>
           </div>
         </form>
       </div>
     </div>
+
   );
 };
 
