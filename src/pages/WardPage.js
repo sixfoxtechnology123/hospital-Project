@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaHospitalAlt, FaBed, FaBuilding, FaUserMd,FaRupeeSign, FaCogs } from 'react-icons/fa';
+import { FaHospitalAlt, FaBed, FaBuilding, FaUserMd,FaRupeeSign, FaCogs, FaTruck } from 'react-icons/fa';
 import BackButton from '../component/BackButton';
 
 const WardPage = () => {
@@ -8,7 +8,7 @@ const WardPage = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-teal-200">
-      <div className="grid grid-cols-1 sm:grid-cols-5 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-6 gap-8">
         {/* Department Master */}
         <div
           onClick={() => navigate('/departmentList')}
@@ -69,6 +69,16 @@ const WardPage = () => {
           <FaBed size={60} className="text-purple-600 mb-4" />
           <h2 className="mt-4 text-xl font-semibold transform transition-transform duration-300 group-hover:-translate-y-1">
             Bed
+          </h2>
+        </div>
+         {/* Vendor Master */}
+        <div
+          onClick={() => navigate('/vendorlist')}
+          className="group p-8 bg-white shadow-lg rounded-xl text-center cursor-pointer hover:bg-green-100 transition"
+        >
+          <FaTruck size={60} className="text-orange-600 mb-4" />
+          <h2 className="mt-4 text-xl font-semibold transform transition-transform duration-300 group-hover:-translate-y-1">
+            Vendor
           </h2>
         </div>
       </div>

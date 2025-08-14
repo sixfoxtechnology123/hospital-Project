@@ -41,9 +41,6 @@ const PatientsPage = () => {
                   <li className="hover:bg-teal-100 px-4 py-2 rounded cursor-pointer" onClick={() => navigate('/select')}>Ip/OP Selection</li>
                   <li className="hover:bg-teal-100 px-4 py-2 rounded cursor-pointer" onClick={() => navigate('/op-registration')}>Out Patient(OP)</li>
                   <li className="hover:bg-teal-100 px-4 py-2 rounded cursor-pointer" onClick={() => navigate('/ip-registration')}>In Patient(IP)</li>
-                  <li className="hover:bg-teal-100 px-4 py-2 rounded cursor-pointer" onClick={() => navigate('/doctorMaster')}>Doctor Master</li>
-                  <li className="hover:bg-teal-100 px-4 py-2 rounded cursor-pointer" onClick={() => navigate('/serviceMaster')}>Service Master</li>
-                  <li className="hover:bg-teal-100 px-4 py-2 rounded cursor-pointer" onClick={() => navigate('/serviceRateMaster')}>Service Rate Master</li>
                 </ul>
               </div>
             )}

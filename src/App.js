@@ -18,6 +18,8 @@ import DepartmentList from './pages/DepartmentList';
 import DoctorList from './pages/DoctorList';
 import ServiceList from './pages/ServiceList';
 import ServiceRateList from './pages/ServiceRateList';
+import VendorMaster from './pages/VendorMaster';
+import VendorList from './pages/VendorList';
 
 function App() {
   return (
@@ -42,6 +44,8 @@ function App() {
         <Route path="/wardpage" element={<WardPage/>} />
         <Route path="/Bedmaster" element={<BedMaster/>} />
         <Route path="/Bedlist" element={<BedList/>} />
+        <Route path="/vendormaster" element={<VendorMaster/>} />
+        <Route path="/vendorlist" element={<VendorList/>} />
       </Routes>
     </div>
   );

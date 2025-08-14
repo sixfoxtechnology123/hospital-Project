@@ -11,6 +11,7 @@ const serviceRateRoutes = require('./routes/serviceRateRoutes');
 const opRoutes = require('./routes/opRegistrationRoutes');
 const wardRoutes = require('./routes/wardRoutes');
 const bedRoutes = require('./routes/bedRoutes');
+const vendorRoutes = require('./routes/vendorRoutes');
 
 
 
@@ -34,6 +35,8 @@ app.use('/api/service-rates', serviceRateRoutes);
 app.use('/api/op', opRoutes);
 app.use('/api/wards', wardRoutes);
 app.use('/api/beds', bedRoutes);
+app.use('/api/vendors', vendorRoutes);
+
 
 
 const PORT = process.env.PORT || 5000;
