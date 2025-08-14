@@ -108,6 +108,7 @@ const ServiceMaster = () => {
           description: '',
           status: 'Active',
         });
+        navigate('/servicelist', { replace: true }); 
       }
     } catch (err) {
       console.error('Save failed:', err);

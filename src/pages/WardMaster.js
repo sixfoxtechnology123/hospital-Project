@@ -106,6 +106,7 @@ const WardMaster = () => {
           type: '',
           status: 'Active',
         });
+        navigate('/wardList', { replace: true }); 
       }
     } catch (err) {
       console.error('Save failed:', err);
