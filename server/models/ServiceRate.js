@@ -7,8 +7,8 @@ const serviceRateSchema = new mongoose.Schema(
     serviceId: { type: String, required: true },            // links to ServiceMaster.serviceId (string)
     rateType: { type: String, enum: ['General', 'Insurance', 'Corporate', 'Package'], required: true },
     rateAmount: { type: Number, required: true },
-    effectiveFrom: { type: Date, required: true },
-    effectiveTo: { type: Date }, // optional
+    effectiveFrom: { type: String, required: true }, 
+    effectiveTo: { type: String },                   
     doctorShare: { type: Number, default: null },
     hospitalShare: { type: Number, default: null },
     status: { type: String, enum: ['Active', 'Inactive'], default: 'Active' },

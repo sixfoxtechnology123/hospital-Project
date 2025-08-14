@@ -75,8 +75,13 @@ const ServiceRateList = () => {
                   </td>
                   <td className="border border-green-500 px-2 py-1">{r.rateType}</td>
                   <td className="border border-green-500 px-2 py-1">{Number(r.rateAmount).toFixed(2)}</td>
-                  <td className="border border-green-500 px-2 py-1">{r.effectiveFrom?.substring(0,10) || ''}</td>
-                  <td className="border border-green-500 px-2 py-1">{r.effectiveTo?.substring(0,10) || ''}</td>
+                  <td className="border border-green-500 px-2 py-1">
+                    {r.effectiveFrom ? new Date(r.effectiveFrom).toLocaleDateString('en-GB') : ''}
+                  </td>
+                  <td className="border border-green-500 px-2 py-1">
+                    {r.effectiveTo ? new Date(r.effectiveTo).toLocaleDateString('en-GB') : ''}
+                  </td>
+
                   <td className="border border-green-500 px-2 py-1">
                     {r.doctorShare != null ? Number(r.doctorShare).toFixed(2) : ''}
                   </td>
