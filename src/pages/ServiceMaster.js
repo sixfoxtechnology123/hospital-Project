@@ -20,6 +20,7 @@ const ServiceMaster = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  // Load departments + decide create vs edit
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
@@ -62,6 +63,26 @@ const ServiceMaster = () => {
       setIsEditMode(false);
     }
   }, [location.state]);
+
+ useEffect(() => {
+  if (!isEditMode || !incomingService || departments.length === 0) return;
+
+  // Map deptCode (stored in DB) to _id (for dropdown)
+  let deptId = '';
+  if (incomingService.departmentId) {
+    deptId =
+      typeof incomingService.departmentId === 'object'
+        ? incomingService.departmentId._id
+        : incomingService.departmentId;
+  } else if (incomingService.departmentCode) {
+    const match = departments.find(d => d.deptCode === incomingService.departmentCode);
+    if (match) deptId = match._id;
+  }
+
+  setService(prev => ({ ...prev, departmentId: deptId }));
+}, [isEditMode, incomingService, departments]);
+
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
