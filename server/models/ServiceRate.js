@@ -9,9 +9,9 @@ const serviceRateSchema = new mongoose.Schema(
     rateAmount: { type: Number, required: true },
     effectiveFrom: { type: Date, required: true },
     effectiveTo: { type: Date }, // optional
-    status: { type: String, enum: ['Active', 'Inactive'], default: 'Active' },
     doctorShare: { type: Number, default: null },
     hospitalShare: { type: Number, default: null },
+    status: { type: String, enum: ['Active', 'Inactive'], default: 'Active' },
   },
   {
     timestamps: false,
@@ -19,4 +19,4 @@ const serviceRateSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model('ServiceRate', serviceRateSchema);
+module.exports = mongoose.model('ServiceRatemaster', serviceRateSchema);

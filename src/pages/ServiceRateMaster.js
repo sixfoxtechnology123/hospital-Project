@@ -105,6 +105,7 @@ const ServiceRateMaster = () => {
           doctorShare: '',
           hospitalShare: '',
         });
+        navigate('/serviceRateList', { replace: true });
       }
     } catch (err) {
       console.error('Save failed:', err);
