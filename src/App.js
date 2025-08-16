@@ -27,6 +27,8 @@ import SpecialtyList from './pages/SpecialtyList';
 import SpecialtyMaster from './pages/SpecialtyMaster';
 import GenericMedicineMaster from './pages/genericMedicineMaster';
 import GenericMedicineList from './pages/genericMedicineList';
+import UnitMaster from './pages/UnitMaster';
+import UnitList from './pages/UnitList';
 
 function App() {
   return (
@@ -60,6 +62,8 @@ function App() {
         <Route path="/SpecialtyList" element={<SpecialtyList/>} />
         <Route path="/GenericMedicineMaster" element={<GenericMedicineMaster/>} />
         <Route path="/GenericMedicineList" element={<GenericMedicineList/>} />
+        <Route path="/UnitMaster" element={<UnitMaster/>} />
+        <Route path="/UnitList" element={<UnitList/>} />
       </Routes>
     </div>
   );

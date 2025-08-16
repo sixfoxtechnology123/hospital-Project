@@ -15,7 +15,7 @@ const vendorRoutes = require('./routes/vendorRoutes');
 const inventoryItemRoutes = require('./routes/inventoryItemRoutes');
 const specialityRoutes = require('./routes/specialtyRoutes');
 const genericMedicineRoutes = require('./routes/genericMedicineRoutes');
-
+const unitRoutes = require('./routes/unitRoutes');
 
 dotenv.config();
 connectDB();
@@ -40,6 +40,7 @@ app.use('/api/vendors', vendorRoutes);
 app.use('/api/inventory-items', inventoryItemRoutes);
 app.use('/api/specialties', specialityRoutes);
 app.use('/api/generic-medicines', genericMedicineRoutes);
+app.use('/api/units', unitRoutes);
 
 
 const PORT = process.env.PORT || 5000;
