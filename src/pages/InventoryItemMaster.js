@@ -20,20 +20,27 @@ const InventoryItemMaster = () => {
   });
 
   const [vendors, setVendors] = useState([]);
+  const [units, setUnits] = useState([]);
   const [isEditMode, setIsEditMode] = useState(false);
 
-  // Load vendors once
-  useEffect(() => {
-    const fetchVendors = async () => {
-      try {
-        const res = await axios.get("http://localhost:5000/api/vendors");
-        setVendors(res.data || []);
-      } catch {
-        setVendors([]);
-      }
-    };
-    fetchVendors();
-  }, []);
+ useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const resVendors = await axios.get("http://localhost:5000/api/vendors");
+      setVendors(resVendors.data || []);
+    } catch {
+      setVendors([]);
+    }
+
+    try {
+      const resUnits = await axios.get("http://localhost:5000/api/units");
+      setUnits(resUnits.data || []);
+    } catch {
+      setUnits([]);
+    }
+  };
+  fetchData();
+}, []);
 
   // Decide create vs edit + fetch next ID for create
   useEffect(() => {
@@ -169,21 +176,24 @@ const InventoryItemMaster = () => {
             </select>
           </div>
 
-          <div>
-            <label className="block font-medium">Unit</label>
-            <select
-              name="unit"
-              value={item.unit}
-              onChange={handleChange}
-              required
-              className="w-full border border-gray-300 p-1 rounded"
-            >
-              <option value="">--Select--</option>
-              <option value="Box">Box</option>
-              <option value="Strip">Strip</option>
-              <option value="Bottle">Bottle</option>
-            </select>
-          </div>
+         <div>
+              <label className="block font-medium">Unit</label>
+              <select
+                name="unit"
+                value={item.unit}
+                onChange={handleChange}
+                required
+                className="w-full border border-gray-300 p-1 rounded"
+              >
+                <option value="">--Select--</option>
+                {units.map((u) => (
+                  <option key={u._id || u.unitId} value={u.unitName}>
+                    {u.unitName}
+                  </option>
+                ))}
+              </select>
+            </div>
+
 
           <div>
             <label className="block font-medium">Unit Pieces</label>
