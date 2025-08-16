@@ -52,7 +52,7 @@ const GenericMedicineMaster = () => {
     e.preventDefault();
     try {
       if (isEditMode) {
-        await axios.put(`http://localhost:5000/api/generics/${generic._id}`, generic);
+        await axios.put(`http://localhost:5000/api/generic-medicines/${generic._id}`, generic);
         alert('Generic medicine updated successfully!');
       } else {
         await axios.post("http://localhost:5000/api/generic-medicines", generic);

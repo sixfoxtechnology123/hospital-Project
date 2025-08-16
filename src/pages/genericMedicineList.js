@@ -1,34 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { FaTrash, FaEdit } from 'react-icons/fa';
 import BackButton from '../component/BackButton';
 
 const GenericMedicineList = () => {
   const [generics, setGenerics] = useState([]);
   const navigate = useNavigate();
-  const location = useLocation();
 
+  // Fetch generics from backend
+  useEffect(() => {
+    const fetchGenerics = async () => {
+      try {
+        const res = await axios.get('http://localhost:5000/api/generic-medicines');
+        console.log('Fetched generics:', res.data); // debug
+        setGenerics(res.data || []);
+      } catch (e) {
+        console.error('Failed to fetch generics:', e);
+      }
+    };
+    fetchGenerics();
+  }, []);
 
-useEffect(() => {
-  const fetchGenerics = async () => {
-    try {
-      const res = await axios.get('http://localhost:5000/api/generics');
-      console.log('Fetched generics:', res.data); // debug
-      setGenerics(res.data || []);
-    } catch (e) {
-      console.error('Failed to fetch generics:', e);
-    }
-  };
-
-  fetchGenerics();
-}, []); // empty array → runs once on mount
-
-
+  // Delete generic medicine
   const deleteGeneric = async (id) => {
     if (!window.confirm('Are you sure you want to delete this generic medicine?')) return;
     try {
-      await axios.delete(`http://localhost:5000/api/generics/${id}`);
+      await axios.delete(`http://localhost:5000/api/generic-medicines/${id}`);
       setGenerics(prev => prev.filter(g => g._id !== id));
     } catch (err) {
       console.error('Failed to delete generic:', err);
@@ -73,7 +71,9 @@ useEffect(() => {
                 <td className="border border-green-500 px-2 py-1 text-center">
                   <div className="flex justify-center items-center gap-4">
                     <button
-                      onClick={() => navigate('/genericMaster', { state: { generic: g } })}
+                      onClick={() =>
+                        navigate('/GenericMedicineMaster', { state: { generic: g } })
+                      }
                       className="text-blue-600 hover:text-blue-800"
                     >
                       <FaEdit />
