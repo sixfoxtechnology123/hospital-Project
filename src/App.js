@@ -25,6 +25,8 @@ import InventoryItemList from './pages/InventoryItemList';
 import SpecialityPage from './pages/SpecialityPage';
 import SpecialtyList from './pages/SpecialtyList';
 import SpecialtyMaster from './pages/SpecialtyMaster';
+import GenericMedicineMaster from './pages/genericMedicineMaster';
+import GenericMedicineList from './pages/genericMedicineList';
 
 function App() {
   return (
@@ -56,6 +58,8 @@ function App() {
         <Route path="/InventoryItemList" element={<InventoryItemList/>} />
         <Route path="/SpecialtyMaster" element={<SpecialtyMaster/>} />
         <Route path="/SpecialtyList" element={<SpecialtyList/>} />
+        <Route path="/GenericMedicineMaster" element={<GenericMedicineMaster/>} />
+        <Route path="/GenericMedicineList" element={<GenericMedicineList/>} />
       </Routes>
     </div>
   );

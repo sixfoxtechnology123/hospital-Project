@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { FaTruck, FaBoxes, FaStethoscope } from "react-icons/fa";
+import { FaTruck, FaBoxes, FaStethoscope, FaPills } from "react-icons/fa";
 import BackButton from "../component/BackButton";
 
 const SpecialityPage = () => {
@@ -40,6 +40,17 @@ const SpecialityPage = () => {
           <FaStethoscope size={60} className="text-green-600 mb-4" />
           <h2 className="mt-4 text-xl font-semibold transform transition-transform duration-300 group-hover:-translate-y-1">
             Speciality
+          </h2>
+        </div>
+
+        {/* Generic Medicine */}
+        <div
+          onClick={() => navigate("/GenericMedicineList")}
+          className="group p-8 bg-white shadow-lg rounded-xl text-center cursor-pointer hover:bg-blue-200 transition"
+        >
+          <FaPills size={60} className="text-red-600 mb-4" />
+          <h2 className="mt-4 text-xl font-semibold transform transition-transform duration-300 group-hover:-translate-y-1">
+            Generic Medicine
           </h2>
         </div>
       </div>
