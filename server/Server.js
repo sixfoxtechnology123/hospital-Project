@@ -13,9 +13,7 @@ const wardRoutes = require('./routes/wardRoutes');
 const bedRoutes = require('./routes/bedRoutes');
 const vendorRoutes = require('./routes/vendorRoutes');
 const inventoryItemRoutes = require('./routes/inventoryItemRoutes');
-
-
-
+const specialityRoutes = require('./routes/specialtyRoutes');
 
 dotenv.config();
 connectDB();
@@ -38,9 +36,7 @@ app.use('/api/wards', wardRoutes);
 app.use('/api/beds', bedRoutes);
 app.use('/api/vendors', vendorRoutes);
 app.use('/api/inventory-items', inventoryItemRoutes);
-
-
-
+app.use('/api/specialties', specialityRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

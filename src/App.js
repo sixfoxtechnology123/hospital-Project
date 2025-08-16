@@ -22,6 +22,9 @@ import VendorMaster from './pages/VendorMaster';
 import VendorList from './pages/VendorList';
 import InventoryItemMaster from './pages/InventoryItemMaster';
 import InventoryItemList from './pages/InventoryItemList';
+import SpecialityPage from './pages/SpecialityPage';
+import SpecialtyList from './pages/SpecialtyList';
+import SpecialtyMaster from './pages/SpecialtyMaster';
 
 function App() {
   return (
@@ -44,12 +47,15 @@ function App() {
         <Route path="/wards" element={<WardMaster/>} />
         <Route path="/wardList" element={<WardList/>} />
         <Route path="/wardpage" element={<WardPage/>} />
+        <Route path="/SpecialityPage" element={<SpecialityPage/>} />
         <Route path="/Bedmaster" element={<BedMaster/>} />
         <Route path="/Bedlist" element={<BedList/>} />
         <Route path="/vendormaster" element={<VendorMaster/>} />
         <Route path="/vendorlist" element={<VendorList/>} />
         <Route path="/InventoryItemMaster" element={<InventoryItemMaster/>} />
         <Route path="/InventoryItemList" element={<InventoryItemList/>} />
+        <Route path="/SpecialtyMaster" element={<SpecialtyMaster/>} />
+        <Route path="/SpecialtyList" element={<SpecialtyList/>} />
       </Routes>
     </div>
   );
