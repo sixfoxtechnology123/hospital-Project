@@ -1,6 +1,13 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { FaTruck, FaBoxes, FaStethoscope, FaPills, FaBalanceScale } from "react-icons/fa"; 
+import { 
+  FaTruck, 
+  FaBoxes, 
+  FaStethoscope, 
+  FaPills, 
+  FaBalanceScale,
+  FaPrescriptionBottleAlt   // ✅ added new medicine icon
+} from "react-icons/fa"; 
 import BackButton from "../component/BackButton";
 
 const SpecialityPage = () => {
@@ -10,7 +17,7 @@ const SpecialityPage = () => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-teal-200">
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
 
-         {/* Unit Master */}
+        {/* Unit Master */}
         <div
           onClick={() => navigate("/UnitList")}
           className="group p-8 bg-white shadow-lg rounded-xl text-center cursor-pointer hover:bg-blue-200 transition"
@@ -54,6 +61,17 @@ const SpecialityPage = () => {
           </h2>
         </div>
 
+        {/* Medicine Master */}
+        <div
+          onClick={() => navigate("/MedicineList")}
+          className="group p-8 bg-white shadow-lg rounded-xl text-center cursor-pointer hover:bg-blue-200 transition"
+        >
+          <FaPrescriptionBottleAlt size={60} className="text-blue-600 mb-4" />
+          <h2 className="mt-4 text-xl font-semibold transform transition-transform duration-300 group-hover:-translate-y-1">
+            Medicine
+          </h2>
+        </div>
+
         {/* Generic Medicine */}
         <div
           onClick={() => navigate("/GenericMedicineList")}
@@ -65,7 +83,6 @@ const SpecialityPage = () => {
           </h2>
         </div>
 
-       
       </div>
 
       <div className="mt-8 w-full flex justify-center">

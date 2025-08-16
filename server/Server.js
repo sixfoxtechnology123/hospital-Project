@@ -16,6 +16,8 @@ const inventoryItemRoutes = require('./routes/inventoryItemRoutes');
 const specialityRoutes = require('./routes/specialtyRoutes');
 const genericMedicineRoutes = require('./routes/genericMedicineRoutes');
 const unitRoutes = require('./routes/unitRoutes');
+const medicineRoutes = require('./routes/medicineRoutes');
+const statusRoutes = require("./routes/statusRoutes");
 
 dotenv.config();
 connectDB();
@@ -41,6 +43,8 @@ app.use('/api/inventory-items', inventoryItemRoutes);
 app.use('/api/specialties', specialityRoutes);
 app.use('/api/generic-medicines', genericMedicineRoutes);
 app.use('/api/units', unitRoutes);
+app.use('/api/medicines', medicineRoutes);
+app.use("/api/status", statusRoutes);
 
 
 const PORT = process.env.PORT || 5000;

@@ -29,6 +29,11 @@ import GenericMedicineMaster from './pages/genericMedicineMaster';
 import GenericMedicineList from './pages/genericMedicineList';
 import UnitMaster from './pages/UnitMaster';
 import UnitList from './pages/UnitList';
+import MedicineMaster from './pages/MedicineMaster';
+import MedicineList from './pages/MedicineList';
+import StatusMaster from './pages/StatusMaster';
+import StatusList from './pages/StatusList';
+import StatusPage from './pages/StatusPage';
 
 function App() {
   return (
@@ -52,6 +57,7 @@ function App() {
         <Route path="/wardList" element={<WardList/>} />
         <Route path="/wardpage" element={<WardPage/>} />
         <Route path="/SpecialityPage" element={<SpecialityPage/>} />
+        <Route path="/StatusPage" element={<StatusPage/>} />
         <Route path="/Bedmaster" element={<BedMaster/>} />
         <Route path="/Bedlist" element={<BedList/>} />
         <Route path="/vendormaster" element={<VendorMaster/>} />
@@ -64,6 +70,10 @@ function App() {
         <Route path="/GenericMedicineList" element={<GenericMedicineList/>} />
         <Route path="/UnitMaster" element={<UnitMaster/>} />
         <Route path="/UnitList" element={<UnitList/>} />
+        <Route path="/MedicineMaster" element={<MedicineMaster/>} />
+        <Route path="/MedicineList" element={<MedicineList/>} />
+        <Route path="/StatusMaster" element={<StatusMaster/>} />
+        <Route path="/StatusList" element={<StatusList/>} />
       </Routes>
     </div>
   );
