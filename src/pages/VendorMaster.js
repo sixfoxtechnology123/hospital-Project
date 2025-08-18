@@ -93,7 +93,7 @@ const VendorMaster = () => {
           </div>
 
           <div>
-            <label className="block font-medium">Supplier Name</label>
+            <label className="block font-medium">Vendor Name</label>
             <input
               type="text"
               name="vendorName"

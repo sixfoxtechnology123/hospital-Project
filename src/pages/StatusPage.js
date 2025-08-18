@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { FaCheckCircle, FaVials, FaFlask, FaUserShield } from "react-icons/fa";  
+import { FaCheckCircle, FaVials, FaFlask, FaUserShield, FaMoneyBillWave } from "react-icons/fa";  
 import BackButton from "../component/BackButton";
 
 const StatusPage = () => {
@@ -50,6 +50,17 @@ const StatusPage = () => {
           <FaUserShield size={60} className="text-red-600 mb-4" />
           <h2 className="mt-4 text-xl font-semibold transform transition-transform duration-300 group-hover:-translate-y-1">
             Insurance Provider
+          </h2>
+        </div>
+
+        {/* Charges */}
+        <div
+          onClick={() => navigate("/ChargesList")}  
+          className="group p-8 bg-white shadow-lg rounded-xl text-center cursor-pointer hover:bg-yellow-200 transition"
+        >
+          <FaMoneyBillWave size={60} className="text-teal-600 mb-4" />
+          <h2 className="mt-4 text-xl font-semibold transform transition-transform duration-300 group-hover:-translate-y-1">
+            Charges
           </h2>
         </div>
       </div>

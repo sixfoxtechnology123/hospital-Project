@@ -54,7 +54,7 @@ const VendorList = () => {
         <thead className="bg-gray-200 text-sm">
           <tr>
             <th className="border border-green-500 px-2 py-1">Vendor ID</th>
-            <th className="border border-green-500 px-2 py-1">Supplier Name</th>
+            <th className="border border-green-500 px-2 py-1">Vendor Name</th>
             <th className="border border-green-500 px-2 py-1">Contact Person</th>
             <th className="border border-green-500 px-2 py-1">Mobile Number</th>
             <th className="border border-green-500 px-2 py-1">GST No</th>

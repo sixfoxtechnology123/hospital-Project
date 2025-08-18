@@ -40,6 +40,8 @@ import SampleMaster from './pages/SampleMaster';
 import SampleList from './pages/SampleList';
 import InsuranceProviderMaster from './pages/InsuranceProviderMaster';
 import InsuranceProviderList from './pages/InsuranceProviderList';
+import ChargesMaster from './pages/Chargesmaster';
+import ChargesList from './pages/Chargeslist';
 
 function App() {
   return (
@@ -86,6 +88,8 @@ function App() {
         <Route path="/SampleList" element={<SampleList/>} />
         <Route path="/InsuranceProviderMaster" element={<InsuranceProviderMaster/>} />
         <Route path="/InsuranceProviderList" element={<InsuranceProviderList/>} />
+        <Route path="/ChargesMaster" element={<ChargesMaster/>} />
+        <Route path="/ChargesList" element={<ChargesList/>} />
       </Routes>
     </div>
   );

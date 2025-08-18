@@ -21,6 +21,7 @@ const statusRoutes = require("./routes/statusRoutes");
 const investigationRoutes = require('./routes/investigationRoutes');
 const sampleRoutes = require('./routes/sampleroutes');
 const insuranceRoutes = require("./routes/insuranceRoutes");
+const chargesRoutes = require("./routes/chargeroutes");
 
 dotenv.config();
 connectDB();
@@ -51,7 +52,7 @@ app.use("/api/status", statusRoutes);
 app.use('/api/investigations', investigationRoutes);
 app.use('/api/samples', sampleRoutes);  
 app.use("/api/insurance", insuranceRoutes);
-
+app.use("/api/charges", chargesRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
