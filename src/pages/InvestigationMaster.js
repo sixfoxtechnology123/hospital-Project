@@ -14,12 +14,24 @@ const InvestigationMaster = () => {
   });
 
   const [departments, setDepartments] = useState([]);
+  const [samples, setSamples] = useState([]);
   const [isEditMode, setIsEditMode] = useState(false);
   const [incomingTest, setIncomingTest] = useState(null);
 
   const location = useLocation();
   const navigate = useNavigate();
+  useEffect(() => {
+  const fetchSamples = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/samples");
+      setSamples(res.data);
+    } catch (err) {
+      console.error("Failed to fetch samples:", err);
+    }
+  };
 
+  fetchSamples();
+}, []);
   // Load departments + check edit mode
   useEffect(() => {
     const fetchDepartments = async () => {
@@ -153,24 +165,24 @@ const InvestigationMaster = () => {
             </select>
           </div>
 
-          <div>
-            <label className="block font-medium">Sample Type</label>
-            <select
-              name="sampleType"
-              value={test.sampleType}
-              onChange={handleChange}
-              className="w-full border border-gray-300 p-1 rounded"
-              required
-            >
-              <option value="">--Select--</option>
-              <option value="Blood">Blood</option>
-              <option value="Urine">Urine</option>
-              <option value="Saliva">Saliva</option>
-              <option value="Tissue">Tissue</option>
-              <option value="Stool">Stool</option>
-              <option value="No Sample">No Sample</option>
-            </select>
-          </div>
+      <div>
+        <label className="block font-medium">Sample Type</label>
+        <select
+            name="sampleType"
+            value={test.sampleType}
+            onChange={handleChange}
+            className="w-full border border-gray-300 p-1 rounded"
+            required
+        >
+            <option value="">--Select--</option>
+            {samples.map((sample) => (
+            <option key={sample._id} value={sample.sampleName}>
+                {sample.sampleName}
+            </option>
+            ))}
+        </select>
+        </div>
+
 
           <div>
             <label className="block font-medium">Rate</label>

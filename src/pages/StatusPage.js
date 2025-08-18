@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { FaCheckCircle, FaVials, FaFlask } from "react-icons/fa";  // ✅ Added FaFlask
+import { FaCheckCircle, FaVials, FaFlask, FaUserShield } from "react-icons/fa";  
 import BackButton from "../component/BackButton";
 
 const StatusPage = () => {
@@ -9,7 +9,6 @@ const StatusPage = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-teal-200">
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
-
         {/* Status Master */}
         <div
           onClick={() => navigate("/StatusList")}
@@ -18,6 +17,17 @@ const StatusPage = () => {
           <FaCheckCircle size={60} className="text-green-600 mb-4" />
           <h2 className="mt-4 text-xl font-semibold transform transition-transform duration-300 group-hover:-translate-y-1">
             Status
+          </h2>
+        </div>
+
+        {/* Sample Test */}
+        <div
+          onClick={() => navigate("/SampleList")}
+          className="group p-8 bg-white shadow-lg rounded-xl text-center cursor-pointer hover:bg-yellow-200 transition"
+        >
+          <FaFlask size={60} className="text-purple-600 mb-4" />
+          <h2 className="mt-4 text-xl font-semibold transform transition-transform duration-300 group-hover:-translate-y-1">
+            Sample Test
           </h2>
         </div>
 
@@ -32,17 +42,16 @@ const StatusPage = () => {
           </h2>
         </div>
 
-        {/* Sample Test */}
+        {/* Insurance Provider */}
         <div
-          onClick={() => navigate("/SampleList")}   // ✅ navigate to your sample list page
+          onClick={() => navigate("/InsuranceProviderList")}  
           className="group p-8 bg-white shadow-lg rounded-xl text-center cursor-pointer hover:bg-yellow-200 transition"
         >
-          <FaFlask size={60} className="text-purple-600 mb-4" />
+          <FaUserShield size={60} className="text-red-600 mb-4" />
           <h2 className="mt-4 text-xl font-semibold transform transition-transform duration-300 group-hover:-translate-y-1">
-            Sample Test
+            Insurance Provider
           </h2>
         </div>
-
       </div>
 
       <div className="mt-8 w-full flex justify-center">
