@@ -18,6 +18,7 @@ const genericMedicineRoutes = require('./routes/genericMedicineRoutes');
 const unitRoutes = require('./routes/unitRoutes');
 const medicineRoutes = require('./routes/medicineRoutes');
 const statusRoutes = require("./routes/statusRoutes");
+const investigationRoutes = require('./routes/investigationRoutes');
 
 dotenv.config();
 connectDB();
@@ -45,6 +46,7 @@ app.use('/api/generic-medicines', genericMedicineRoutes);
 app.use('/api/units', unitRoutes);
 app.use('/api/medicines', medicineRoutes);
 app.use("/api/status", statusRoutes);
+app.use('/api/investigations', investigationRoutes);
 
 
 const PORT = process.env.PORT || 5000;

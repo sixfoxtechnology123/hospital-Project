@@ -34,6 +34,8 @@ import MedicineList from './pages/MedicineList';
 import StatusMaster from './pages/StatusMaster';
 import StatusList from './pages/StatusList';
 import StatusPage from './pages/StatusPage';
+import InvestigationMaster from './pages/InvestigationMaster';
+import InvestigationList from './pages/InvestigationList';
 
 function App() {
   return (
@@ -74,6 +76,8 @@ function App() {
         <Route path="/MedicineList" element={<MedicineList/>} />
         <Route path="/StatusMaster" element={<StatusMaster/>} />
         <Route path="/StatusList" element={<StatusList/>} />
+        <Route path="/InvestigationMaster" element={<InvestigationMaster/>} />
+        <Route path="/InvestigationList" element={<InvestigationList/>} />
       </Routes>
     </div>
   );

@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { FaCheckCircle } from "react-icons/fa"; 
+import { FaCheckCircle, FaVials } from "react-icons/fa";  // ✅ Added FaVials
 import BackButton from "../component/BackButton";
 
 const StatusPage = () => {
@@ -18,6 +18,17 @@ const StatusPage = () => {
           <FaCheckCircle size={60} className="text-green-600 mb-4" />
           <h2 className="mt-4 text-xl font-semibold transform transition-transform duration-300 group-hover:-translate-y-1">
             Status
+          </h2>
+        </div>
+
+        {/* Investigation Test */}
+        <div
+          onClick={() => navigate("/InvestigationList")}
+          className="group p-8 bg-white shadow-lg rounded-xl text-center cursor-pointer hover:bg-yellow-200 transition"
+        >
+          <FaVials size={60} className="text-blue-600 mb-4" />
+          <h2 className="mt-4 text-xl font-semibold transform transition-transform duration-300 group-hover:-translate-y-1">
+            Investigation Test
           </h2>
         </div>
 

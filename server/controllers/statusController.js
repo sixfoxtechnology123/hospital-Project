@@ -88,6 +88,10 @@ module.exports = {
   createStatus,
   updateStatus,
   getAllStatus,
-  deleteStatus  
+  deleteStatus
+
+
+
+  
 };
 
