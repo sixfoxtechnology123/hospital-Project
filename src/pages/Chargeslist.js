@@ -54,7 +54,7 @@ const ChargesList = () => {
           <tr>
             <th className="border border-green-500 px-2 py-1">Charge ID</th>
             <th className="border border-green-500 px-2 py-1">Item Type</th>
-            <th className="border border-green-500 px-2 py-1">Item</th>
+            <th className="border border-green-500 px-2 py-1">Item_ID_Name</th>
             <th className="border border-green-500 px-2 py-1">Description</th>
             <th className="border border-green-500 px-2 py-1">Rate</th>
             <th className="border border-green-500 px-2 py-1">Status</th>
@@ -67,7 +67,7 @@ const ChargesList = () => {
               <tr key={c._id} className="hover:bg-gray-100 transition">
                 <td className="border border-green-500 px-2 py-1">{c.chargeId}</td>
                 <td className="border border-green-500 px-2 py-1">{c.item_type}</td>
-                <td className="border border-green-500 px-2 py-1">{c.itemDisplay}</td>
+                <td className="border border-green-500 px-2 py-1">{c.item_display}</td>
                 <td className="border border-green-500 px-2 py-1">{c.description}</td>
                 <td className="border border-green-500 px-2 py-1">{c.rate}</td>
                 <td className="border border-green-500 px-2 py-1">{c.status}</td>

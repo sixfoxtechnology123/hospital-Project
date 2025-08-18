@@ -8,20 +8,19 @@ const ChargesMaster = () => {
     chargeId: "",
     item_type: "",
     item_id: "",
+    item_display: "", // <-- added to store display name
     description: "",
     rate: "",
     status: "Active",
   });
 
   const [isEditMode, setIsEditMode] = useState(false);
-  const [incomingCharge, setIncomingCharge] = useState(null);
-
   const [items, setItems] = useState([]); // list of items based on item_type
 
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Fetch next chargeId
+  // Fetch next chargeId or load for edit
   useEffect(() => {
     const fetchNextChargeId = async () => {
       try {
@@ -34,13 +33,13 @@ const ChargesMaster = () => {
 
     if (location.state?.charge) {
       const c = location.state.charge;
-      setIncomingCharge(c);
       setIsEditMode(true);
       setCharge({
         _id: c._id,
         chargeId: c.chargeId,
         item_type: c.item_type,
         item_id: c.item_id,
+        item_display: c.item_display || "",
         description: c.description,
         rate: c.rate,
         status: c.status,
@@ -51,7 +50,7 @@ const ChargesMaster = () => {
     }
   }, [location.state]);
 
-  // Load item list when item_type changes
+  // Load items list when item_type changes
   useEffect(() => {
     const fetchItems = async () => {
       if (!charge.item_type) return;
@@ -65,11 +64,25 @@ const ChargesMaster = () => {
     fetchItems();
   }, [charge.item_type]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setCharge({ ...charge, [name]: value });
-  };
+    const handleChange = (e) => {
+      const { name, value } = e.target;
 
+      if (name === "item_id") {
+        const selectedItem = items.find((it) => it._id === value);
+        setCharge({
+          ...charge,
+          item_id: value,
+          item_display: selectedItem
+            ? `${selectedItem.itemCode}-${selectedItem.displayName}`
+            : "",
+        });
+      } else {
+        setCharge({ ...charge, [name]: value });
+      }
+    };
+
+
+  // Submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -117,30 +130,33 @@ const ChargesMaster = () => {
             >
               <option value="">--Select--</option>
               {[
-                "Department",
-                "Doctor",
-                "Service",
-                "Service Rate",
-                "Ward",
-                "Bed",
-                "Unit",
-                "Vendor",
-                "Inventory Item",
-                "Speciality",
-                "Medicine",
-                "Generic Medicine",
-                "Status",
-                "Sample Test",
-                "Investigation Test",
-                "Insurance Provider",
+                { label: "Department", value: "Department" },
+                { label: "Doctor", value: "Doctor" },
+                { label: "Service", value: "Service" },
+                { label: "Service Rate", value: "ServiceRate" },
+                { label: "Ward", value: "Ward" },
+                { label: "Bed", value: "Bed" },
+                { label: "Unit", value: "Unit" },
+                { label: "Vendor", value: "Vendor" },
+                { label: "Inventory Item", value: "InventoryItem" },
+                { label: "Speciality", value: "Speciality" },
+                { label: "Medicine", value: "Medicine" },
+                { label: "Generic Medicine", value: "GenericMedicine" },
+                { label: "Status", value: "Status" },
+                { label: "Sample Test", value: "SampleTest" },
+                { label: "Investigation Test", value: "InvestigationTest" },
+                { label: "Insurance Provider", value: "InsuranceProvider" },
               ].map((m) => (
-                <option key={m} value={m}>{m}</option>
+                <option key={m.value} value={m.value}>
+                  {m.label}
+                </option>
               ))}
             </select>
           </div>
 
+
           <div>
-            <label className="block font-medium">Item_ID</label>
+            <label className="block font-medium">Item</label>
             <select
               name="item_id"
               value={charge.item_id}
@@ -199,9 +215,7 @@ const ChargesMaster = () => {
             <button
               type="submit"
               className={`px-4 py-1 rounded text-white ${
-                isEditMode
-                  ? "bg-yellow-500 hover:bg-yellow-600"
-                  : "bg-teal-600 hover:bg-teal-700"
+                isEditMode ? "bg-yellow-500 hover:bg-yellow-600" : "bg-teal-600 hover:bg-teal-700"
               }`}
             >
               {isEditMode ? "Update" : "Save"}
