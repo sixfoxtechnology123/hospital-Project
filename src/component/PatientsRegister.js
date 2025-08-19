@@ -174,14 +174,16 @@ const PatientsRegister = () => {
               <button
               onClick={() => {
                 setShowSuccessModal(false);
-                navigate('/select', {
+                navigate('/PatientUpdatePage', {
                   
                   state: {
                     mrNumber: mrNumber,
                     patientData: navigateData,
-                    
+                  
                   }
+                  
                 });
+               
                  //reset();
               }}
               className="mt-6 px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded"

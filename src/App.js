@@ -42,6 +42,10 @@ import InsuranceProviderMaster from './pages/InsuranceProviderMaster';
 import InsuranceProviderList from './pages/InsuranceProviderList';
 import ChargesMaster from './pages/Chargesmaster';
 import ChargesList from './pages/Chargeslist';
+import PatientsList from './component/PatientsList';
+import PatientUpdatePage from './component/PatientUpdatePage';
+
+
 
 function App() {
   return (
@@ -90,6 +94,8 @@ function App() {
         <Route path="/InsuranceProviderList" element={<InsuranceProviderList/>} />
         <Route path="/ChargesMaster" element={<ChargesMaster/>} />
         <Route path="/ChargesList" element={<ChargesList/>} />
+        <Route path="/PatientsList" element={<PatientsList/>} />
+        <Route path="/PatientUpdatePage" element={<PatientUpdatePage/>} /> 
       </Routes>
     </div>
   );
