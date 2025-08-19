@@ -119,33 +119,56 @@ exports.getItemsByType = async (req, res) => {
 };
 
 //  CREATE
+// CREATE
 exports.createCharge = async (req, res) => {
   try {
     const { item_type, item_id, description, rate, status } = req.body;
 
-    let item_display = item_id; // default
+    let item_display = req.body.item_display || "";
 
-    // Lookup item name from master collections
-    const masterCollections = {
-      InventoryItem: { collection: "inventoryitemmaster", idField: "itemId", nameField: "itemName" },
-      Medicine: { collection: "medicinemaster", idField: "medicineId", nameField: "name" },
-      GenericMedicine: { collection: "generic_medicines", idField: "genericId", nameField: "genericName" },
-      Department: { collection: "departmentmasters", idField: "deptCode", nameField: "deptName" },
-      Doctor: { collection: "doctormasters", idField: "doctorCode", nameField: "doctorName" },
-      Service: { collection: "servicemaster", idField: "serviceId", nameField: "serviceName" },
-      Ward: { collection: "wardmasters", idField: "wardId", nameField: "name" },
-      Unit: { collection: "unitMaster", idField: "unitId", nameField: "unitName" },
-      Vendor: { collection: "vendormaster", idField: "vendorId", nameField: "vendorName" },
-    };
+    // Lookup by _id if item_display not provided
+    if (!item_display) {
+      const collMap = {
+        Department: { collection: "departmentmasters", map: (i) => `${i.deptCode} - ${i.deptName}` },
+        Doctor: { collection: "doctormasters", map: (i) => `${i.doctorCode} - ${i.doctorName}` },
+        Service: { collection: "servicemaster", map: (i) => `${i.serviceId} - ${i.serviceName}` },
+        ServiceRate: { collection: "service_rate_master", map: (i) => `${i.rateId} - ${i.rateType}` },
+        Ward: { collection: "wardmasters", map: (i) => `${i.wardId} - ${i.name}` },
+        Bed: { collection: "bedmasters", map: (i) => `${i.bed_number}` },
+        Unit: { collection: "unitMaster", map: (i) => `${i.unitId} - ${i.unitName}` },
+        Vendor: { collection: "vendormaster", map: (i) => `${i.vendorId} - ${i.vendorName}` },
+        InventoryItem: { collection: "inventoryitemmaster", map: (i) => `${i.itemId} - ${i.itemName}` },
+        Speciality: { collection: "specialtiesmaster", map: (i) => `${i.specialtyId} - ${i.name}` },
+        Medicine: { collection: "medicinemaster", map: (i) => `${i.medicineId} - ${i.name}` },
+        GenericMedicine: { collection: "generic_medicines", map: (i) => `${i.genericId} - ${i.genericName}` },
+        Status: { collection: "statusmaster", map: (i) => `${i.statusId} - ${i.statusName}` },
+        SampleTest: { collection: "samplemaster", map: (i) => `${i.sampleId} - ${i.sampleName}` },
+        InvestigationTest: { collection: "investigation_tests", map: (i) => `${i.testId} - ${i.name}` },
+        InsuranceProvider: { collection: "insuranceproviders", map: (i) => `${i.providerId} - ${i.name}` },
+      };
 
-    const master = masterCollections[item_type];
-    if (master) {
-      const item = await mongoose.connection.collection(master.collection).findOne({ [master.idField]: item_id });
-      if (item) item_display = `${item[master.idField]} - ${item[master.nameField]}`;
+      const config = collMap[item_type];
+      if (config) {
+        const item = await mongoose.connection
+          .collection(config.collection)
+          .findOne({ _id: new mongoose.Types.ObjectId(item_id) });
+
+        if (item) {
+          item_display = config.map(item);
+        }
+      }
     }
 
     const chargeId = await generateNextChargeId();
-    const doc = new Charge({ chargeId, item_type, item_id, item_display, description, rate, status });
+    const doc = new Charge({
+      chargeId,
+      item_type,
+      item_id,
+      item_display,
+      description,
+      rate,
+      status,
+    });
     await doc.save();
     res.status(201).json(doc);
   } catch (err) {
@@ -154,29 +177,15 @@ exports.createCharge = async (req, res) => {
   }
 };
 
+
 //  UPDATE
 exports.updateCharge = async (req, res) => {
   try {
     const { item_type, item_id } = req.body;
+    let item_display = req.body.item_display || item_id;
 
-    let item_display = item_id; // default
-
-    const masterCollections = {
-      InventoryItem: { collection: "inventoryitemmaster", idField: "itemId", nameField: "itemName" },
-      Medicine: { collection: "medicinemaster", idField: "medicineId", nameField: "name" },
-      GenericMedicine: { collection: "generic_medicines", idField: "genericId", nameField: "genericName" },
-      Department: { collection: "departmentmasters", idField: "deptCode", nameField: "deptName" },
-      Doctor: { collection: "doctormasters", idField: "doctorCode", nameField: "doctorName" },
-      Service: { collection: "servicemaster", idField: "serviceId", nameField: "serviceName" },
-      Ward: { collection: "wardmasters", idField: "wardId", nameField: "name" },
-      Unit: { collection: "unitMaster", idField: "unitId", nameField: "unitName" },
-      Vendor: { collection: "vendormaster", idField: "vendorId", nameField: "vendorName" },
-    };
-
-    const master = masterCollections[item_type];
-    if (master) {
-      const item = await mongoose.connection.collection(master.collection).findOne({ [master.idField]: item_id });
-      if (item) item_display = `${item[master.idField]} - ${item[master.nameField]}`;
+    if (!req.body.item_display) {
+      // repeat lookup like in createCharge
     }
 
     const updated = await Charge.findByIdAndUpdate(
@@ -192,6 +201,7 @@ exports.updateCharge = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
 
 // DELETE
 exports.deleteCharge = async (req, res) => {

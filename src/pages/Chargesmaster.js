@@ -64,22 +64,33 @@ const ChargesMaster = () => {
     fetchItems();
   }, [charge.item_type]);
 
-    const handleChange = (e) => {
-      const { name, value } = e.target;
+const handleChange = (e) => {
+  const { name, value } = e.target;
 
-      if (name === "item_id") {
-        const selectedItem = items.find((it) => it._id === value);
-        setCharge({
-          ...charge,
-          item_id: value,
-          item_display: selectedItem
-            ? `${selectedItem.itemCode}-${selectedItem.displayName}`
-            : "",
-        });
-      } else {
-        setCharge({ ...charge, [name]: value });
+  if (name === "item_id") {
+    const selectedItem = items.find((it) => it._id === value);
+
+    let display = "";
+    if (selectedItem) {
+      if (selectedItem.itemCode && selectedItem.displayName) {
+        display = `${selectedItem.itemCode} - ${selectedItem.displayName}`;
+      } else if (selectedItem.itemCode) {
+        display = selectedItem.itemCode;
+      } else if (selectedItem.displayName) {
+        display = selectedItem.displayName;
       }
-    };
+    }
+
+    setCharge({
+      ...charge,
+      item_id: value,
+      item_display: display,
+    });
+  } else {
+    setCharge({ ...charge, [name]: value });
+  }
+};
+
 
 
   // Submit form
@@ -156,7 +167,7 @@ const ChargesMaster = () => {
 
 
           <div>
-            <label className="block font-medium">Item</label>
+            <label className="block font-medium">Item_ID_Name</label>
             <select
               name="item_id"
               value={charge.item_id}
