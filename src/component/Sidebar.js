@@ -1,6 +1,6 @@
 // Sidebar.js
-import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import React, { useState, useMemo } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 import {
   Users,
   BedDouble,
@@ -8,14 +8,26 @@ import {
   AlertTriangle,
   Menu,
   X,
-  ArrowBigRightDash, 
+  ArrowBigRightDash,
   ArrowBigLeftDash,
-  Home,   
+  Home,
 } from "lucide-react";
 
 const Sidebar = () => {
-  const [isOpen, setIsOpen] = useState(true); // For desktop toggle
-  const [mobileOpen, setMobileOpen] = useState(false); // For mobile drawer
+  const [isOpen, setIsOpen] = useState(true);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const location = useLocation();
+
+  // Get patientData either from location.state or localStorage
+  const patientData = useMemo(() => {
+    try {
+      return location.state?.patientData || JSON.parse(localStorage.getItem("patientFormData") || "null");
+    } catch {
+      return null;
+    }
+  }, [location.state]);
+
+ 
 
   return (
     <>
@@ -54,7 +66,7 @@ const Sidebar = () => {
           </button>
         </div>
 
-        {/* Heading (only if expanded on desktop) */}
+        {/* Heading */}
         {isOpen && (
           <h2 className="hidden md:block text-xl font-bold mb-6">
             Patient Management
@@ -63,7 +75,6 @@ const Sidebar = () => {
 
         {/* Links */}
         <ul className="space-y-3">
-        
           <li>
             <NavLink
               to="/PatientsList"
@@ -97,6 +108,7 @@ const Sidebar = () => {
           <li>
             <NavLink
               to="/ip-registration"
+              state={{ patientData }}
               className={({ isActive }) =>
                 `flex items-center gap-3 p-2 rounded transition-colors ${
                   isActive ? "bg-blue-600 text-white" : "hover:bg-gray-700"
@@ -112,6 +124,7 @@ const Sidebar = () => {
           <li>
             <NavLink
               to="/op-registration"
+              state={{ patientData }}
               className={({ isActive }) =>
                 `flex items-center gap-3 p-2 rounded transition-colors ${
                   isActive ? "bg-blue-600 text-white" : "hover:bg-gray-700"

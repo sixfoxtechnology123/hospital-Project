@@ -5,78 +5,51 @@ import axios from 'axios';
 import BackButton from './BackButton';
 import Sidebar from './Sidebar';
 
-// install delete icon package
-// npm install @heroicons/react
+// Generate next OP number based on last submitted OP
+const generateNextOpNumber = (lastOp = null) => {
+  const now = new Date();
+  const yyyy = now.getFullYear();
+  const mm = String(now.getMonth() + 1).padStart(2, '0');
+  const dd = String(now.getDate()).padStart(2, '0');
+  const today = `${yyyy}${mm}${dd}`;
 
-  // Generate OP number like OP0001
- let opCounter = 1;
+  let counter = 1;
+  if (lastOp && lastOp.startsWith(`OP${today}`)) {
+    counter = parseInt(lastOp.slice(-4)) + 1;
+  }
 
-const generateOpNumber = () => {
-  const opNumber = `OP${String(opCounter).padStart(4, '0')}`;
-  opCounter++;
-  return opNumber;
+  return `OP${today}${String(counter).padStart(4, '0')}`;
 };
-
 
 const OpRegister = () => {
   const location = useLocation();
-  const { mrNumber, patientData } = location.state || {}; //  Get mrNumber from route state
+  const { patientData } = location.state || {};
+
+  // --- STATE ---
+  const [mrNumber, setMrNumber] = useState('');
   const [departments, setDepartments] = useState([]);
   const [opNumber, setOpNumber] = useState('');
+  const [lastOp, setLastOp] = useState(null); // last submitted OP
   const [dateTime, setDateTime] = useState('');
-  const [paymentType, setPaymentType] = useState('');
-  const [category, setCategory] = useState('');
-  const [department, setDepartment] = useState('');
   const [validTill, setValidTill] = useState('');
-  const [doctors, setDoctors] = useState([]);
-  const [serviceList, setServicesList] = useState([]);
+  const [category, setCategory] = useState('');
+  const [paymentType, setPaymentType] = useState('');
+  const [department, setDepartment] = useState('');
   const [name, setName] = useState('');
   const [mobile, setMobile] = useState('');
   const [address, setAddress] = useState('');
+  const [services, setServices] = useState([]);
+  const [rows, setRows] = useState([]);
+  const [doctors, setDoctors] = useState([]);
+  const [serviceList, setServicesList] = useState([]);
+
+  // MISSING STATES for toggle & payment input
   const [activeSection, setActiveSection] = useState('');
   const [paymentAmount, setPaymentAmount] = useState('');
-  const [netTotals, setNetTotal] = useState(0);
-  
 
-const toggleSection = (section) => {
-  setActiveSection((prevSection) => (prevSection === section ? '' : section));
-};
-console.log(netTotals)
-
-useEffect(() => {
-  if (patientData) {
-    setName(patientData.name || '');
-    setMobile(patientData.mobile || '');
-    setAddress(patientData.address || '');
-  }
-}, [patientData]);
-
- const [rows, setRows] = useState([
-    {
-      opNumber: "OP0001",
-      paymentType: "Cash",
-      paymentMode: "Cash",
-      amount: "",
-      cardNo: "",
-      bank: "",
-      cardValidDate: "",
-    },
-  ]);
-
-  const handleAddRow = (e) => {
-    e.preventDefault();
-    setRows([
-      ...rows,
-      {
-        opNumber: "OP0001",
-        paymentType: "Cash",
-        paymentMode: "Cash",
-        amount: "",
-        cardNo: "",
-        bank: "",
-        cardValidDate: "",
-      }
-    ]);
+  // --- FUNCTIONS ---
+  const toggleSection = (section) => {
+    setActiveSection(prev => (prev === section ? '' : section));
   };
 
   const handleInputChange = (index, field, value) => {
@@ -85,92 +58,110 @@ useEffect(() => {
     setRows(updatedRows);
   };
 
+  // Set patient data
+  useEffect(() => {
+    if (patientData) {
+      setMrNumber(patientData.mrNumber || '');
+      setName(patientData.name || '');
+      setMobile(patientData.mobile || '');
+      setAddress(patientData.address || '');
+    }
+  }, [patientData]);
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  // Payment type based on category
+  useEffect(() => {
+    if (category === 'General') setPaymentType('Cash');
+    else if (category === 'TPA' || category === 'Insurance') setPaymentType('Credit');
+    else setPaymentType('');
+  }, [category]);
 
-  const net = Number(netTotal);
+  // Initialize OP Number & rows when lastOp changes
+  useEffect(() => {
+    const initOp = () => {
+      const newOp = generateNextOpNumber(lastOp);
+      setOpNumber(newOp);
+      const now = new Date();
+      setDateTime(now.toLocaleString());
+      setValidTill(now.toLocaleString());
 
-  const totalPayment = rows.reduce((sum, row) => {
-    const amt = Number(row.amount);
-    return sum + (isNaN(amt) ? 0 : amt);
-  }, 0);
+      setServices([{
+        opNumber: newOp,
+        serviceCode: '',
+        doctorCode: '',
+        serviceCategory: '',
+        unitPrice: '',
+        quantity: 1,
+        discountPercent: '',
+        discountValue: 0,
+        netAmount: 0,
+      }]);
 
-  if (net === totalPayment) {
-    try {
-      const formData = {
-        mrNumber,
-        opNumber,
-        dateTime,
-        category,
-        paymentType,
-        department,
-        validTill,
-        name,
-        mobile,
-        address,
-        services,
-        payments: rows,
-        grossTotal,
-        discountTotal,
-        netTotal
-      };
+      setRows([{
+        opNumber: newOp,
+        paymentType: 'Cash',
+        paymentMode: 'Cash',
+        amount: '',
+        cardNo: '',
+        bank: '',
+        cardValidDate: '',
+      }]);
+    };
+    initOp();
+  }, [lastOp]);
 
-      await axios.post('http://localhost:5000/api/op/register', formData);
-      alert('Submitted successfully!');
+  // Fetch doctors & services
+  useEffect(() => {
+    const fetchDoctorsAndServices = async () => {
+      try {
+        const doctorRes = await axios.get("http://localhost:5000/api/doctors");
+        const serviceRes = await axios.get("http://localhost:5000/api/services");
+        setDoctors(doctorRes.data);
+        setServicesList(serviceRes.data);
+      } catch (error) { console.error(error); }
+    };
+    fetchDoctorsAndServices();
+  }, []);
 
-      // Reset
-      setServices([
-        {
-          opNumber: opNumber,
-          serviceCode: '',
-          doctorCode: '',
-          serviceCategory: '',
-          unitPrice: '',
-          quantity: 1,
-          discountPercent: '',
-          discountValue: 0,
-          netAmount: 0
-        }
-      ]);
-      setRows([
-        {
-          opNumber: opNumber,
-          paymentType: 'Cash',
-          paymentMode: 'Cash',
-          amount: '',
-          cardNo: '',
-          bank: '',
-          cardValidDate: ''
-        }
-      ]);
-      setNetTotal(0);
+  // Fetch departments
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      try {
+        const res = await axios.get('http://localhost:5000/api/departments');
+        setDepartments(res.data);
+      } catch (error) { console.error(error); }
+    };
+    fetchDepartments();
+  }, []);
 
-    } catch (err) {
-      console.error("Error saving OP data:", err);
-      alert("Failed to submit. Check console for details.");
+  // Service change handler
+  const handleServiceChange = (index, field, value) => {
+    const updated = [...services];
+    updated[index][field] = value;
+
+    if (field === 'serviceCode') {
+      const service = serviceList.find(s => s.code === value);
+      updated[index].unitPrice = service ? service.price : 0;
     }
 
-  } else {
-    alert(`Mismatch. Net Amount: ₹${net}, Payment Amount: ₹${totalPayment}`);
-  }
-};
+    const qty = parseFloat(updated[index].quantity || 0);
+    const price = parseFloat(updated[index].unitPrice || 0);
+    const gross = qty * price;
 
+    let discountPercent = parseFloat(updated[index].discountPercent || 0);
+    let discountValue = parseFloat(updated[index].discountValue || 0);
 
-  const formatDateTime = (dateObj) => {
-    const options = {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: true,
-    };
-    return dateObj.toLocaleString('en-GB', options).replace(',', '');
+    if (field === 'discountPercent') discountValue = (gross * discountPercent) / 100;
+    else if (field === 'discountValue') discountPercent = gross ? (discountValue / gross) * 100 : 0;
+
+    updated[index].discountPercent = discountPercent;
+    updated[index].discountValue = discountValue;
+    updated[index].netAmount = gross - discountValue;
+
+    setServices(updated);
   };
-  const [services, setServices] = useState([
-  {
-    opNumber: opNumber,
+
+  const addRow = () => setServices([...services, {
+    opNumber,
     serviceCode: '',
     doctorCode: '',
     serviceCategory: '',
@@ -179,143 +170,45 @@ const handleSubmit = async (e) => {
     discountPercent: '',
     discountValue: 0,
     netAmount: 0
-  }
-]);
+  }]);
+  const deleteRow = (index) => setServices(services.filter((_, i) => i !== index));
 
-// Add Row
-const addRow = () => {
-  setServices([
-    ...services,
-    {
-      opNumber: opNumber,
-      serviceCode: '',
-      doctorCode: '',
-      serviceCategory: '',
-      unitPrice: '',
-      quantity: 1,
-      discountPercent: '',
-      discountValue: 0,
-      netAmount: 0
-    }
-  ]);
-};
-
-
-// Handle field change
-const handleServiceChange = (index, field, value) => {
-  const updated = [...services];
-  updated[index][field] = value;
-
-  if (field === 'serviceCode') {
-    const service = serviceList.find(s => s.code === value);
-    updated[index].unitPrice = service ? service.price : 0;
-  }
-
-  const qty = parseFloat(updated[index].quantity || 0);
-  const price = parseFloat(updated[index].unitPrice || 0);
-  const gross = qty * price;
-
-  let discountPercent = parseFloat(updated[index].discountPercent || 0);
-  let discountValue = parseFloat(updated[index].discountValue || 0);
-
-  if (field === 'discountPercent') {
-    discountValue = (gross * discountPercent) / 100;
-    updated[index].discountValue = discountValue;
-  } else if (field === 'discountValue') {
-    discountPercent = gross ? (discountValue / gross) * 100 : 0;
-    updated[index].discountPercent = discountPercent;
-  }
-
-  const net = gross - discountValue;
-
-  updated[index].netAmount = net;
-  setServices(updated);
-};
-
-
-// Calculate totals
-const grossTotal = services.reduce((sum, row) => sum + row.unitPrice * row.quantity, 0);
-const discountTotal = services.reduce(
-  (sum, row) => sum + Number(row.discountValue || 0),
-  0
-);
-
-const netTotal = services.reduce((sum, row) => sum + row.netAmount, 0);
-
-useEffect(() => {
-    if (category === 'General') {
-      setPaymentType('Cash');
-    } else if (category === 'TPA' || category === 'Insurance') {
-      setPaymentType('Credit');
-    } else {
-      setPaymentType('');
-    }
-  }, [category]);
-
-    useEffect(() => {
-      const now = new Date();
-      const generatedOp = generateOpNumber();
-      setOpNumber(generatedOp);
-      setDateTime(formatDateTime(now));
-      setValidTill(formatDateTime(now));
-
-      // Now set initial services row with generated OP Number
-      setServices([
-        {
-          opNumber: generatedOp,
-          serviceCode: '',
-          doctorCode: '',
-          serviceCategory: '',
-          unitPrice: '',
-          quantity: 1,
-          discountPercent: '',
-          discountValue: 0,
-          netAmount: 0,
-        }
-      ]);
-    }, []);
-
-    //delete services
-    const deleteRow = (index) => {
-    const updated = [...services];
-    updated.splice(index, 1);
-    setServices(updated);
+  const handleAddRow = (e) => {
+    e.preventDefault();
+    setRows([...rows, { opNumber, paymentType: 'Cash', paymentMode: 'Cash', amount: '', cardNo: '', bank: '', cardValidDate: '' }]);
   };
+  const deletePaymentRow = (index) => setRows(rows.filter((_, i) => i !== index));
 
-  //delete payment
-  const deletePaymentRow = (index) => {
-  const updatedRows = [...rows];
-  updatedRows.splice(index, 1);
-  setRows(updatedRows);
-};
+  // Totals
+  const grossTotal = services.reduce((sum, s) => sum + s.unitPrice * s.quantity, 0);
+  const discountTotal = services.reduce((sum, s) => sum + Number(s.discountValue || 0), 0);
+  const netTotal = services.reduce((sum, s) => sum + s.netAmount, 0);
 
-  useEffect(() => {
-  const fetchDoctorsAndServices = async () => {
+  // Submit
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const totalPayment = rows.reduce((sum, r) => sum + Number(r.amount || 0), 0);
+    if (netTotal !== totalPayment) {
+      alert(`Mismatch! Net: ${netTotal}, Payment: ${totalPayment}`);
+      return;
+    }
+
     try {
-      const doctorRes = await axios.get("http://localhost:5000/api/doctors");
-      const serviceRes = await axios.get("http://localhost:5000/api/services");
-      setDoctors(doctorRes.data);
-      setServicesList(serviceRes.data);
-    } catch (error) {
-      console.error("Failed to fetch doctors/services:", error);
+      await axios.post('http://localhost:5000/api/op/register', {
+        mrNumber, opNumber, dateTime, category, paymentType,
+        department, validTill, name, mobile, address,
+        services, payments: rows, grossTotal, discountTotal, netTotal
+      });
+
+      alert('Submitted successfully!');
+      setLastOp(opNumber); // this triggers new OP number and resets form
+      setPaymentAmount(''); // reset payment input
+    } catch (err) {
+      console.error(err);
+      alert('Failed to submit');
     }
   };
-
-  fetchDoctorsAndServices();
-}, []);
-
-  useEffect(() => {
-  const fetchDepartments = async () => {
-    try {
-      const res = await axios.get('http://localhost:5000/api/departments');
-      setDepartments(res.data); // Assuming response has [{ deptCode, deptName }]
-    } catch (error) {
-      console.error('Error fetching departments:', error);
-    }
-  };
-
-  fetchDepartments();
-}, []);
 
 
   return (
@@ -333,7 +226,7 @@ useEffect(() => {
           
           <input
             type="text"
-            value={mrNumber}
+             value={mrNumber}
             readOnly
             className="border-2 p-1"
           />

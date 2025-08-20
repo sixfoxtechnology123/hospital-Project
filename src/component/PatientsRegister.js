@@ -3,7 +3,6 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import BackButton from './BackButton';
 
-
 const PatientsRegister = () => {
   const navigate = useNavigate();
 
@@ -41,6 +40,24 @@ const PatientsRegister = () => {
   const [manualDOBInput, setManualDOBInput] = useState(false);
   const [navigateData, setNavigateData] = useState(null);
 
+  // Generate MR number (frontend fallback)
+  const generateMRNumber = () => {
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    const today = `${yyyy}${mm}${dd}`;
+
+    const storedData = JSON.parse(localStorage.getItem('mrCounterData')) || { date: today, counter: 0 };
+    let counter = storedData.counter;
+
+    if (storedData.date !== today) counter = 0;
+
+    counter++;
+    localStorage.setItem('mrCounterData', JSON.stringify({ date: today, counter }));
+
+    return `MR${today}${String(counter).padStart(4, '0')}`;
+  };
 
   // Handle field changes
   const handleChange = (e) => {
@@ -139,57 +156,52 @@ const PatientsRegister = () => {
 
   // Submit patient form
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
+    if (!validateForm()) return;
 
-  if (!validateForm()) return;
+    try {
+      const res = await axios.post('http://localhost:5000/api/register', formData);
 
-  try {
-    const res = await axios.post('http://localhost:5000/api/register', formData);
+      // Use backend MR number if available, otherwise generate frontend
+      const mr = res.data?.mrNumber || generateMRNumber();
+      setMrNumber(mr);
 
-    const mr = res.data?.mrNumber || 'Unknown';
-
-    setMrNumber(mr);
-    const patientSnapshot = { ...formData }; 
-    setShowSuccessModal(true);
-    setNavigateData(patientSnapshot); 
-
-    reset();
-  } catch (err) {
-    alert('Registration Failed');
-  }
-};
+      const patientSnapshot = { ...formData, mrNumber: mr };
+      setShowSuccessModal(true);
+      setNavigateData(patientSnapshot);
+      
+      reset();
+    } catch (err) {
+      alert('Registration Failed');
+      console.error(err);
+    }
+  };
 
 
-  return (
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white pt-1 px-3 w-full mx-auto border-2 border-gray-300 shadow text-sm"
-      >
-        {/* MR Success Modal */}
-        {showSuccessModal && (
-          <div className="fixed inset-0 flex items-center justify-center bg-green-100 bg-opacity-95 z-50">
-            <div className="bg-white border-2 border-green-500 rounded-xl p-6 sm:p-10 shadow-lg text-center max-w-md w-full">
-              <h2 className="text-xl sm:text-2xl font-bold text-green-700 mb-4">
-                Patient Registered Successfully
-              </h2>
-              <p className="text-base sm:text-lg text-gray-800">
-                MR Number is: <span className="font-semibold">{mrNumber}</span>
-              </p>
-              <button
-                onClick={() => {
-                  setShowSuccessModal(false);
-                  navigate("/PatientUpdatePage", {
-                    state: { mrNumber: mrNumber, patientData: navigateData },
-                  });
-                }}
-                className="mt-6 px-4 sm:px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded"
-              >
-                Continue
-              </button>
-            </div>
+    return (
+    <form onSubmit={handleSubmit} className="bg-white pt-1 px-3 w-full mx-auto border-2 border-gray-300 shadow text-sm">
+      {/* MR Success Modal */}
+      {showSuccessModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-green-100 bg-opacity-95 z-50">
+          <div className="bg-white border-2 border-green-500 rounded-xl p-6 sm:p-10 shadow-lg text-center max-w-md w-full">
+            <h2 className="text-xl sm:text-2xl font-bold text-green-700 mb-4">
+              Patient Registered Successfully
+            </h2>
+            <p className="text-base sm:text-lg text-gray-800">
+              MR Number is: <span className="font-semibold">{mrNumber}</span>
+            </p>
+            <button
+              onClick={() => {
+                setShowSuccessModal(false);
+                navigate("/PatientUpdatePage", { state: { mrNumber, patientData: navigateData } });
+              }}
+              className="mt-6 px-4 sm:px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded"
+            >
+              Continue
+            </button>
           </div>
-        )}
-
+        </div>
+      )}
         {/* Basic Details */}
         <h3 className="text-white bg-teal-700 p-2 font-semibold mt-2 rounded">
           Basic Details

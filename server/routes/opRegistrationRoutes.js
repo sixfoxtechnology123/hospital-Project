@@ -5,6 +5,6 @@ const router = express.Router();
 const { opRegisterController } = require('../controllers/opController');
 
 // Define route
-router.post('/register', opRegisterController); // ✅ Pass function, not object
+router.post('/register', opRegisterController); // Pass function, not object
 
 module.exports = router;
