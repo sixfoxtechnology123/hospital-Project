@@ -94,7 +94,7 @@ const PatientsList = () => {
 
           {/* Center: Title */}
           <h2 className="text-xl font-bold text-green-800 text-center flex-1">
-            Patients
+            Registered Patients List
           </h2>
 
           {/* Right: Search + New Register */}
@@ -143,7 +143,7 @@ const PatientsList = () => {
                   <td className="border border-green-500 px-2 py-1">
                     <div className="flex justify-center items-center gap-4">
                       <button
-                        onClick={() => navigate(`/select/${p._id}`)}
+                       onClick={() => navigate(`/PatientUpdatePage/${p._id}`)}
                         className="text-green-700 hover:text-green-900"
                         title="Continue"
                       >

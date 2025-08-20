@@ -53,5 +53,25 @@ router.post('/register', async (req, res) => {
     res.status(500).json({ message: "Registration Failed" });
   }
 });
+router.get('/patients', async (req, res) => {
+  try {
+    const patients = await Patient.find().sort({ createdAt: -1 });
+    res.json(patients);
+  } catch (err) {
+    console.error("Error fetching patients:", err);
+    res.status(500).json({ message: "Failed to fetch patients" });
+  }
+});
+
+//  Delete patient
+router.delete('/patients/:id', async (req, res) => {
+  try {
+    await Patient.findByIdAndDelete(req.params.id);
+    res.json({ message: "Patient deleted" });
+  } catch (err) {
+    console.error("Error deleting patient:", err);
+    res.status(500).json({ message: "Delete failed" });
+  }
+});
 
 module.exports = router;
