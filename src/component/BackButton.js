@@ -6,14 +6,20 @@ const BackButton = ({ label = "Back" }) => {
   const navigate = useNavigate();
 
   return (
-    <button
-      type="button"
-      onClick={() => navigate(-1)}
-      className="flex items-center gap-1 bg-blue-700 font-semibold  text-white px-4 py-1 rounded"
-    >
-      <FaArrowLeft className="text-sm" />
-      {label}
-    </button>
+    <div className="w-full flex justify-center sm:justify-start">
+      <button
+        type="button"
+        onClick={() => navigate(-1)}
+        className="inline-flex items-center gap-2 bg-blue-700 font-semibold text-white
+                  px-3 py-1 sm:px-4 sm:py-2
+                  text-sm sm:text-base
+                  rounded-lg shadow hover:bg-blue-800 transition"
+      >
+        <FaArrowLeft className="text-sm sm:text-base" />
+        <span className="leading-none">{label ?? 'Back'}</span>
+      </button>
+    </div>
+
   );
 };
 

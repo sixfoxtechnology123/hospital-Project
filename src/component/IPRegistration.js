@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import BackButton from './BackButton';
+import Sidebar from './Sidebar';
+
 
 const IPRegistration = () => {
   const location = useLocation();
@@ -73,7 +75,8 @@ const IPRegistration = () => {
 
     if (!patientData && mrNumber) fetchPatientDetails();
   }, [mrNumber, patientData]);
-
+   console.log(setPlans)
+   console.log(setPackages)
   // Auto-fill patient fields when patientData ready (your existing)
   useEffect(() => {
     if (!patientData) return;
@@ -175,7 +178,10 @@ const IPRegistration = () => {
 
 
   return (
-     <form onSubmit={handleSubmit} className="bg-white pt-1 px-2 mt-1 text-black  w-screen mx-auto border border-gray-300 shadow text-sm">
+    <div className="flex min-h-screen flex-col  md:flex-row">
+      <Sidebar/>
+    <div className="flex-1 overflow-y-auto">
+     <form onSubmit={handleSubmit} className="bg-white pt-2 px-3 w-full  mx-auto border-2 border-gray-300 shadow text-sm md:text-sm">
       <div className="grid grid-cols-3 gap-4 mb-4">
         {/* Admission Date & Time */}
         <div>
@@ -209,7 +215,7 @@ const IPRegistration = () => {
         </div>
       </div>
 
-      <div className=" text-white bg-teal-700 text-base flex justify-between p-0 font-semibold">
+      <div className=" text-white bg-teal-700 text-sm flex justify-between p-0 font-semibold">
         <span className="ml-2">Patient Details</span>
       </div>
       <div className="md:grid grid-cols-5 gap-2 mb-2">
@@ -329,7 +335,7 @@ const IPRegistration = () => {
       </div>
 
 
-        <div className=" text-white bg-teal-700 text-base flex justify-between p-0 font-semibold">
+        <div className=" text-white bg-teal-700 text-sm flex justify-between p-0 font-semibold">
         <span className="ml-2">Hospital Details</span>
       </div>
       <div className="md:grid grid-cols-5 gap-2 mb-2">
@@ -478,13 +484,14 @@ const IPRegistration = () => {
         <BackButton />
         <button
           type="submit"
-          className="bg-green-600 font-semibold hover:bg-green-700 text-white px-4 py-2 rounded"
+          className="bg-green-600 font-semibold hover:bg-green-700 text-white px-4 py-1 rounded"
         >
           Submit
         </button>
       </div>
     </form>
-    
+    </div>
+    </div>
   );
 };
 

@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { TrashIcon } from '@heroicons/react/24/solid';
 import axios from 'axios';
 import BackButton from './BackButton';
+import Sidebar from './Sidebar';
 
 // install delete icon package
 // npm install @heroicons/react
@@ -318,7 +319,10 @@ useEffect(() => {
 
 
   return (
-      <form onSubmit={handleSubmit} className="bg-white pt-1 px-2 mt-1 w-screen mx-auto border border-gray-300 shadow text-sm">
+    <div className="flex min-h-screen flex-col  md:flex-row">
+      <Sidebar/>
+       <div className="flex-1 overflow-y-auto">
+      <form onSubmit={handleSubmit} className="bg-white pt-2 px-3 w-full  mx-auto border-2 border-gray-300 shadow text-sm md:text-sm">
       <div className=" text-white bg-teal-700 text-base flex justify-between p-1 font-semibold">
         <span className="ml-2">OP Registration Form</span>
       </div>
@@ -755,6 +759,8 @@ useEffect(() => {
         </>
       )}
       </form>
+      </div>
+      </div>
     );
 };
 export default OpRegister;

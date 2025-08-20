@@ -44,6 +44,10 @@ import ChargesMaster from './pages/Chargesmaster';
 import ChargesList from './pages/Chargeslist';
 import PatientsList from './component/PatientsList';
 import PatientUpdatePage from './component/PatientUpdatePage';
+import Sidebar from './component/Sidebar';
+
+
+
 
 
 
@@ -96,6 +100,7 @@ function App() {
         <Route path="/ChargesList" element={<ChargesList/>} />
         <Route path="/PatientsList" element={<PatientsList/>} />
         <Route path="/PatientUpdatePage" element={<PatientUpdatePage/>} /> 
+        <Route path="/Sidebar" element={<Sidebar/>} /> 
       </Routes>
     </div>
   );
