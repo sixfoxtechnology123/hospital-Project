@@ -3,7 +3,6 @@ import PatientsRegister from './component/PatientsRegister';
 import OpIpSelection from './component/IpOpSelection';
 import OpForm from './component/OPRegister';
 import HomePage from './pages/HomePage';
-import PatientsPage from './pages/PatientsPage';
 import DepartmentMaster from './pages/DepartmentMaster';
 import DoctorMaster from './pages/DoctorMaster';
 import ServiceMaster from './pages/ServiceMaster';
@@ -45,6 +44,7 @@ import ChargesList from './pages/Chargeslist';
 import PatientsList from './component/PatientsList';
 import PatientUpdatePage from './component/PatientUpdatePage';
 import Sidebar from './component/Sidebar';
+import Header from './component/Header';
 
 
 
@@ -56,7 +56,6 @@ function App() {
     <div>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/patients" element={<PatientsPage />} />
         <Route path="/PatientsRegister" element={<PatientsRegister />} />
         <Route path="/select" element={<OpIpSelection />} />
         <Route path="/op-registration" element={<OpForm />} />
@@ -101,6 +100,7 @@ function App() {
         <Route path="/PatientsList" element={<PatientsList/>} />
         <Route path="/PatientUpdatePage/:id" element={<PatientUpdatePage/>} /> 
         <Route path="/Sidebar" element={<Sidebar/>} /> 
+        <Route path="/Header" element={<Header/>} /> 
       </Routes>
     </div>
   );

@@ -186,7 +186,7 @@ const IPRegistration = () => {
     <div className="flex min-h-screen flex-col md:flex-row">
       <Sidebar />
       <div className="flex-1 overflow-y-auto">
-        <form onSubmit={handleSubmit} className="bg-white pt-2 px-3 w-full mx-auto border-2 border-gray-300 shadow text-sm md:text-sm">
+        <form onSubmit={handleSubmit} className="bg-white p-3 w-full mx-auto border-2 border-gray-300 shadow text-sm md:text-sm">
           {/* Admission Date, IP Number, MR Number */}
           <div className="grid grid-cols-3 gap-4 mb-4">
             <div>

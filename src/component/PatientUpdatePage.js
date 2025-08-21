@@ -114,7 +114,7 @@ useEffect(() => {
       <div className="flex min-h-screen flex-col  md:flex-row">
         <Sidebar/>
       {/* Form Section */}
-      <div className="flex-1 p-3  md:p-6 bg-gray-100 overflow-y-auto">
+      <div className="flex-1 p-3  md:p-3 bg-gray-100 overflow-y-auto">
         <form
           onSubmit={handleSubmit}
           className="bg-white pt-2 px-3 w-full mx-auto border-2 border-gray-300 shadow text-sm md:text-base"

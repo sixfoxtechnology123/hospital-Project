@@ -1,6 +1,13 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaUserInjured, FaProcedures, FaStethoscope, FaCheckCircle } from 'react-icons/fa';
+import { 
+  FaUserInjured, 
+  FaProcedures, 
+  FaStethoscope, 
+  FaCheckCircle, 
+  FaHospitalUser,
+  FaUserPlus   // ➕ for New Register
+} from 'react-icons/fa';
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -9,7 +16,7 @@ const HomePage = () => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-teal-200">
       <h1 className="text-4xl font-bold text-gray-800 mb-10">Welcome to CLINIX</h1>
 
-      <div className="flex gap-10 flex-wrap justify-center">
+      <div className=" grid grid-cols-1 sm:grid-cols-3 gap-8 flex-wrap justify-center">
         {/* Patients Box */}
         <div
           className="group p-8 bg-white shadow-lg rounded-xl text-center cursor-pointer hover:bg-blue-100 transition"
@@ -17,9 +24,32 @@ const HomePage = () => {
         >
           <FaUserInjured size={50} className="mx-auto text-blue-500" />
           <h2 className="mt-4 text-xl font-semibold transform transition-transform duration-300 group-hover:-translate-y-1">
-            Patients
+            All Patients List
           </h2>
         </div>
+        
+          {/* New Register Box */}
+        <div
+          className="group p-8 bg-white shadow-lg rounded-xl text-center cursor-pointer hover:bg-teal-100 transition"
+          onClick={() => navigate('/PatientsRegister')}
+        >
+          <FaUserPlus size={50} className="mx-auto text-teal-500" />
+          <h2 className="mt-4 text-xl font-semibold transform transition-transform duration-300 group-hover:-translate-y-1">
+            New Register
+          </h2>
+        </div>
+
+        {/* IPD/OPD/Emergency Box */}
+        <div
+          className="group p-8 bg-white shadow-lg rounded-xl text-center cursor-pointer hover:bg-red-100 transition"
+          onClick={() => navigate('/PatientUpdatePage/:id')}
+        >
+          <FaHospitalUser size={50} className="mx-auto text-red-500" />
+          <h2 className="mt-4 text-xl font-semibold transform transition-transform duration-300 group-hover:-translate-y-1">
+            Patients Home
+          </h2>
+        </div>
+
         {/* Ward Box */}
         <div
           className="group p-8 bg-white shadow-lg rounded-xl text-center cursor-pointer hover:bg-green-100 transition"
@@ -52,6 +82,8 @@ const HomePage = () => {
             Status
           </h2>
         </div>
+
+      
       </div>
     </div>
   );
