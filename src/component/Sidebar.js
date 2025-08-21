@@ -66,6 +66,21 @@ const Sidebar = () => {
 
         {/* Links */}
         <ul className="space-y-3">
+          <li>
+              <NavLink
+                to="/"
+                className={({ isActive }) =>
+                  `flex items-center gap-3 p-2 rounded transition-colors ${
+                    isActive ? "bg-blue-600 text-white" : "hover:bg-gray-700"
+                  }`
+                }
+                onClick={() => setMobileOpen(false)}
+              >
+                <Home size={20} />
+                {isOpen && <span>Home</span>}
+              </NavLink>
+            </li>
+
           {/* Patients List */}
           <li>
             <NavLink

@@ -7,7 +7,9 @@ import axios from "axios";
 const UpdatePatientPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-
+  const [manualAgeInput, setManualAgeInput] = useState(false);
+  const [manualDOBInput, setManualDOBInput] = useState(false);
+ 
   const [formData, setFormData] = useState({
     mrNumber: "",
     prefix: "",
@@ -50,9 +52,49 @@ const UpdatePatientPage = () => {
     }
   }, [id]);
 
+  // const handleChange = (e) => {
+  //   setFormData({ ...formData, [e.target.name]: e.target.value });
+  // };
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const { name, value } = e.target;
+
+  // Detect manual input
+  if (name === 'age') {
+    setManualAgeInput(true);
+    setManualDOBInput(false);
+  }
+  if (name === 'dob') {
+    setManualDOBInput(true);
+    setManualAgeInput(false);
+  }
+
+  setFormData({ ...formData, [name]: value });
+};
+useEffect(() => {
+  const today = new Date();
+
+  // If DOB changed manually, calculate Age
+  if (manualDOBInput && formData.dob) {
+    const birthDate = new Date(formData.dob);
+    let calculatedAge = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) calculatedAge--;
+    if (calculatedAge !== parseInt(formData.age)) {
+      setFormData(prev => ({ ...prev, age: calculatedAge.toString() }));
+    }
+  }
+
+  // If Age changed manually, calculate DOB
+  if (manualAgeInput && formData.age) {
+    const ageInt = parseInt(formData.age);
+    if (!isNaN(ageInt)) {
+      const approxDOB = new Date(today.getFullYear() - ageInt, today.getMonth(), today.getDate());
+      const formattedDOB = approxDOB.toISOString().split("T")[0];
+      setFormData(prev => ({ ...prev, dob: formattedDOB }));
+    }
+  }
+}, [formData.dob, formData.age, manualAgeInput, manualDOBInput]);
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
