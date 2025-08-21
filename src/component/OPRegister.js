@@ -64,7 +64,9 @@ const OpRegister = () => {
       setMrNumber(patientData.mrNumber || '');
       setName(patientData.name || '');
       setMobile(patientData.mobile || '');
-      setAddress(patientData.address || '');
+      setAddress(
+      `${patientData.address1 || ''} ${patientData.address2 || ''}`.trim()
+    );
     }
   }, [patientData]);
 
