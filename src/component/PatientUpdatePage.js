@@ -6,7 +6,7 @@ import axios from "axios";
 
 const UpdatePatientPage = () => {
   const { id } = useParams();
-  const navigate = useNavigate(); // ✅ Added navigate
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     mrNumber: "",
@@ -37,12 +37,15 @@ const UpdatePatientPage = () => {
     pan: "",
   });
 
-  // Fetch patient details by ID
+  // Fetch patient details by ID and save to localStorage
   useEffect(() => {
     if (id) {
       axios
         .get(`http://localhost:5000/api/patients/${id}`)
-        .then((res) => setFormData(res.data))
+        .then((res) => {
+          setFormData(res.data);
+          localStorage.setItem("latestPatient", JSON.stringify(res.data)); // Save latest patient
+        })
         .catch((err) => console.error("Error fetching patient:", err));
     }
   }, [id]);
@@ -55,14 +58,15 @@ const UpdatePatientPage = () => {
     e.preventDefault();
     axios
       .put(`http://localhost:5000/api/patients/${id}`, formData)
-      .then(() => {
+      .then((res) => {
         alert("Patient updated successfully!");
-        navigate(`/PatientUpdatePage/${id}`); // ✅ Fixed: use existing id
+        setFormData(res.data);
+        localStorage.setItem("latestPatient", JSON.stringify(res.data)); // Update latest patient
+        navigate(`/PatientUpdatePage/${id}`);
       })
-      .catch((err) => {
-        console.error("Update failed:", err);
-      });
+      .catch((err) => console.error("Update failed:", err));
   };
+
 
   return (
       <div className="flex min-h-screen flex-col  md:flex-row">

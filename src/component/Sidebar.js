@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
 import {
   Users,
   BedDouble,
@@ -15,19 +15,14 @@ import {
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const location = useLocation();
 
-  // Get latest patient data from state or localStorage
-  const patientData = useMemo(() => {
-    try {
-      return (
-        location.state?.patientData ||
-        JSON.parse(localStorage.getItem("patientFormData") || "null")
-      );
-    } catch {
-      return null;
-    }
-  }, [location.state]);
+  // Read latest patient from localStorage
+  let patientData = null;
+  try {
+    patientData = JSON.parse(localStorage.getItem("latestPatient"));
+  } catch (err) {
+    patientData = null;
+  }
 
   return (
     <>
@@ -71,6 +66,7 @@ const Sidebar = () => {
 
         {/* Links */}
         <ul className="space-y-3">
+          {/* Patients List */}
           <li>
             <NavLink
               to="/PatientsList"
@@ -86,10 +82,10 @@ const Sidebar = () => {
             </NavLink>
           </li>
 
+          {/* Dashboard */}
           <li>
             <NavLink
-              to="/PatientUpdatePage"
-              state={{ patientData }}
+              to={patientData?._id ? `/PatientUpdatePage/${patientData._id}` : "/PatientsList"}
               className={({ isActive }) =>
                 `flex items-center gap-3 p-2 rounded transition-colors ${
                   isActive ? "bg-blue-600 text-white" : "hover:bg-gray-700"
@@ -102,8 +98,7 @@ const Sidebar = () => {
             </NavLink>
           </li>
 
-          <li>
-            <NavLink
+         <NavLink
               to="/ip-registration"
               state={{ patientData }}
               className={({ isActive }) =>
@@ -116,9 +111,7 @@ const Sidebar = () => {
               <BedDouble size={20} />
               {isOpen && <span>IPD Registration</span>}
             </NavLink>
-          </li>
 
-          <li>
             <NavLink
               to="/op-registration"
               state={{ patientData }}
@@ -132,8 +125,8 @@ const Sidebar = () => {
               <Stethoscope size={20} />
               {isOpen && <span>OPD Registration</span>}
             </NavLink>
-          </li>
 
+          {/* Emergency */}
           <li>
             <NavLink
               to="/emergency"
