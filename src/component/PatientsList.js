@@ -142,13 +142,14 @@ const PatientsList = () => {
                   <td className="border border-green-500 px-2 py-1">{p.email}</td>
                   <td className="border border-green-500 px-2 py-1">
                     <div className="flex justify-center items-center gap-4">
-                      <button
-                       onClick={() => navigate(`/PatientUpdatePage/${p._id}`)}
+                     <button
+                        onClick={() => navigate(`/PatientUpdatePage/${p._id}`)}
                         className="text-green-700 hover:text-green-900"
                         title="Continue"
                       >
                         <FaArrowRight />
                       </button>
+
                       <button
                         onClick={() => handleDelete(p._id)}
                         className="text-red-600 hover:text-red-800"

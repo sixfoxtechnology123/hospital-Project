@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import BackButton from "./BackButton";
 import Sidebar from "./Sidebar";
-
+import axios from "axios";
 
 const UpdatePatientPage = () => {
-const location = useLocation();
-const { patientData, mrNumber: navMr } = location.state || {};
-
+  const { id } = useParams();
 
   const [formData, setFormData] = useState({
-     mrNumber: "",
+    mrNumber: "",
     prefix: "",
     name: "",
     fatherOrSpouse: "",
@@ -39,42 +37,28 @@ const { patientData, mrNumber: navMr } = location.state || {};
   });
 
   useEffect(() => {
-    // 1. If patientData or navMr comes from navigation, save to localStorage
-    if (patientData || navMr) {
-      const updatedData = {
-        ...formData,
-        ...(patientData || {}),
-        mrNumber: navMr ?? formData.mrNumber,
-      };
-
-      setFormData(updatedData);
-
-      // Save into localStorage
-      localStorage.setItem("patientFormData", JSON.stringify(updatedData));
-    } else {
-      // 2. If no data in navigation, try to load from localStorage
-      const savedData = localStorage.getItem("patientFormData");
-      if (savedData) {
-        setFormData(JSON.parse(savedData));
-      }
+    if (id) {
+      axios
+        .get(`http://localhost:5000/api/patients/${id}`)
+        .then((res) => setFormData(res.data))
+        .catch((err) => console.error("Error fetching patient:", err));
     }
-}, [patientData, navMr]);
+  }, [id]);
 
-
-
- const handleChange = (e) => {
-  const updatedForm = { ...formData, [e.target.name]: e.target.value };
-  setFormData(updatedForm);
-
-  // Keep localStorage updated
-  localStorage.setItem("patientFormData", JSON.stringify(updatedForm));
-};
-
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Updated Patient Data:", formData);
-    // yahan aap backend API call kar sakte ho to update DB
+    axios
+      .put(`http://localhost:5000/api/patients/${id}`, formData)
+      .then(() => {
+        alert("Patient updated successfully!");
+      })
+      .catch((err) => {
+        console.error("Update failed:", err);
+      });
   };
   
   return (

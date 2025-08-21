@@ -62,6 +62,17 @@ router.get('/patients', async (req, res) => {
     res.status(500).json({ message: "Failed to fetch patients" });
   }
 });
+// GET single patient by ID
+router.get("/patients/:id", async (req, res) => {
+  try {
+    const patient = await Patient.findById(req.params.id);
+    if (!patient) return res.status(404).json({ message: "Patient not found" });
+    res.json(patient);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 
 //  Delete patient
 router.delete('/patients/:id', async (req, res) => {

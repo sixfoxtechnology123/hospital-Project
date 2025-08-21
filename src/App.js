@@ -99,7 +99,7 @@ function App() {
         <Route path="/ChargesMaster" element={<ChargesMaster/>} />
         <Route path="/ChargesList" element={<ChargesList/>} />
         <Route path="/PatientsList" element={<PatientsList/>} />
-        <Route path="/PatientUpdatePage" element={<PatientUpdatePage/>} /> 
+        <Route path="/PatientUpdatePage/:id" element={<PatientUpdatePage/>} /> 
         <Route path="/Sidebar" element={<Sidebar/>} /> 
       </Routes>
     </div>
