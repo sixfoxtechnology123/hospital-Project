@@ -59,16 +59,16 @@ const OpRegister = () => {
   };
 
   // Set patient data
-  useEffect(() => {
-    if (patientData) {
-      setMrNumber(patientData.mrNumber || '');
-      setName(patientData.name || '');
-      setMobile(patientData.mobile || '');
-      setAddress(
-      `${patientData.address1 || ''} ${patientData.address2 || ''}`.trim()
-    );
-    }
-  }, [patientData]);
+useEffect(() => {
+  if (patientData) {
+    setMrNumber(patientData.mrNumber || '');
+    setName(patientData.name || '');
+    setMobile(patientData.mobile || '');
+    setAddress(patientData.address1 || patientData.address2 || '');
+  }
+}, [patientData]);
+
+
 
   // Payment type based on category
   useEffect(() => {
