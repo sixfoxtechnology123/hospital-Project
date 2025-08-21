@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import BackButton from "./BackButton";
 import Sidebar from "./Sidebar";
 import axios from "axios";
 
 const UpdatePatientPage = () => {
   const { id } = useParams();
+  const navigate = useNavigate(); // ✅ Added navigate
 
   const [formData, setFormData] = useState({
     mrNumber: "",
@@ -36,6 +37,7 @@ const UpdatePatientPage = () => {
     pan: "",
   });
 
+  // Fetch patient details by ID
   useEffect(() => {
     if (id) {
       axios
@@ -55,12 +57,13 @@ const UpdatePatientPage = () => {
       .put(`http://localhost:5000/api/patients/${id}`, formData)
       .then(() => {
         alert("Patient updated successfully!");
+        navigate(`/PatientUpdatePage/${id}`); // ✅ Fixed: use existing id
       })
       .catch((err) => {
         console.error("Update failed:", err);
       });
   };
-  
+
   return (
       <div className="flex min-h-screen flex-col  md:flex-row">
         <Sidebar/>

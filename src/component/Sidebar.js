@@ -1,4 +1,3 @@
-// Sidebar.js
 import React, { useState, useMemo } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import {
@@ -18,16 +17,17 @@ const Sidebar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
 
-  // Get patientData either from location.state or localStorage
+  // Get latest patient data from state or localStorage
   const patientData = useMemo(() => {
     try {
-      return location.state?.patientData || JSON.parse(localStorage.getItem("patientFormData") || "null");
+      return (
+        location.state?.patientData ||
+        JSON.parse(localStorage.getItem("patientFormData") || "null")
+      );
     } catch {
       return null;
     }
   }, [location.state]);
-
- 
 
   return (
     <>
@@ -49,15 +49,12 @@ const Sidebar = () => {
       >
         {/* Top Controls */}
         <div className="flex items-center justify-between mb-6">
-          {/* Desktop Toggle */}
           <button
             className="hidden md:block text-white p-2"
             onClick={() => setIsOpen(!isOpen)}
           >
             {isOpen ? <ArrowBigLeftDash size={22} /> : <ArrowBigRightDash size={22} />}
           </button>
-
-          {/* Mobile Close */}
           <button
             className="md:hidden text-white p-2 ml-auto"
             onClick={() => setMobileOpen(false)}
@@ -66,7 +63,6 @@ const Sidebar = () => {
           </button>
         </div>
 
-        {/* Heading */}
         {isOpen && (
           <h2 className="hidden md:block text-xl font-bold mb-6">
             Patient Management
@@ -86,13 +82,14 @@ const Sidebar = () => {
               onClick={() => setMobileOpen(false)}
             >
               <Home size={20} />
-              {isOpen && <span>Home</span>}
+              {isOpen && <span>Patients List</span>}
             </NavLink>
           </li>
 
           <li>
             <NavLink
               to="/PatientUpdatePage"
+              state={{ patientData }}
               className={({ isActive }) =>
                 `flex items-center gap-3 p-2 rounded transition-colors ${
                   isActive ? "bg-blue-600 text-white" : "hover:bg-gray-700"
@@ -117,7 +114,7 @@ const Sidebar = () => {
               onClick={() => setMobileOpen(false)}
             >
               <BedDouble size={20} />
-              {isOpen && <span>IPD</span>}
+              {isOpen && <span>IPD Registration</span>}
             </NavLink>
           </li>
 
@@ -133,7 +130,7 @@ const Sidebar = () => {
               onClick={() => setMobileOpen(false)}
             >
               <Stethoscope size={20} />
-              {isOpen && <span>OPD</span>}
+              {isOpen && <span>OPD Registration</span>}
             </NavLink>
           </li>
 

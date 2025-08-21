@@ -46,8 +46,8 @@ router.post('/register', async (req, res) => {
 
     const patient = new Patient(formData);
     await patient.save();
-
-    res.json({ message: "Patient Registered", mrNumber });
+    res.json({ message: "Patient Registered", mrNumber, patientId: patient._id });
+ 
   } catch (err) {
     console.error("Error Registering Patient:", err);
     res.status(500).json({ message: "Registration Failed" });

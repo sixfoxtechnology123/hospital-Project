@@ -6,70 +6,26 @@ import BackButton from './BackButton';
 const PatientsRegister = () => {
   const navigate = useNavigate();
 
+
   const [formData, setFormData] = useState({
-    name: '',
-    prefix: '',
-    fatherOrSpouse: '',
-    sex: '',
-    dob: '',
-    age: '',
-    maritalStatus: '',
-    bloodGroup: '',
-    address1: '',
-    address2: '',
-    location: '',
-    city: '',
-    pinCode: '',
-    state: '',
-    country: '',
-    mobile: '',
-    email: '',
-    kinMobile: '',
-    kinRelation: '',
-    abhaId: '',
-    aadhar: '',
-    occupation: '',
-    religion: '',
-    source: '',
-    pan: ''
+    name: '', prefix: '', fatherOrSpouse: '', sex: '', dob: '', age: '',
+    maritalStatus: '', bloodGroup: '', address1: '', address2: '', location: '',
+    city: '', pinCode: '', state: '', country: '', mobile: '', email: '',
+    kinMobile: '', kinRelation: '', abhaId: '', aadhar: '', occupation: '',
+    religion: '', source: '', pan: ''
   });
 
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [mrNumber, setMrNumber] = useState('');
   const [manualAgeInput, setManualAgeInput] = useState(false);
   const [manualDOBInput, setManualDOBInput] = useState(false);
-  const [navigateData, setNavigateData] = useState(null);
-
-  // Generate MR number (frontend fallback)
-  const generateMRNumber = () => {
-    const now = new Date();
-    const yyyy = now.getFullYear();
-    const mm = String(now.getMonth() + 1).padStart(2, '0');
-    const dd = String(now.getDate()).padStart(2, '0');
-    const today = `${yyyy}${mm}${dd}`;
-
-    const storedData = JSON.parse(localStorage.getItem('mrCounterData')) || { date: today, counter: 0 };
-    let counter = storedData.counter;
-
-    if (storedData.date !== today) counter = 0;
-
-    counter++;
-    localStorage.setItem('mrCounterData', JSON.stringify({ date: today, counter }));
-
-    return `MR${today}${String(counter).padStart(4, '0')}`;
-  };
+  const [patientId, setPatientId] = useState(null);
 
   // Handle field changes
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    if (name === "age") {
-      setManualAgeInput(true);
-      setManualDOBInput(false);
-    } else if (name === "dob") {
-      setManualDOBInput(true);
-      setManualAgeInput(false);
-    }
+    if (name === 'age') { setManualAgeInput(true); setManualDOBInput(false); }
+    if (name === 'dob') { setManualDOBInput(true); setManualAgeInput(false); }
 
     setFormData(prev => ({ ...prev, [name]: value }));
   };
@@ -77,20 +33,15 @@ const PatientsRegister = () => {
   // Sync DOB and Age
   useEffect(() => {
     const today = new Date();
-
     if (manualDOBInput && formData.dob) {
       const birthDate = new Date(formData.dob);
       let calculatedAge = today.getFullYear() - birthDate.getFullYear();
       const m = today.getMonth() - birthDate.getMonth();
-      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-        calculatedAge--;
-      }
-
+      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) calculatedAge--;
       if (calculatedAge !== parseInt(formData.age)) {
         setFormData(prev => ({ ...prev, age: calculatedAge.toString() }));
       }
     }
-
     if (manualAgeInput && formData.age) {
       const ageInt = parseInt(formData.age);
       if (!isNaN(ageInt)) {
@@ -104,53 +55,27 @@ const PatientsRegister = () => {
   // Reset form
   const reset = () => {
     setFormData({
-      name: '',
-      prefix: '',
-      fatherOrSpouse: '',
-      sex: '',
-      dob: '',
-      age: '',
-      maritalStatus: '',
-      bloodGroup: '',
-      address1: '',
-      address2: '',
-      location: '',
-      city: '',
-      pinCode: '',
-      state: '',
-      country: '',
-      mobile: '',
-      email: '',
-      kinMobile: '',
-      kinRelation: '',
-      abhaId: '',
-      aadhar: '',
-      occupation: '',
-      religion: '',
-      source: '',
-      pan: ''
+      name: '', prefix: '', fatherOrSpouse: '', sex: '', dob: '', age: '',
+      maritalStatus: '', bloodGroup: '', address1: '', address2: '', location: '',
+      city: '', pinCode: '', state: '', country: '', mobile: '', email: '',
+      kinMobile: '', kinRelation: '', abhaId: '', aadhar: '', occupation: '',
+      religion: '', source: '', pan: ''
     });
   };
 
-  // Validate required & optional fields
+  // Validate form
   const validateForm = () => {
     const { name, dob, mobile, email, aadhar } = formData;
-
     if (!name?.trim() || !dob?.trim() || !mobile?.trim()) {
       alert("Name, DOB, and Mobile Number are required.");
       return false;
     }
-
     if (email && !/^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/.test(email)) {
-      alert("Invalid Email ID");
-      return false;
+      alert("Invalid Email ID"); return false;
     }
-
     if (aadhar && !/^\d{12}$/.test(aadhar)) {
-      alert("Invalid Aadhar Number");
-      return false;
+      alert("Invalid Aadhar Number"); return false;
     }
-
     return true;
   };
 
@@ -161,15 +86,11 @@ const PatientsRegister = () => {
 
     try {
       const res = await axios.post('http://localhost:5000/api/register', formData);
-
-      // Use backend MR number if available, otherwise generate frontend
-      const mr = res.data?.mrNumber || generateMRNumber();
+      const mr = res.data?.mrNumber;
+      const id = res.data?.patientId;
       setMrNumber(mr);
-
-      const patientSnapshot = { ...formData, mrNumber: mr };
+      setPatientId(res.data.patientId);
       setShowSuccessModal(true);
-      setNavigateData(patientSnapshot);
-      
       reset();
     } catch (err) {
       alert('Registration Failed');
@@ -190,15 +111,17 @@ const PatientsRegister = () => {
             <p className="text-base sm:text-lg text-gray-800">
               MR Number is: <span className="font-semibold">{mrNumber}</span>
             </p>
-            <button
-              onClick={() => {
-                setShowSuccessModal(false);
-                navigate('/PatientUpdatePage/:id', { state: { mrNumber, patientData: navigateData } });
-              }}
+           <button
+           onClick={() => {
+            setShowSuccessModal(false);
+            if (patientId) navigate(`/PatientUpdatePage/${patientId}`);
+          }}
+
               className="mt-6 px-4 sm:px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded"
             >
               Continue
             </button>
+
           </div>
         </div>
       )}
