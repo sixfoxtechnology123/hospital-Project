@@ -39,11 +39,11 @@ const DepartmentList = () => {
       <div className="bg-green-50 border border-green-300 rounded-lg shadow-md p-2 mb-4">
         <div className="flex justify-between items-center">
           <h2 className="text-xl font-bold text-green-800">Department</h2>
-          <div className="flex gap-4">
+          <div className="flex gap-2">
             <BackButton />
             <button
               onClick={() => navigate('/departmentMaster')}
-              className="bg-green-600 text-white px-4 py-1 rounded-lg font-semibold shadow"
+              className="bg-green-600 hover:bg-green-700 text-white px-4 py-1 rounded font-semibold whitespace-nowrap"
             >
               Add Department
             </button>

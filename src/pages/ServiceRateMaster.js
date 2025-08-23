@@ -240,7 +240,7 @@ const ServiceRateMaster = () => {
               </select>
             </div>
 
-            {/* ✅ Buttons row: full width under the grid */}
+            {/* Buttons row: full width under the grid */}
             <div className="col-span-1 md:col-span-2 lg:col-span-3 flex justify-between mt-2">
               <BackButton />
               <button
