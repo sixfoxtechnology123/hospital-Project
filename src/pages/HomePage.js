@@ -35,7 +35,7 @@ const HomePage = () => {
         >
           <FaUserPlus size={50} className="mx-auto text-teal-500" />
           <h2 className="mt-4 text-xl font-semibold transform transition-transform duration-300 group-hover:-translate-y-1">
-            New Register
+            New Registration
           </h2>
         </div>
 
