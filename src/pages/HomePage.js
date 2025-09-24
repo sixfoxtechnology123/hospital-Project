@@ -24,7 +24,7 @@ const HomePage = () => {
         >
           <FaUserInjured size={50} className="mx-auto text-blue-500" />
           <h2 className="mt-4 text-xl font-semibold transform transition-transform duration-300 group-hover:-translate-y-1">
-            All Patients List
+            All Patients List here
           </h2>
         </div>
         
